@@ -92,6 +92,11 @@ def call_gemini(prompt, retries=3):
 
 
 def main():
+    with open("youtube_outliers.json", encoding="utf-8") as f:
+        raw = json.load(f)
+    if not raw:
+        print("😴 No new outliers today — keeping the last good brief on the dashboard.")
+        return
     data = load_outliers()
     print("🧠 Sending fitness outliers to Gemini...\n")
     raw = call_gemini(PROMPT.format(data=data))
