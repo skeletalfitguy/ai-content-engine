@@ -1,0 +1,119 @@
+{
+    "scored_topics": [
+        {
+            "topic": "Running VS Jump Rope | See What Happens Inside Your Body",
+            "score": 98,
+            "angle": "VS",
+            "why": "It pits the absolute highest outlier (Running, 2515x) against another highly accessible, high-impact cardio exercise to trigger immediate comparison bias."
+        },
+        {
+            "topic": "What Happens to Your Spine If You Deadlift Every Day?",
+            "score": 94,
+            "angle": "everyday",
+            "why": "It combines the high-anxiety topic of spinal safety with the high-retention 'every day' consistency format."
+        },
+        {
+            "topic": "Squats VS Leg Press | See What Happens Inside Your Joint",
+            "score": 91,
+            "angle": "VS",
+            "why": "Directly targets the eternal gym debate of free weights versus machines with a visual promise of joint-level biomechanics."
+        },
+        {
+            "topic": "What Happens Inside Your Body When You Do Pull-Ups Every Day?",
+            "score": 88,
+            "angle": "everyday",
+            "why": "Leverages the massive appeal of upper-body calisthenics and shows the direct muscle transformation of a gold-standard exercise."
+        },
+        {
+            "topic": "Pushups VS Dips | What Happens Inside Your Chest?",
+            "score": 85,
+            "angle": "VS",
+            "why": "Two bodyweight titans compared head-to-head, promising to show exactly which muscle fibers get activated."
+        },
+        {
+            "topic": "What Happens Inside Your Knees When You Do Deep Squats?",
+            "score": 82,
+            "angle": "single-exercise",
+            "why": "Leverages the 1348x 'What Happens inside your body when you [action]' format, focusing on a major joint anxiety point."
+        },
+        {
+            "topic": "What Happens to Your Core If You Plank for 4 Minutes Every Day?",
+            "score": 79,
+            "angle": "everyday",
+            "why": "Directly builds on the 20.13x outlier plank video, promising a deep visual analysis of core muscle tension."
+        },
+        {
+            "topic": "What Happens Inside Your Forearms When You Hang From a Bar?",
+            "score": 75,
+            "angle": "single-exercise",
+            "why": "Taps into the trending interest in grip strength and forearm training (13.75x outlier) using a simple, high-curiosity movement."
+        }
+    ],
+    "winning_templates": [
+        {
+            "template": "[Exercise A] VS [Exercise B] | See What Happens Inside Your Body",
+            "why_it_works": "Triggers immediate curiosity and debate over which common exercise is safer or more effective.",
+            "proof": "Running vs Walking | See What Happens Inside Your Body [2515.25x]"
+        },
+        {
+            "template": "What Happens Inside Your Body If You Do [Exercise] EVERY DAY?",
+            "why_it_works": "Promises a timeline-based visual transformation and warns about potential overtraining injuries.",
+            "proof": "What Happens to Your Body If You Cycle Every Day? [42.41x]"
+        },
+        {
+            "template": "What Happens Inside Your Body When You [Action]?",
+            "why_it_works": "Focuses on the immediate, explosive anatomical reaction to a heavy or high-impact athletic movement.",
+            "proof": "What Happens in Your Body When You Punch a Boxing Bag? [1348.65x]"
+        },
+        {
+            "template": "[Exercise] VS [Target Area]: What Happens Inside Your Body?",
+            "why_it_works": "Addresses fat loss/muscle growth myths directly by showing the anatomical impossibility or reality of spot reduction.",
+            "proof": "Squats vs Thigh Fat: What Happens Inside Your Body? [179.85x]"
+        }
+    ],
+    "todays_hooks": [
+        "Running VS Jump Rope: What actually happens to your joints?",
+        "What happens if you do 50 Kettlebell Swings every day?",
+        "Squats VS Leg Press: See what happens to your knees!",
+        "What happens to your spine if you Deadlift every day?",
+        "Pushups VS Dips: See what happens inside your chest!",
+        "What happens to your core if you do a Wall Sit every day?",
+        "Pull-ups VS Chin-ups: See the muscle difference!",
+        "What happens inside your shoulders if you Swim every day?",
+        "Plank VS Crunch: See what actually destroys belly fat!",
+        "What happens inside your calves if you Jump Rope every day?"
+    ],
+    "shorts_scripts": [
+        {
+            "hook": "Running VS Jump Rope: What actually happens inside your joints?",
+            "beats": [
+                "Running sends a shockwave up your tibia, compressing your meniscus with three times your body weight.",
+                "Jump rope distributes this load evenly across both feet, using your Achilles tendon like a powerful spring.",
+                "While running burns slightly more visceral fat over time, jumping rope builds twenty-four percent more bone density in your ankles."
+            ],
+            "payoff": "Jump rope actually saves your knees because it forces a forefoot landing, while running often causes heel-striking that rattles your lower spine!",
+            "visual_note": "A 3D skeleton showing red stress waves traveling up the tibia during a heel-strike run, contrasted with green elastic tension glowing in the Achilles tendon during a jump rope bounce."
+        },
+        {
+            "hook": "What happens inside your spine if you Deadlift every day?",
+            "beats": [
+                "Day 1: Your spinal erectors undergo intense micro-tearing as they fight to keep your lumbar spine neutral.",
+                "Day 10: Without rest, your intervertebral discs cannot rehydrate, leaving them compressed and vulnerable.",
+                "Day 30: Your nervous system misfires from fatigue, shifting the load directly onto your L4 and L5 ligaments."
+            ],
+            "payoff": "Instead of building a bulletproof back, deadlifting heavy every single day slowly starves your spinal discs of fluid, speeding up disc herniation!",
+            "visual_note": "3D anatomical view of the lower back showing spinal muscles glowing bright red with inflammation, zooming into the L4-L5 spinal discs flattening and pinching a nerve."
+        },
+        {
+            "hook": "Squats VS Leg Press: Here is what happens to your lower back.",
+            "beats": [
+                "When you squat, your entire core and spinal stabilizers fire to keep your pelvis locked in alignment.",
+                "On the leg press, the inclined seat forces your pelvis to tilt backward at the bottom of the movement.",
+                "This 'butt wink' on the machine transfers hundreds of pounds of pressure directly from your legs to your lower spine."
+            ],
+            "payoff": "The leg press actually puts MORE dangerous shearing force on your lumbar spine than a heavy barbell squat because your back is trapped against the pad!",
+            "visual_note": "Split-screen 3D animation showing a stable, green-aligned spine during a barbell squat, compared to a rounding, red-highlighted lumbar spine flexing under pressure during a leg press."
+        }
+    ],
+    "generated_at": "2026-07-04 11:33 UTC"
+}

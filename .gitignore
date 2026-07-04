@@ -1,0 +1,25 @@
+# === SECRETS — never commit these ===
+.env
+.env.*
+*.key
+secrets/
+All Api keys*.txt
+*api*key*.txt
+*API*key*.txt
+
+# === Python ===
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# === Logs only (data JSON is committed so GitHub Pages can display it) ===
+*.log
+
+# === OS / editor junk ===
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
