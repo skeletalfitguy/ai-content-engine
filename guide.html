@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Use — Anas Content Mastermind</title>
+<style>
+  :root{
+    --bg:#0a0e16; --card:#141b2b; --card2:#1b2438; --line:#26314b;
+    --text:#e8edf7; --muted:#8b98b4; --accent:#5b8cff; --hot:#ff5b6e;
+    --gold:#ffcf5b; --green:#48d597; --vs:#c07bff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6;padding:22px;max-width:820px;margin:0 auto}
+  .brand{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:700}
+  h1{font-size:25px;letter-spacing:-.5px;margin-top:4px}
+  h1 span{color:var(--accent)}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:8px}
+  nav{display:flex;gap:8px;margin:14px 0 26px}
+  nav a{font-size:13px;text-decoration:none;color:var(--muted);background:var(--card);border:1px solid var(--line);padding:7px 16px;border-radius:20px;transition:.15s}
+  nav a:hover{color:var(--text)}
+  nav a.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  h2{font-size:18px;margin:30px 0 12px;display:flex;align-items:center;gap:8px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:14px}
+  .step{display:flex;gap:14px;margin-bottom:14px}
+  .num{flex:none;width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:15px}
+  .step h3{font-size:15px;margin-bottom:3px}
+  .step p{color:var(--muted);font-size:13.5px}
+  p{font-size:14px;color:#cdd6ea}
+  ul{margin:8px 0 8px 20px}
+  li{font-size:14px;color:#cdd6ea;margin-bottom:6px}
+  .tag{font-size:11px;padding:2px 8px;border-radius:5px;font-weight:600}
+  .tag.VS{background:rgba(192,123,255,.15);color:var(--vs)}
+  .tag.everyday{background:rgba(72,213,151,.13);color:var(--green)}
+  b{color:var(--text)}
+  .hl{background:rgba(91,140,255,.12);border-left:3px solid var(--accent);padding:12px 16px;border-radius:0 8px 8px 0;font-size:14px;margin:12px 0}
+  .glossary b{color:var(--gold)}
+  code{background:var(--card2);padding:2px 7px;border-radius:5px;font-size:13px;color:var(--green)}
+  footer{margin-top:38px;color:var(--muted);font-size:11.5px;text-align:center}
+  a.link{color:var(--accent)}
+</style>
+</head>
+<body>
+  <div class="brand">Anas · Content Mastermind</div>
+  <h1>How to <span>Use It</span></h1>
+  <div class="sub">Your 10-minute morning routine to never run out of viral fitness ideas</div>
+  <nav>
+    <a href="index.html">📊 Dashboard</a>
+    <a href="guide.html" class="active">📖 How to Use</a>
+  </nav>
+
+  <div class="hl">
+    <b>What this is:</b> Every morning this system automatically scans all of YouTube for
+    fitness "what happens inside your body" Shorts that went viral, steals the winning hooks,
+    scores fresh ideas for you, and writes ready-to-shoot scripts — so you wake up knowing
+    exactly what to make. It runs by itself. You just read it and create.
+  </div>
+
+  <h2>☀️ Your daily routine (10 min)</h2>
+  <div class="card">
+    <div class="step"><div class="num">1</div><div>
+      <h3>Open the Dashboard</h3>
+      <p>Every morning, open the <a class="link" href="index.html">Dashboard</a>. It already
+      refreshed itself — today's ideas are waiting. Nothing to run.</p></div></div>
+    <div class="step"><div class="num">2</div><div>
+      <h3>Read the top-scored topic</h3>
+      <p>Look at <b>“Today's Topics — Ranked.”</b> The highest score (out of 100) is your
+      best bet for today. Pick one you like.</p></div></div>
+    <div class="step"><div class="num">3</div><div>
+      <h3>Grab the hook + script</h3>
+      <p>Scroll to <b>“Ready-to-Shoot Scripts”</b> — it gives you the exact first line (hook),
+      the narration beats, the payoff, and what the 3D visual should show.</p></div></div>
+    <div class="step"><div class="num">4</div><div>
+      <h3>Refine in Claude (optional)</h3>
+      <p>Paste the topic + hook into your Claude chat to polish the full script in your voice —
+      then it's ready for your normal flow.</p></div></div>
+    <div class="step"><div class="num">5</div><div>
+      <h3>Produce &amp; post</h3>
+      <p>Generate the video (Google Veo/Omni), merge in CapCut, voiceover with ElevenLabs,
+      post the Short. Done — repeat tomorrow.</p></div></div>
+  </div>
+
+  <h2>🧭 What each section means</h2>
+  <div class="card glossary">
+    <p><b>🏆 Today's Topics — Ranked:</b> Fresh video ideas scored 0–100 for viral potential.
+      Start here.</p>
+    <p style="margin-top:10px"><b>🧩 Winning Templates:</b> The reusable hook patterns that are
+      working right now (with a <code>___</code> blank to fill).</p>
+    <p style="margin-top:10px"><b>✨ Fresh Hooks:</b> 10 brand-new hook titles you can steal
+      straight away.</p>
+    <p style="margin-top:10px"><b>🎬 Ready-to-Shoot Scripts:</b> Full mini-scripts — hook,
+      beats, payoff, and the visual note.</p>
+    <p style="margin-top:10px"><b>📊 Raw Outliers:</b> The actual viral videos it found today
+      (with view counts and how many times they beat their channel size). Proof, and inspiration.</p>
+    <p style="margin-top:10px"><b>🏦 Hook Bank:</b> A growing library of every winning hook it's
+      ever found. Gets richer every day.</p>
+  </div>
+
+  <h2>🔥 The 2 patterns that win in your niche</h2>
+  <div class="card">
+    <p><span class="tag VS">VS</span> &nbsp;<b>“[Exercise A] VS [Exercise B] — see what happens inside your body.”</b>
+      The strongest format. The viewer <i>has</i> to know which is better. (Running vs Walking hit 59M views.)</p>
+    <p style="margin-top:12px"><span class="tag everyday">EVERYDAY</span> &nbsp;<b>“What happens if you do [exercise] every day?”</b>
+      The habit hook — people are curious about their own routines.</p>
+    <div class="hl" style="margin-top:14px"><b>Golden rule:</b> The first 2 seconds decide everything.
+      Your opening line must create a question the viewer can't scroll past. That's why the hook matters
+      more than the animation.</div>
+  </div>
+
+  <h2>🤖 How the automation works</h2>
+  <div class="card">
+    <ul>
+      <li>Every morning at <b>9:00 AM</b> the pipeline runs automatically on your PC.</li>
+      <li>If your PC was off, it <b>catches up</b> and runs the moment you're back online.</li>
+      <li>It scans YouTube → scores with Gemini AI → updates this dashboard → all free.</li>
+      <li>It <b>remembers</b> what it already showed you, so each day's brief is genuinely new.</li>
+    </ul>
+    <p style="margin-top:10px;color:var(--muted)">You never press anything. Just open the dashboard and create.</p>
+  </div>
+
+  <footer>Anas Content Mastermind · built to run itself · $0 forever</footer>
+</body>
+</html>

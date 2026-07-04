@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Skeletal Fit Guy — Daily Viral Radar</title>
+<title>Anas Content Mastermind — Viral Dashboard</title>
 <style>
   :root{
     --bg:#0a0e16; --card:#141b2b; --card2:#1b2438; --line:#26314b;
@@ -17,6 +17,11 @@
   h1 span{color:var(--accent)}
   .sub{color:var(--muted);font-size:13px;margin-bottom:8px}
   .pill{font-size:11px;color:var(--muted);background:var(--card2);padding:3px 10px;border-radius:20px}
+  nav{display:flex;gap:8px;margin:14px 0 4px}
+  nav a{font-size:13px;text-decoration:none;color:var(--muted);background:var(--card);border:1px solid var(--line);padding:7px 16px;border-radius:20px;transition:.15s}
+  nav a:hover{color:var(--text)}
+  nav a.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .brand{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:700}
   h2{font-size:13px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin:32px 0 14px;border-bottom:1px solid var(--line);padding-bottom:8px}
   .grid{display:grid;gap:12px}
   .cols{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
@@ -47,11 +52,16 @@
 </style>
 </head>
 <body>
+  <div class="brand">Anas · Content Mastermind</div>
   <header>
-    <h1>Skeletal Fit Guy — <span>Viral Radar</span></h1>
+    <h1>Anas <span>Content Mastermind</span></h1>
     <span class="pill" id="updated">loading…</span>
   </header>
-  <div class="sub">Daily fitness "what happens inside your body" intelligence · auto-updated 9 AM</div>
+  <div class="sub">Your daily fitness "what happens inside your body" viral intelligence · auto-updated every morning</div>
+  <nav>
+    <a href="index.html" class="active">📊 Dashboard</a>
+    <a href="guide.html">📖 How to Use</a>
+  </nav>
 
   <div id="brain">
     <h2>🏆 Today's Topics — Ranked</h2>
@@ -70,7 +80,7 @@
   <h2>🏦 Hook Bank (growing)</h2>
   <div id="bank" class="card"></div>
 
-  <footer>ai-content-engine · YouTube Data API + Gemini · $0 pipeline</footer>
+  <footer>Anas Content Mastermind · YouTube Data API + Gemini · runs itself daily · $0</footer>
 
 <script>
 const $=id=>document.getElementById(id);
