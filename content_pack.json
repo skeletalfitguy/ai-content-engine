@@ -1,102 +1,119 @@
 {
     "scored_topics": [
         {
-            "topic": "Poor Squat Form vs Better Squat Form: See What Happens Inside Your Spine",
+            "topic": "Running vs Jump Rope: See what happens inside your body",
             "score": 98,
             "angle": "VS",
-            "why": "It directly adapts the 346x push-up outlier using the squat, the most debated and feared exercise for back safety."
+            "why": "It instantly pits the world's most popular cardio against its highest-intensity rival using a high-curiosity 3D visual promise."
         },
         {
-            "topic": "What Happens Inside Your Body When You Plank Daily?",
-            "score": 91,
+            "topic": "What happens if you do Shadow Boxing every day",
+            "score": 95,
             "angle": "everyday",
-            "why": "Planking is a universally recognized challenge, making the daily compounding effects highly relatable."
+            "why": "Leverages the massive boxing outlier (1348x) with the high-retention 'everyday' commitment hook."
         },
         {
-            "topic": "Running on Concrete VS Running on Turf: Inside Your Joints",
-            "score": 87,
+            "topic": "Push-Ups vs Pull-Ups: See what happens inside your body",
+            "score": 92,
             "angle": "VS",
-            "why": "Visualizes the high-impact shockwaves traveling through the skeletal structure depending on the surface."
+            "why": "Contrasts the ultimate push and pull movements, triggering visual curiosity about opposing muscle groups."
         },
         {
-            "topic": "Barbell Bench Press VS Dumbbell Press: Inside Your Chest",
-            "score": 84,
-            "angle": "VS",
-            "why": "Solves the ultimate gym debate by showing actual muscle fiber recruitment and shoulder joint strain."
-        },
-        {
-            "topic": "What Happens Inside Your Body When You Do Pull-Ups Daily?",
-            "score": 80,
+            "topic": "What happens if you do 50 Squats every day",
+            "score": 89,
             "angle": "everyday",
-            "why": "Leverages the aspirational pull-up progression with a visual of back muscle hypertrophy."
+            "why": "Appeals to a massive audience by using the most fundamental lower-body movement in a daily challenge format."
         },
         {
-            "topic": "Behind-the-Neck Pulldowns VS Front Pulldowns: Joint Damage",
-            "score": 75,
+            "topic": "What happens inside your body when you Deadlift",
+            "score": 86,
+            "angle": "single-exercise",
+            "why": "Taps into the heavy-compound lifting curiosity, showing the entire posterior chain lighting up in 3D."
+        },
+        {
+            "topic": "Kettlebell Swings vs Burpees: See inside your body",
+            "score": 83,
             "angle": "VS",
-            "why": "Immediately flags a dangerous gym mistake that viewers want to check if they are committing."
+            "why": "Features two brutal conditioning movements, promising a visual breakdown of where fat is targeted."
+        },
+        {
+            "topic": "What happens to your body if you do Hanging Leg Raises every day",
+            "score": 81,
+            "angle": "everyday",
+            "why": "Combines the core-sculpting obsession of the plank outlier with a highly visual, dynamic movement."
+        },
+        {
+            "topic": "Running vs Rowing: What happens inside your body",
+            "score": 78,
+            "angle": "VS",
+            "why": "Compares pure impact cardio against a full-body resistance cardio machine to show distinct biomechanical effects."
         }
     ],
     "winning_templates": [
         {
-            "template": "Poor ___ Form vs Better ___ Form | See What Happens Inside Your Body",
-            "why_it_works": "Triggers immediate fear of injury and the urge to correct one's own gym mistakes.",
-            "proof": "Poor Push-Up Form vs Better Push-Up Form (346.98x views/subs)"
+            "template": "[Exercise A] VS [Exercise B] | See What Happens Inside Your Body",
+            "why_it_works": "Piques competitive curiosity and promises an exclusive, high-value visual comparison of muscle activation.",
+            "proof": "Running vs Walking | See What Happens Inside Your Body [2515.25x]"
         },
         {
-            "template": "What Happens Inside Your Body When You Do ___ Daily?",
-            "why_it_works": "Preys on the curiosity of long-term body transformations and biological compounding effects.",
-            "proof": "What Happens Inside Your Body When You Do Rowing Exercise Daily? (14.07x views/subs)"
+            "template": "What Happens inside Your Body When You [Exercise]?",
+            "why_it_works": "Promises a scientific, x-ray view of a familiar movement, turning common exercises into a visual spectacle.",
+            "proof": "What Happens in Your Body When You Punch a Boxing Bag? [1348.65x]"
         },
         {
-            "template": "[Exercise A] VS [Exercise B]: See What Happens Inside Your Body",
-            "why_it_works": "Creates a visual competition that settles common fitness debates with scientific biomechanics.",
-            "proof": "Elevator vs Stairs (25.05x views/subs)"
+            "template": "What Happens to Your Body If You [Exercise] EVERY DAY?",
+            "why_it_works": "Builds anticipation around long-term physiological transformation and daily-habit consistency.",
+            "proof": "What Happens to Your Body If You Cycle Every Day? [42.41x]"
+        },
+        {
+            "template": "What Happens to Your Muscles If You Do [Exercise] Every Day?",
+            "why_it_works": "Highly targeted to hypertrophy-seeking viewers wanting to know the exact muscle adaptation process.",
+            "proof": "What Happens If You Do Knuckle Push-Ups EVERY DAY? [24.99x]"
         }
     ],
     "todays_hooks": [
-        "Poor Squat Form vs Better Squat Form: Inside Your Spine",
-        "What Happens Inside Your Body If You Plank Daily?",
-        "Running VS Jump Rope: What Happens to Your Knees?",
-        "Poor Deadlift Form vs Better Deadlift: Inside Your Back",
-        "What Happens to Your Body When You Do 50 Push-Ups Daily?",
-        "Chin-Ups VS Pull-Ups: See What Happens Inside Your Arms",
-        "Leg Press VS Squats: What Happens Inside Your Joints?",
-        "What Happens Inside Your Body If You Run Daily?",
-        "Barbell Bench VS Dumbbell Press: Inside Your Pecs",
-        "Poor Overhead Press vs Better Form: Inside Your Shoulders"
+        "Sprinting vs Jogging: See what happens inside your body",
+        "What happens to your body if you Jump Rope every day?",
+        "Planks VS Hanging Leg Raises: See inside your body",
+        "What happens inside your muscles when you Bench Press?",
+        "What happens to your spine if you Deadlift every day?",
+        "Push-Ups VS Dips: See what happens inside your body",
+        "What happens inside your knees if you Squat every day?",
+        "Pull-ups VS Chin-ups: See inside your muscles",
+        "What happens inside your body when you Kettlebell Swing?",
+        "What happens if you do 100 Calf Raises every day?"
     ],
     "shorts_scripts": [
         {
-            "hook": "Stop doing squats like this. Here's what it does to your spine.",
+            "hook": "Sprinting vs Jogging: See what happens inside your body.",
             "beats": [
-                "Look at your lower back during a rounded squat—the lumbar vertebrae pinch your spinal discs.",
-                "Now watch a neutral-spine squat: the load is distributed perfectly across your hips and glutes.",
-                "A rounded spine increases shear force on your discs by over two hundred percent."
+                "While jogging uses slow-twitch fibers and oxygen to burn steady fuel...",
+                "Sprinting flips a survival switch, instantly tearing open your fast-twitch muscle fibers.",
+                "This triggers 'EPOC'—causing your nervous system to melt fat at three times the speed even after you stop running."
             ],
-            "payoff": "Fixing your hip mobility instantly shifts the pressure from your spine to your quad fibers.",
-            "visual_note": "A 3D translucent skeleton showing spinal discs glowing red and pinching under a rounded load, transitioning to green and perfectly aligned."
+            "payoff": "Sprinting actually remodels your cellular mitochondria, turning you into a passive fat-burning machine even while asleep.",
+            "visual_note": "3D camera zooms into the thigh, showing slow-twitch fibers glowing blue during a jog, then violently exploding into pulsing red fast-twitch fibers during a sprint."
         },
         {
-            "hook": "What actually happens inside your body when you do pull-ups daily?",
+            "hook": "What happens to your spine if you Deadlift every day?",
             "beats": [
-                "Day 1 to 7: Your latissimus dorsi fibers micro-tear, sending satellite cells to repair them bigger.",
-                "Day 14: Your nervous system recruits dormant motor units in your forearms, exploding your grip strength.",
-                "Day 30: Your shoulder blades pull backward, correcting your rounded desk posture."
+                "On days 1 to 5, your spinal erectors micro-tear, screaming for recovery.",
+                "By day 15, your central nervous system adapts, rapidly firing core-bracing signals.",
+                "By day 30, your body deposits calcium, drastically increasing the bone density of your vertebrae."
             ],
-            "payoff": "The daily hanging stretch decompresses your spine, temporarily making you up to one centimeter taller.",
-            "visual_note": "A 3D camera zooming into back muscles to show cellular tearing, followed by the vertebrae stretching slightly apart."
+            "payoff": "With perfect form, daily deadlifts pull fluid back into your spinal discs, making your back virtually bulletproof to aging.",
+            "visual_note": "A translucent 3D skeleton deadlifting. Lumbar vertebrae glow red with mechanical stress, which gradually shifts to a thick, glowing green shield of protective muscle fibers."
         },
         {
-            "hook": "Running vs Jump Rope: Which destroys your knees faster?",
+            "hook": "Planks VS Hanging Leg Raises: See inside your core.",
             "beats": [
-                "Every stride in running sends shockwaves three times your body weight up your shinbone.",
-                "But jump rope forces you to land on the balls of your feet, using your calves as natural springs.",
-                "This elastic recoil absorbs the impact before it ever reaches your knee cartilage."
+                "Planks lock your rectus abdominis in a static, isometric hold, building deep core endurance.",
+                "But Hanging Leg Raises force your abs to contract dynamically while fighting gravity.",
+                "This activates 64% more lower abdominal fibers and directly targets the hard-to-reach hip flexors."
             ],
-            "payoff": "Jump rope actually reduces peak knee joint stress by up to thirty percent compared to running.",
-            "visual_note": "Side-by-side 3D skeletal view showing red shockwaves travelling up the runner's knee versus blue cushioned waves dissipating in the jumper's ankle."
+            "payoff": "Planks strengthen your inner corset, but leg raises are what actually build thick, deep V-line blocks.",
+            "visual_note": "3D torso showing static yellow tension lines across the entire midsection during a plank, switching to intense pulsing red waves climbing up the lower abs during a leg raise."
         }
     ],
-    "generated_at": "2026-07-04 21:21 UTC"
+    "generated_at": "2026-07-04 21:51 UTC"
 }
