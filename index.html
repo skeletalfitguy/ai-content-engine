@@ -125,14 +125,28 @@
   /* mobile */
   @media(max-width:820px){
     .app{flex-direction:column}
-    .sidebar{width:100%;height:auto;position:static;flex-direction:row;flex-wrap:wrap;align-items:center;padding:12px}
-    .sb-brand{padding:0 10px 0 0}
-    .nav{flex-direction:row;flex-wrap:wrap;flex:1;gap:4px}
-    .nav a{padding:8px 10px}
-    .nav a span.lbl{display:none}
-    .sb-foot{margin:0 0 0 auto}
+    .sidebar{width:100%;height:auto;position:sticky;top:0;z-index:50;flex-direction:column;gap:11px;padding:12px 14px;border-right:none;border-bottom:1px solid var(--border)}
+    .sb-brand{padding:0;width:100%}
+    .nav{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+    .nav::-webkit-scrollbar{display:none}
+    .nav a{flex:none;white-space:nowrap;padding:8px 13px}
+    .nav a span.lbl{display:inline}
+    .sb-foot{margin:0}
     .agent{display:none}
-    .main{padding:18px 16px}
+    .sb-links{gap:16px}
+    .main{padding:18px 15px}
+    .head{margin-bottom:18px;gap:14px}
+    .greet h1{font-size:22px}
+    .greet .meta{font-size:12px}
+    .actions{width:100%;gap:8px}
+    .btn.primary{flex-basis:100%;order:-1;justify-content:center;padding:12px}
+    .btn{flex:1;justify-content:center}
+    .badge{flex:1;text-align:center}
+    .grid{grid-template-columns:1fr}
+    .day{min-width:44px;padding:8px 3px}
+    .day small{font-size:14px}
+    .sh{padding:15px}
+    .mbox{padding:18px}
   }
 </style>
 </head>
