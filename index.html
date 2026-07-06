@@ -30,6 +30,7 @@
   .sb-logo{width:30px;height:30px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
   .sb-brand b{font-size:15px}
   .sb-brand span{display:block;font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+  .hamb{display:none;margin-left:auto;background:var(--surface2);border:1px solid var(--border);color:var(--text);width:40px;height:40px;border-radius:9px;font-size:18px;cursor:pointer;align-items:center;justify-content:center}
   .nav{display:flex;flex-direction:column;gap:2px}
   .nav a{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:9px;color:var(--muted);font-size:13.5px;cursor:pointer}
   .nav a .ic{width:18px;text-align:center;font-size:14px}
@@ -125,15 +126,16 @@
   /* mobile */
   @media(max-width:820px){
     .app{flex-direction:column}
-    .sidebar{width:100%;height:auto;position:sticky;top:0;z-index:50;flex-direction:column;gap:11px;padding:12px 14px;border-right:none;border-bottom:1px solid var(--border)}
-    .sb-brand{padding:0;width:100%}
-    .nav{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:4px;-webkit-overflow-scrolling:touch}
-    .nav::-webkit-scrollbar{display:none}
-    .nav a{flex:none;white-space:nowrap;padding:8px 13px}
-    .nav a span.lbl{display:inline}
-    .sb-foot{margin:0}
+    .sidebar{width:100%;height:auto;position:sticky;top:0;z-index:50;flex-direction:column;gap:0;padding:12px 14px;border-right:none;border-bottom:1px solid var(--border)}
+    .sb-brand{padding:0;width:100%;margin:0}
+    .hamb{display:flex}
+    .nav{display:none;flex-direction:column;gap:3px;margin-top:12px}
+    .sidebar.open .nav{display:flex}
+    .nav a{padding:12px 12px;font-size:14px}
+    .sb-foot{display:none;margin-top:12px}
+    .sidebar.open .sb-foot{display:block}
     .agent{display:none}
-    .sb-links{gap:16px}
+    .sb-links{justify-content:flex-start;gap:22px;padding-top:12px;border-top:1px solid var(--border)}
     .main{padding:18px 15px}
     .head{margin-bottom:18px;gap:14px}
     .greet h1{font-size:22px}
@@ -183,6 +185,7 @@
     <div class="sb-brand">
       <div class="sb-logo">A</div>
       <div><b>Anas Content HQ</b><span>Viral Engine</span></div>
+      <button class="hamb" id="hamb" aria-label="Menu">☰</button>
     </div>
     <nav class="nav" id="nav">
       <a data-view="daily" class="active"><span class="ic">📋</span><span class="lbl">Daily Brief</span></a>
@@ -370,7 +373,9 @@ async function loadData(){
   DATA.bank=await j('hook_bank.json')||[];
 }
 
-document.querySelectorAll('.nav a').forEach(a=>a.onclick=()=>route(a.dataset.view));
+const _sb=document.querySelector('.sidebar');
+const _hamb=$('hamb'); if(_hamb) _hamb.onclick=()=>_sb.classList.toggle('open');
+document.querySelectorAll('.nav a').forEach(a=>a.onclick=()=>{route(a.dataset.view);_sb.classList.remove('open');});
 $('signout').onclick=()=>{sessionStorage.removeItem('acm_unlocked');location.reload();};
 
 (async()=>{ await loadData(); route('daily'); })();

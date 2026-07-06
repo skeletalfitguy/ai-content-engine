@@ -22,6 +22,8 @@ youtube = build("youtube", "v3", developerKey=YOUTUBE_API_KEY)
 # NICHE: FITNESS "what happens to your body / inside your body" shorts.
 # We discover what is winning across all of YouTube, not a fixed channel list.
 # ---------------------------------------------------------------------------
+# ~18% of the daily YouTube quota (17 searches x 100 units = 1,700 + ~30 overhead
+# = ~1,730 units of 10,000). Leaves ~82% free for the other dashboards you'll add.
 NICHE_QUERIES = [
     "what happens to your body when you workout",
     "what happens inside your body when you exercise",
@@ -31,6 +33,15 @@ NICHE_QUERIES = [
     "running vs walking what happens inside your body",
     "what happens if you do plank everyday",
     "what happens to your body when you run everyday",
+    "what happens to your body when you do squats everyday",
+    "what happens inside your body when you do cardio",
+    "pushups vs pullups what happens inside your body",
+    "what happens to your body when you stretch everyday",
+    "what happens to your body when you do situps everyday",
+    "cardio vs weights what happens inside your body",
+    "what happens inside your body when you do pull ups",
+    "what happens to your body when you cycle everyday",
+    "what happens to your body when you skip the gym",
 ]
 
 # Only keep videos whose title is clearly FITNESS (kills diet/pregnancy/random noise)
