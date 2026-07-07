@@ -26,7 +26,14 @@
   /* app shell */
   .app{display:flex;min-height:100vh}
   .sidebar{width:244px;flex:none;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;padding:20px 14px}
-  .sb-brand{display:flex;align-items:center;gap:10px;padding:4px 8px 20px}
+  .sb-brand{display:flex;align-items:center;gap:10px;padding:4px 8px 20px;cursor:pointer;position:relative}
+  .sw-arrow{font-size:10px;color:var(--muted);margin-left:4px}
+  .switch-menu{display:none;position:absolute;top:56px;left:8px;z-index:300;background:var(--surface2);border:1px solid var(--border);border-radius:10px;min-width:230px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.55)}
+  .switch-menu.open{display:block}
+  .switch-menu a{display:block;padding:11px 14px;font-size:13px}
+  .switch-menu a small{display:block;color:var(--muted);font-size:11px;margin-top:1px}
+  .switch-menu a:hover{background:var(--surface)}
+  .switch-menu a.cur{border-left:3px solid var(--accent)}
   .sb-logo{width:30px;height:30px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
   .sb-brand b{font-size:15px}
   .sb-brand span{display:block;font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
@@ -182,10 +189,14 @@
 
 <div class="app">
   <aside class="sidebar">
-    <div class="sb-brand">
+    <div class="sb-brand" id="brandbtn">
       <div class="sb-logo">A</div>
-      <div><b>Anas Content HQ</b><span>Viral Engine</span></div>
+      <div><b>Anas Content HQ <span class="sw-arrow">▾</span></b><span>Viral Engine</span></div>
       <button class="hamb" id="hamb" aria-label="Menu">☰</button>
+      <div class="switch-menu" id="switchmenu">
+        <a href="index.html" class="cur">🏋️ Anas Content HQ<small>Fitness shorts radar</small></a>
+        <a href="copylab.html">✍️ Anas Copy Lab<small>Copywriting &amp; AI radar</small></a>
+      </div>
     </div>
     <nav class="nav" id="nav">
       <a data-view="daily" class="active"><span class="ic">📋</span><span class="lbl">Daily Brief</span></a>
@@ -374,9 +385,12 @@ async function loadData(){
 }
 
 const _sb=document.querySelector('.sidebar');
-const _hamb=$('hamb'); if(_hamb) _hamb.onclick=()=>_sb.classList.toggle('open');
+const _hamb=$('hamb'); if(_hamb) _hamb.onclick=e=>{e.stopPropagation();_sb.classList.toggle('open');};
 document.querySelectorAll('.nav a').forEach(a=>a.onclick=()=>{route(a.dataset.view);_sb.classList.remove('open');});
 $('signout').onclick=()=>{sessionStorage.removeItem('acm_unlocked');location.reload();};
+const _bb=$('brandbtn'), _sm=$('switchmenu');
+_bb.addEventListener('click',e=>{ if(e.target.id==='hamb')return; _sm.classList.toggle('open'); });
+document.addEventListener('click',e=>{ if(!_bb.contains(e.target)) _sm.classList.remove('open'); });
 
 (async()=>{ await loadData(); route('daily'); })();
 </script>

@@ -16,7 +16,7 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if not GEMINI_API_KEY:
     raise ValueError("❌ Missing GEMINI_API_KEY inside your .env file!")
 
-MODEL = "gemini-flash-latest"
+MODELS = ["gemini-flash-latest", "gemini-2.5-flash", "gemini-2.0-flash"]  # fallback chain
 BASE = "https://generativelanguage.googleapis.com/v1beta"
 NICHE = "faceless AI FITNESS YouTube Shorts (the '3D anatomy / what happens inside your body when you exercise' format)"
 
@@ -73,23 +73,26 @@ def load_outliers(path="youtube_outliers.json"):
 
 
 def call_gemini(prompt, retries=3):
-    url = f"{BASE}/models/{MODEL}:generateContent?key={GEMINI_API_KEY}"
     payload = {
         "systemInstruction": {"parts": [{"text": SYSTEM}]},
         "contents": [{"parts": [{"text": prompt}]}],
         "generationConfig": {"temperature": 0.9, "responseMimeType": "application/json"},
     }
-    for attempt in range(retries):
-        r = requests.post(url, json=payload, timeout=120)
-        if r.status_code == 200:
-            return r.json()["candidates"][0]["content"]["parts"][0]["text"]
-        if r.status_code == 429:
-            wait = 6 * (attempt + 1)
-            print(f"  ⏳ rate limited, waiting {wait}s...")
-            time.sleep(wait)
-            continue
-        raise RuntimeError(f"Gemini error {r.status_code}: {r.text[:300]}")
-    raise RuntimeError("Gemini failed after retries")
+    for model in MODELS:  # try each model; fall back if one is overloaded
+        url = f"{BASE}/models/{model}:generateContent?key={GEMINI_API_KEY}"
+        for attempt in range(retries):
+            r = requests.post(url, json=payload, timeout=120)
+            if r.status_code == 200:
+                print(f"  ✓ answered by {model}")
+                return r.json()["candidates"][0]["content"]["parts"][0]["text"]
+            if r.status_code in (429, 500, 502, 503, 504):
+                wait = 10 * (attempt + 1)
+                print(f"  ⏳ {model} busy ({r.status_code}), waiting {wait}s...")
+                time.sleep(wait)
+                continue
+            raise RuntimeError(f"Gemini error {r.status_code}: {r.text[:300]}")
+        print(f"  ↪ {model} unavailable, falling back...")
+    raise RuntimeError("All Gemini models failed after retries")
 
 
 def main():

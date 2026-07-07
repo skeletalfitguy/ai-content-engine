@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anas Copy Lab</title>
+<style>
+  :root{
+    --bg:#0B0B0C; --surface:#1A1A1E; --surface2:#232329; --accent:#E6B84C;
+    --accent-dim:rgba(230,184,76,.14); --border:#2C2C2E; --muted:#8E8E93;
+    --text:#FFFFFF; --green:#30D158; --red:#E5484D; --blue:#5b8cff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.5;font-size:14px}
+  a{color:inherit;text-decoration:none}
+  /* password gate */
+  #authgate{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
+  .gatebox{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:34px 28px;text-align:center;max-width:340px;width:100%}
+  .gatelogo{font-size:30px;margin-bottom:10px}
+  .gatebox h2{font-size:18px;margin-bottom:4px}
+  .gatebox p{color:var(--muted);font-size:13px;margin-bottom:18px}
+  .gatebox input{width:100%;padding:11px 14px;border-radius:9px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:14px;margin-bottom:12px;outline:none}
+  .gatebox input:focus{border-color:var(--accent)}
+  .gatebox button{width:100%;padding:11px;border-radius:9px;border:none;background:var(--accent);color:#111;font-weight:700;font-size:14px;cursor:pointer}
+  #pwerr{color:var(--red);font-size:12.5px;margin-top:10px;min-height:16px}
+  /* shell */
+  .app{display:flex;min-height:100vh}
+  .sidebar{width:244px;flex:none;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;padding:20px 14px}
+  .sb-brand{display:flex;align-items:center;gap:10px;padding:4px 8px 20px;cursor:pointer;position:relative}
+  .sb-logo{width:30px;height:30px;border-radius:8px;background:var(--accent);color:#111;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+  .sb-brand b{font-size:15px}
+  .sb-brand .sub{display:block;font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+  .sw-arrow{font-size:10px;color:var(--muted);margin-left:4px}
+  .switch-menu{display:none;position:absolute;top:56px;left:8px;z-index:300;background:var(--surface2);border:1px solid var(--border);border-radius:10px;min-width:230px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.55)}
+  .switch-menu.open{display:block}
+  .switch-menu a{display:block;padding:11px 14px;font-size:13px}
+  .switch-menu a small{display:block;color:var(--muted);font-size:11px;margin-top:1px}
+  .switch-menu a:hover{background:var(--surface)}
+  .switch-menu a.cur{border-left:3px solid var(--accent)}
+  .hamb{display:none;margin-left:auto;background:var(--surface2);border:1px solid var(--border);color:var(--text);width:40px;height:40px;border-radius:9px;font-size:18px;cursor:pointer;align-items:center;justify-content:center}
+  .nav{display:flex;flex-direction:column;gap:2px}
+  .nav a{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:9px;color:var(--muted);font-size:13.5px;cursor:pointer}
+  .nav a .ic{width:18px;text-align:center;font-size:14px}
+  .nav a:hover{background:var(--surface2);color:var(--text)}
+  .nav a.active{background:var(--accent-dim);color:var(--accent);font-weight:600}
+  .sb-foot{margin-top:auto}
+  .agent{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:12px}
+  .agent .row{display:flex;align-items:center;gap:8px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(48,209,88,.55)}70%{box-shadow:0 0 0 7px rgba(48,209,88,0)}100%{box-shadow:0 0 0 0 rgba(48,209,88,0)}}
+  .agent b{font-size:12.5px}
+  .agent small{display:block;color:var(--muted);font-size:11px;margin-top:3px;padding-left:16px}
+  .sb-links{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:0 4px}
+  .sb-links a{color:var(--muted);font-size:12px}
+  .sb-links a:hover{color:var(--text)}
+  /* main */
+  .main{flex:1;padding:26px 30px;min-width:0}
+  .head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+  .greet h1{font-size:26px;font-weight:700;letter-spacing:-.5px}
+  .greet .meta{color:var(--muted);font-size:12.5px;margin-top:5px}
+  .actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .badge{background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-size:12px;padding:7px 12px;border-radius:20px}
+  .btn{border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;padding:8px 14px;border-radius:9px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .btn:hover{border-color:var(--muted)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#111;font-weight:700}
+  /* cards */
+  .grid{display:grid;gap:13px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+  .pcard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:transform .12s,border-color .12s;display:flex;flex-direction:column;gap:9px}
+  .pcard:hover{transform:translateY(-2px);border-color:var(--accent)}
+  .pc-top{display:flex;align-items:center;justify-content:space-between}
+  .num{width:26px;height:26px;border-radius:7px;background:var(--accent-dim);color:var(--accent);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+  .score{font-weight:800;color:var(--green);font-size:14px}
+  .cat{font-size:10px;text-transform:uppercase;letter-spacing:1px;padding:3px 8px;border-radius:5px;background:var(--surface2);color:var(--muted)}
+  .pc-title{font-size:15px;font-weight:600;line-height:1.35}
+  .pc-snip{font-size:12.5px;color:var(--muted)}
+  .pc-open{font-size:12px;color:var(--accent);margin-top:auto}
+  /* modal */
+  #modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:8000;display:none;align-items:center;justify-content:center;padding:18px}
+  #modal.show{display:flex}
+  .mbox{background:var(--surface);border:1px solid var(--border);border-radius:14px;max-width:620px;width:100%;max-height:88vh;overflow-y:auto;padding:22px}
+  .mh{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px}
+  .mh h2{font-size:18px;line-height:1.3}
+  .mclose{background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:8px;width:30px;height:30px;flex:none;cursor:pointer;font-size:15px}
+  .mwhy{color:var(--muted);font-size:12.5px;font-style:italic;margin-bottom:14px}
+  .block{background:var(--surface2);border-radius:10px;padding:13px 15px;margin-bottom:11px}
+  .lbl{display:flex;justify-content:space-between;align-items:center;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:700;margin-bottom:8px}
+  .copybtn{background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;text-transform:none;letter-spacing:0}
+  .copybtn:hover{color:var(--text);border-color:var(--accent)}
+  .hookline{font-size:15px;font-weight:600}
+  .postbody{white-space:pre-wrap;font-size:13.5px;color:#e6e6ea;line-height:1.65}
+  .slide{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--border)}
+  .slide:last-child{border-bottom:none}
+  .slide .sn{flex:none;width:24px;height:24px;border-radius:6px;background:var(--accent-dim);color:var(--accent);font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center}
+  .slide p{font-size:13.5px;color:#e6e6ea}
+  .caption{font-size:13px;color:#d6d6da;white-space:pre-wrap}
+  .watchlink{display:inline-flex;gap:7px;margin-top:2px;font-size:13px;color:var(--accent);background:var(--accent-dim);border:1px solid var(--border);padding:9px 13px;border-radius:9px}
+  /* hook bank */
+  .vhead{margin-bottom:20px}
+  .vhead h1{font-size:24px}
+  .vhead p{color:var(--muted);font-size:13px;margin-top:5px}
+  .bank-item{display:flex;gap:10px;align-items:baseline;font-size:13px;padding:10px 0;border-bottom:1px solid var(--border);color:#d6d6da}
+  .bank-item .r{color:var(--accent);font-weight:700;font-size:12px;flex:none;min-width:56px}
+  .bank-item a{color:var(--muted)}
+  .bank-item a:hover{color:var(--accent)}
+  .empty{color:var(--muted);font-size:13px;background:var(--surface);border:1px dashed var(--border);border-radius:12px;padding:18px;text-align:center}
+  .credit{margin-top:34px;color:var(--muted);font-size:11.5px;border-top:1px solid var(--border);padding-top:16px}
+  .credit b{color:var(--text)}
+  #toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:11px 18px;border-radius:10px;font-size:13px;z-index:9000;opacity:0;transition:.25s;pointer-events:none}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  /* mobile */
+  @media(max-width:820px){
+    .app{flex-direction:column}
+    .sidebar{width:100%;height:auto;position:sticky;top:0;z-index:50;flex-direction:column;gap:0;padding:12px 14px;border-right:none;border-bottom:1px solid var(--border)}
+    .sb-brand{padding:0;width:100%;margin:0}
+    .hamb{display:flex}
+    .nav{display:none;flex-direction:column;gap:3px;margin-top:12px}
+    .sidebar.open .nav{display:flex}
+    .nav a{padding:12px 12px;font-size:14px}
+    .sb-foot{display:none;margin-top:12px}
+    .sidebar.open .sb-foot{display:block}
+    .agent{display:none}
+    .sb-links{justify-content:flex-start;gap:22px;padding-top:12px;border-top:1px solid var(--border)}
+    .main{padding:18px 15px}
+    .greet h1{font-size:22px}
+    .actions{width:100%;gap:8px}
+    .btn.primary{flex-basis:100%;order:-1;justify-content:center;padding:12px}
+    .btn{flex:1;justify-content:center}
+    .badge{flex:1;text-align:center}
+    .grid{grid-template-columns:1fr}
+    .mbox{padding:18px}
+    .switch-menu{top:60px;left:0}
+  }
+</style>
+</head>
+<body>
+<div id="authgate">
+  <div class="gatebox">
+    <div class="gatelogo">🔒</div>
+    <h2>Anas Copy Lab</h2>
+    <p>Enter password to continue</p>
+    <input id="pwin" type="password" placeholder="Password" autocomplete="off">
+    <button id="pwbtn">Unlock</button>
+    <div id="pwerr"></div>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='acm_unlocked', gate=document.getElementById('authgate');
+  function unlock(){ sessionStorage.setItem(KEY,'1'); gate.style.display='none'; }
+  function norm(s){ return (s||'').toLowerCase().replace(/[^a-z0-9]/g,''); }
+  if(sessionStorage.getItem(KEY)==='1' || norm(location.hash+location.search).indexOf('automation')>-1){ unlock(); return; }
+  function go(){
+    if(norm(document.getElementById('pwin').value)==='automation'){ unlock(); }
+    else { document.getElementById('pwerr').textContent='❌ Wrong password, try again'; }
+  }
+  document.getElementById('pwbtn').onclick=go;
+  document.getElementById('pwin').addEventListener('keydown',function(e){ if(e.key==='Enter') go(); });
+  document.getElementById('pwin').focus();
+})();
+</script>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sb-brand" id="brandbtn">
+      <div class="sb-logo">C</div>
+      <div><b>Anas Copy Lab <span class="sw-arrow">▾</span></b><span class="sub">Copywriting Intelligence</span></div>
+      <button class="hamb" id="hamb" aria-label="Menu">☰</button>
+      <div class="switch-menu" id="switchmenu">
+        <a href="index.html">🏋️ Anas Content HQ<small>Fitness shorts radar</small></a>
+        <a href="copylab.html" class="cur">✍️ Anas Copy Lab<small>Copywriting &amp; AI radar</small></a>
+      </div>
+    </div>
+    <nav class="nav" id="nav">
+      <a data-view="instagram" class="active"><span class="ic">📸</span><span class="lbl">Instagram Content</span></a>
+      <a data-view="linkedin"><span class="ic">💼</span><span class="lbl">LinkedIn Content</span></a>
+      <a data-view="hookbank"><span class="ic">🏦</span><span class="lbl">Hook Bank</span></a>
+    </nav>
+    <div class="sb-foot">
+      <div class="agent">
+        <div class="row"><span class="dot"></span><b>Agent Live</b></div>
+        <small>9 AM PKT · Daily auto-run</small>
+      </div>
+      <div class="sb-links">
+        <a id="signout">Sign out</a>
+      </div>
+    </div>
+  </aside>
+  <main class="main" id="view"></main>
+</div>
+
+<div id="modal"><div class="mbox" id="mbox"></div></div>
+<div id="toast"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+async function j(p){try{const r=await fetch(p+'?t='+Date.now());return r.ok?await r.json():null}catch(e){return null}}
+function el(h){const d=document.createElement('div');d.innerHTML=h.trim();return d.firstChild}
+function esc(s){return(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400);}
+function copyText(txt){ navigator.clipboard.writeText(txt).then(()=>toast('Copied to clipboard ✓')).catch(()=>toast('Could not copy')); }
+function greeting(){const h=new Date().getHours();return h<12?'Good morning':h<18?'Good afternoon':'Good evening';}
+function todayStr(){return new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});}
+
+let DATA={pack:null,outliers:[],bank:[]};
+let CLIP={}; // texts for copy buttons
+
+function findSrc(t){
+  const norm=s=>(s||'').toLowerCase().replace(/\[.*?\]/g,'').replace(/#\w+/g,'').replace(/[^a-z0-9 ]/g,'').replace(/\s+/g,' ').trim();
+  const nt=norm(t); if(!nt) return null;
+  const on=DATA.outliers.map(o=>({n:norm(o.title),o}));
+  for(const e of on){ if(e.n===nt) return e.o; }
+  for(const e of on){ if((e.n.includes(nt)||nt.includes(e.n)) && Math.min(e.n.length,nt.length)>15) return e.o; }
+  return null;
+}
+
+function header(sub, count, unit){
+  const p=DATA.pack;
+  return `<div class="head">
+    <div class="greet"><h1>${greeting()}, Anas</h1>
+      <div class="meta">${sub}${p&&p.generated_at?' · Generated '+esc(p.generated_at):''} · ${todayStr()}</div></div>
+    <div class="actions">
+      <span class="badge">${count} ${unit} ready</span>
+      <button class="btn primary" id="refresh">✨ Refresh Data</button>
+    </div>
+  </div>`;
+}
+function wireHeader(render){
+  const r=$('refresh'); if(r) r.onclick=async()=>{toast('Pulling latest data…');await loadData();render();toast('Refreshed ✓');};
+}
+
+function ideaCard(it,i,snipKey){
+  const snip=snipKey==='ig'?(it.instagram_slides&&it.instagram_slides[0])||it.hook:(it.hook||'');
+  return `<div class="pcard" data-idx="${i}">
+    <div class="pc-top"><div class="num">${i+1}</div><span class="score">${it.score??''}</span></div>
+    <span class="cat">${esc(it.category||'')}</span>
+    <div class="pc-title">${esc(it.topic)}</div>
+    <div class="pc-snip">${esc((snip||'').slice(0,90))}</div>
+    <div class="pc-open">Open →</div>
+  </div>`;
+}
+
+function renderInstagram(){
+  const ideas=(DATA.pack&&DATA.pack.ideas)||[];
+  $('view').innerHTML = header('Instagram carousels — daily brief', ideas.length, 'carousels')
+    + `<div class="grid" id="grid">${ideas.length?ideas.map((it,i)=>ideaCard(it,i,'ig')).join(''):'<div class="empty">No pack yet — the 9 AM run fills this.</div>'}</div>`
+    + `<div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
+  wireHeader(renderInstagram);
+  $('grid')&&$('grid').querySelectorAll('.pcard').forEach(c=>c.onclick=()=>openIG(ideas[+c.dataset.idx]));
+}
+
+function openIG(it){
+  const slides=(it.instagram_slides||[]).map((s,i)=>`<div class="slide"><div class="sn">${i+1}</div><p>${esc(s)}</p></div>`).join('');
+  const allSlides=(it.instagram_slides||[]).map((s,i)=>`Slide ${i+1}: ${s}`).join('\n');
+  CLIP.slides=allSlides; CLIP.caption=it.instagram_caption||'';
+  const src=findSrc(it.inspired_by_title);
+  const watch=src?`<a class="watchlink" href="${src.url}" target="_blank">▶ Based on: ${(src.views||0).toLocaleString()} views (${src.ratio}×) — watch it</a>`:'';
+  $('mbox').innerHTML=`
+    <div class="mh"><h2>📸 ${esc(it.topic)}</h2><button class="mclose" id="mclose">✕</button></div>
+    <div class="mwhy">${esc(it.why)}</div>
+    <div class="block"><div class="lbl"><span>🎣 Hook</span></div><div class="hookline">${esc(it.hook)}</div></div>
+    <div class="block"><div class="lbl"><span>🖼️ Carousel — slide by slide</span><button class="copybtn" onclick="copyText(CLIP.slides)">Copy all</button></div>${slides}</div>
+    <div class="block"><div class="lbl"><span>📝 Caption</span><button class="copybtn" onclick="copyText(CLIP.caption)">Copy</button></div><div class="caption">${esc(it.instagram_caption)}</div></div>
+    ${watch}`;
+  $('modal').classList.add('show');
+  $('mclose').onclick=()=>$('modal').classList.remove('show');
+}
+
+function renderLinkedIn(){
+  const ideas=(DATA.pack&&DATA.pack.ideas)||[];
+  $('view').innerHTML = header('LinkedIn posts — daily brief', ideas.length, 'posts')
+    + `<div class="grid" id="grid">${ideas.length?ideas.map((it,i)=>ideaCard(it,i,'li')).join(''):'<div class="empty">No pack yet — the 9 AM run fills this.</div>'}</div>`
+    + `<div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
+  wireHeader(renderLinkedIn);
+  $('grid')&&$('grid').querySelectorAll('.pcard').forEach(c=>c.onclick=()=>openLI(ideas[+c.dataset.idx]));
+}
+
+function openLI(it){
+  CLIP.post=it.linkedin_post||''; CLIP.xhook=it.x_hook||'';
+  const src=findSrc(it.inspired_by_title);
+  const watch=src?`<a class="watchlink" href="${src.url}" target="_blank">▶ Based on: ${(src.views||0).toLocaleString()} views (${src.ratio}×) — watch it</a>`:'';
+  $('mbox').innerHTML=`
+    <div class="mh"><h2>💼 ${esc(it.topic)}</h2><button class="mclose" id="mclose">✕</button></div>
+    <div class="mwhy">${esc(it.why)}</div>
+    <div class="block"><div class="lbl"><span>📄 LinkedIn post — ready to paste</span><button class="copybtn" onclick="copyText(CLIP.post)">Copy post</button></div>
+      <div class="postbody">${esc(it.linkedin_post)}</div></div>
+    ${it.x_hook?`<div class="block"><div class="lbl"><span>🐦 X version</span><button class="copybtn" onclick="copyText(CLIP.xhook)">Copy</button></div><div class="caption">${esc(it.x_hook)}</div></div>`:''}
+    ${watch}`;
+  $('modal').classList.add('show');
+  $('mclose').onclick=()=>$('modal').classList.remove('show');
+}
+
+function renderHookBank(){
+  const b=DATA.bank.slice().reverse();
+  $('view').innerHTML=`<div class="vhead"><h1>🏦 Copy Hook Bank</h1><p>Every winning copywriting hook collected — your swipe file (${b.length}).</p></div>
+    <div>${b.length?b.map(x=>`<div class="bank-item"><span class="r">${x.ratio}×</span><span style="flex:1">${esc(x.title)}</span><a href="${x.url}" target="_blank">watch ↗</a></div>`).join(''):'<div class="empty">Fills as the pipeline runs daily.</div>'}</div>
+    <div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
+}
+
+$('modal').onclick=e=>{if(e.target.id==='modal')$('modal').classList.remove('show');};
+
+function route(v){
+  document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('active',a.dataset.view===v));
+  if(v==='instagram')renderInstagram();
+  else if(v==='linkedin')renderLinkedIn();
+  else renderHookBank();
+}
+
+async function loadData(){
+  DATA.pack=await j('copy_pack.json');
+  DATA.outliers=await j('copy_outliers.json')||[];
+  DATA.bank=await j('copy_hook_bank.json')||[];
+}
+
+const _sb=document.querySelector('.sidebar');
+const _hamb=$('hamb'); if(_hamb) _hamb.onclick=e=>{e.stopPropagation();_sb.classList.toggle('open');};
+document.querySelectorAll('.nav a').forEach(a=>a.onclick=()=>{route(a.dataset.view);_sb.classList.remove('open');});
+$('signout').onclick=()=>{sessionStorage.removeItem('acm_unlocked');location.reload();};
+const _bb=$('brandbtn'), _sm=$('switchmenu');
+_bb.addEventListener('click',e=>{ if(e.target.id==='hamb')return; _sm.classList.toggle('open'); });
+document.addEventListener('click',e=>{ if(!_bb.contains(e.target)) _sm.classList.remove('open'); });
+
+(async()=>{ await loadData(); route('instagram'); })();
+</script>
+</body>
+</html>
