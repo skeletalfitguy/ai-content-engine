@@ -21,26 +21,54 @@ youtube = build("youtube", "v3", developerKey=YOUTUBE_API_KEY)
 
 # ---------------------------------------------------------------------------
 # ANAS COPY LAB — copywriting / AI+copy / emails / funnels / coaching niche.
-# ~18% of daily YouTube quota (17 searches x 100 = 1,700 + ~30 overhead).
+# ~40% of daily YouTube quota (39 searches x 100 = 3,900 + ~65 overhead ≈ 3,965).
 # ---------------------------------------------------------------------------
 NICHE_QUERIES = [
+    # core copywriting
     "copywriting tips",
     "how to write a sales page",
-    "email copywriting",
-    "sales funnel explained",
-    "ai copywriting chatgpt",
-    "will ai replace copywriters",
-    "how to get copywriting clients",
-    "high converting landing page",
-    "viral hooks copywriting",
-    "email marketing for coaches",
     "direct response copywriting",
     "headline formulas copywriting",
-    "how i became a copywriter",
+    "viral hooks copywriting",
+    "how to write viral hooks",
+    "copywriting for beginners",
+    "sales page breakdown",
+    "landing page mistakes",
+    "high converting landing page",
+    "persuasion psychology in marketing",
+    "marketing psychology hooks",
+    # emails
+    "email copywriting",
+    "email marketing strategy",
+    "email marketing for coaches",
+    "email sequence that converts",
+    "email newsletter growth",
     "cold email that gets clients",
-    "storytelling marketing",
+    # funnels & offers
+    "sales funnel explained",
     "offer that sells marketing",
+    "alex hormozi offer",
+    "vsl video sales letter script",
+    "facebook ads copywriting",
+    # AI x copywriting
+    "ai copywriting chatgpt",
+    "will ai replace copywriters",
+    "claude ai for copywriting",
+    "chatgpt prompts for marketing",
+    "best ai marketing tools 2026",
+    # storytelling & content
+    "storytelling marketing",
+    "brand storytelling examples",
+    "content marketing for coaches",
+    # client acquisition & branding
+    "how to get copywriting clients",
+    "how to get clients on linkedin",
+    "freelance copywriting",
+    "how to build a copywriting portfolio",
+    "how i became a copywriter",
     "linkedin personal branding copywriter",
+    "personal branding on instagram",
+    "instagram growth for coaches",
 ]
 
 # Title must clearly be about copy / marketing / AI-for-business

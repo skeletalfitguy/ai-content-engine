@@ -92,7 +92,7 @@ def call_gemini(prompt, retries=3):
         "systemInstruction": {"parts": [{"text": SYSTEM}]},
         "contents": [{"parts": [{"text": prompt}]}],
         "generationConfig": {"temperature": 0.85, "responseMimeType": "application/json",
-                             "maxOutputTokens": 8192},
+                             "maxOutputTokens": 24576},
     }
     for model in MODELS:  # try each model; fall back if one is overloaded
         url = f"{BASE}/models/{model}:generateContent?key={GEMINI_API_KEY}"
