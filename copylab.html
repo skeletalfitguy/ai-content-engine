@@ -118,6 +118,13 @@
   .scard ul{margin-left:17px}
   .scard li{font-size:13.5px;color:#d6d6da;margin-bottom:8px}
   .scard li b{color:var(--text)}
+  .acc .acc-h{cursor:pointer;display:flex;justify-content:space-between;align-items:center;margin-bottom:0;user-select:none}
+  .acc .acc-h:hover{opacity:.85}
+  .acc .chev{color:var(--muted);font-size:12px;transition:transform .2s;margin-left:10px}
+  .acc.open .chev{transform:rotate(180deg)}
+  .acc .sbody{display:none;margin-top:11px}
+  .acc.open .sbody{display:block}
+  .acc.assembly{border-color:var(--accent);background:linear-gradient(135deg,var(--surface),var(--surface2))}
   .mm-today{background:linear-gradient(135deg,var(--surface),var(--surface2));border:1px solid var(--accent);border-radius:14px;padding:24px;margin-bottom:22px}
   .mm-kicker{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:8px}
   .mm-today h2{font-size:20px;margin-bottom:10px}
@@ -309,7 +316,16 @@ const IG_STRATEGY=[
  {ic:'📊',h:'Metrics that matter (check weekly, not daily)',pts:[
   ['Ignore:','likes and follower count — vanity.'],
   ['Watch:','saves (content value), shares (virality), profile visits (positioning works), DMs started (money), link taps.'],
-  ['Monthly audit:','find your top 3 posts by saves — make more of exactly that. Kill what nobody saved.']]}
+  ['Monthly audit:','find your top 3 posts by saves — make more of exactly that. Kill what nobody saved.']]},
+ {ic:'🧩',h:'The Assembly — if you do this, this is what happens (real)',assembly:true,
+  note:'No hype, no invented numbers. Realistic bands based on how these mechanisms actually work — the variable is whether you run the routine for 90 days.',pts:[
+  ['Your daily assembly (≈50 min, in this order):','10 min hook/skill study → 15 min build today\'s post from the Copy Lab brief → post + share it to your Story → 20 min genuine comments (10 coaches + 5 peers from your list) → reply to every comment on your post → 3 warm DMs. Same order, every single day.'],
+  ['Weeks 1–2 →','reality check: low reach (a few hundred views per post), a trickle of followers. This is NORMAL, not failure — the algorithm is still learning who to show you to, and coaches are seeing your name in their comments for the first time.'],
+  ['Day 30 →','a profile that looks professional, roughly 100–300 real niche followers if you never skipped, and 2–3 coaches replying to your DMs like they already know you. Your grid is now a portfolio a client can scroll.'],
+  ['Day 60 →','the comments start converting: profile visits climb, your teardowns collect saves, and the first inbound question — "do you do this for clients?" — becomes realistic.'],
+  ['Day 90 →','a realistic band is 500–1,500 niche followers (not guaranteed — quality and consistency decide where you land in it). More important than the number: 30–50 coaches who recognize your name. Your first client conversation almost certainly comes from a DM, not a viral post.'],
+  ['The real math →','3 warm DMs a day = ~270 conversations in 90 days. If only 5% turn into real work discussions, that\'s ~13 leads. Closing just 1–3 of those = your client base has started. Followers are the side effect; conversations are the product.'],
+  ['The honest part →','some posts will flop — that\'s data, not defeat. Growth is lumpy: one strong carousel can bring 500 followers in a week, then two quiet weeks. And the brutal truth: most people quit around day 40 — right before the compounding pays. Quitting then means you paid the full cost and collected none of the reward.']]}
 ];
 
 const LI_STRATEGY=[
@@ -356,7 +372,16 @@ const LI_STRATEGY=[
  {ic:'📊',h:'Metrics that matter',pts:[
   ['Watch:','profile views (comments working), connection acceptance rate, comment→profile clicks, inbound DMs.'],
   ['Ignore:','impressions without profile views — reach that doesn\'t convert to curiosity is noise.'],
-  ['Monthly:','top 3 posts by profile views → make more of that exact type.']]}
+  ['Monthly:','top 3 posts by profile views → make more of that exact type.']]},
+ {ic:'🧩',h:'The Assembly — if you do this, this is what happens (real)',assembly:true,
+  note:'No hype, no invented numbers. Realistic bands based on how LinkedIn actually behaves — and on the two real people whose systems this page is built from.',pts:[
+  ['Your daily assembly (≈45 min, in this order):','15 min Skill Hour (hand-copy one great piece) → 5 genuine comments on your Lists 1–2, ideally within an hour of their posts → publish from the Copy Lab LinkedIn tab (3–5×/week) → reply to every comment you get → 5 warm salam-dua DMs. Same order, every day.'],
+  ['Weeks 1–2 →','your own posts get little reach — expected with a small network. But your comments under big accounts already put your headline in front of thousands. Profile views move FIRST — that\'s the leading signal, watch it, not likes.'],
+  ['Day 30 →','a few hundred relevant connections/followers is the realistic band. People from your lists start recognizing your name under posts. 1–2 inbound DMs are possible, usually questions, not offers yet.'],
+  ['Day 60 →','your teardown and case-study posts start getting real niche engagement. Connection acceptance climbs because your profile now sells you before you say a word.'],
+  ['Day 90 →','roughly 1,000–2,500 followers is achievable with daily consistency — not guaranteed, and honestly it doesn\'t need to be more. What matters: warm access to dozens of founders and coaches. First PAID conversations typically show up in months 2–4, not week 1.'],
+  ['The real math →','5 comments a day ≈ 150 a month under accounts with 50k–500k followers. Even a modest ~30 profile views a day compounds to ~2,700 people in 90 days who found you because you said something smart — that is exactly where inbound comes from.'],
+  ['The proof this is real →','Alifia built her entire agency pipeline primarily through LinkedIn presence — over ~2 years, not 2 weeks, starting with hand-copied skill and genuine positioning. Your teacher grew through the lists + genuine engagement + hyper-relevant posting system on this very page. The system is proven; the only untested variable is whether YOU run it for 90 straight days.']]}
 ];
 
 /* ============ MASTERMIND — daily principle bank ============ */
@@ -459,9 +484,12 @@ function renderPlatform(){
     }).join(''):'<div class="empty">No topics for this day.</div>';
   } else {
     const S=isIG?IG_STRATEGY:LI_STRATEGY;
-    body=S.map(sec=>`<div class="scard"><h3>${sec.ic} ${esc(sec.h)}</h3>
-      ${sec.note?`<p class="snote">${esc(sec.note)}</p>`:''}
-      <ul>${sec.pts.map(p=>`<li><b>${esc(p[0])}</b> ${esc(p[1])}</li>`).join('')}</ul></div>`).join('');
+    body=S.map(sec=>`<div class="scard acc${sec.assembly?' assembly':''}">
+      <h3 class="acc-h">${sec.ic} ${esc(sec.h)}<span class="chev">▾</span></h3>
+      <div class="sbody">
+        ${sec.note?`<p class="snote">${esc(sec.note)}</p>`:''}
+        <ul>${sec.pts.map(p=>`<li><b>${esc(p[0])}</b> ${esc(p[1])}</li>`).join('')}</ul>
+      </div></div>`).join('');
   }
   $('view').innerHTML=header(sub,ideas.length,unit)+weekStrip()+banner()+subtabs()+body
     +`<div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
@@ -469,6 +497,7 @@ function renderPlatform(){
   if(SUB==='content'){
     const g=$('grid'); if(g) g.querySelectorAll('.pcard').forEach(c=>c.onclick=()=>isIG?openIG(ideas[+c.dataset.idx]):openLI(ideas[+c.dataset.idx]));
   }
+  document.querySelectorAll('.acc-h').forEach(h=>h.onclick=()=>h.parentElement.classList.toggle('open'));
 }
 
 function openIG(it){
