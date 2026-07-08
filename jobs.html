@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anas Jobs Radar</title>
+<style>
+  :root{
+    --bg:#0B0B0C; --surface:#1A1A1E; --surface2:#232329; --border:#2C2C2E;
+    --muted:#8E8E93; --text:#FFFFFF; --accent:#2DD4BF; --accent-dim:rgba(45,212,191,.14);
+    --green:#30D158; --gold:#E6B84C; --red:#E5484D;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.5;font-size:14px}
+  a{color:inherit;text-decoration:none}
+  #authgate{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
+  .gatebox{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:34px 28px;text-align:center;max-width:340px;width:100%}
+  .gatelogo{font-size:30px;margin-bottom:10px}
+  .gatebox h2{font-size:18px;margin-bottom:4px}
+  .gatebox p{color:var(--muted);font-size:13px;margin-bottom:18px}
+  .gatebox input{width:100%;padding:11px 14px;border-radius:9px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:14px;margin-bottom:12px;outline:none}
+  .gatebox input:focus{border-color:var(--accent)}
+  .gatebox button{width:100%;padding:11px;border-radius:9px;border:none;background:var(--accent);color:#0a0a0a;font-weight:700;font-size:14px;cursor:pointer}
+  #pwerr{color:var(--red);font-size:12.5px;margin-top:10px;min-height:16px}
+  .app{display:flex;min-height:100vh}
+  .sidebar{width:244px;flex:none;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;padding:20px 14px}
+  .sb-brand{display:flex;align-items:center;gap:10px;padding:4px 8px 20px;cursor:pointer;position:relative}
+  .sb-logo{width:30px;height:30px;border-radius:8px;background:var(--accent);color:#0a0a0a;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+  .sb-brand b{font-size:15px}
+  .sb-brand .sub{display:block;font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+  .sw-arrow{font-size:10px;color:var(--muted);margin-left:4px}
+  .switch-menu{display:none;position:absolute;top:56px;left:8px;z-index:300;background:var(--surface2);border:1px solid var(--border);border-radius:10px;min-width:230px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.55)}
+  .switch-menu.open{display:block}
+  .switch-menu a{display:block;padding:11px 14px;font-size:13px}
+  .switch-menu a small{display:block;color:var(--muted);font-size:11px;margin-top:1px}
+  .switch-menu a:hover{background:var(--surface)}
+  .switch-menu a.cur{border-left:3px solid var(--accent)}
+  .hamb{display:none;margin-left:auto;background:var(--surface2);border:1px solid var(--border);color:var(--text);width:40px;height:40px;border-radius:9px;font-size:18px;cursor:pointer;align-items:center;justify-content:center}
+  .nav{display:flex;flex-direction:column;gap:2px}
+  .nav a{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:9px;color:var(--muted);font-size:13.5px;cursor:pointer}
+  .nav a .ic{width:18px;text-align:center;font-size:14px}
+  .nav a:hover{background:var(--surface2);color:var(--text)}
+  .nav a.active{background:var(--accent-dim);color:var(--accent);font-weight:600}
+  .sb-foot{margin-top:auto}
+  .agent{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:12px}
+  .agent .row{display:flex;align-items:center;gap:8px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(48,209,88,.55)}70%{box-shadow:0 0 0 7px rgba(48,209,88,0)}100%{box-shadow:0 0 0 0 rgba(48,209,88,0)}}
+  .agent b{font-size:12.5px}
+  .agent small{display:block;color:var(--muted);font-size:11px;margin-top:3px;padding-left:16px}
+  .sb-links{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:0 4px}
+  .sb-links a{color:var(--muted);font-size:12px}
+  .sb-links a:hover{color:var(--text)}
+  .main{flex:1;padding:26px 30px;min-width:0}
+  .head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+  .greet h1{font-size:26px;font-weight:700;letter-spacing:-.5px}
+  .greet .meta{color:var(--muted);font-size:12.5px;margin-top:5px}
+  .actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .badge{background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-size:12px;padding:7px 12px;border-radius:20px}
+  .btn{border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;padding:8px 14px;border-radius:9px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .btn:hover{border-color:var(--muted)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#0a0a0a;font-weight:700}
+  .week{display:flex;gap:7px;margin-bottom:16px;overflow-x:auto;padding-bottom:2px}
+  .day{flex:1;min-width:52px;text-align:center;padding:9px 4px;border-radius:9px;background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:12.5px;cursor:pointer}
+  .day small{display:block;font-size:15px;font-weight:700;color:var(--text);margin-top:2px}
+  .day.active{background:var(--accent);border-color:var(--accent);color:#0a0a0a}
+  .day.active small{color:#0a0a0a}
+  .histbanner{display:flex;align-items:center;background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:16px}
+  .grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+  .jcard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:15px;cursor:pointer;transition:transform .12s,border-color .12s;display:flex;flex-direction:column;gap:8px}
+  .jcard:hover{transform:translateY(-2px);border-color:var(--accent)}
+  .jc-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .score{font-weight:800;font-size:20px;min-width:40px;text-align:center}
+  .score.hi{color:var(--green)} .score.mid{color:var(--gold)} .score.lo{color:var(--muted)}
+  .mtag{font-size:10px;text-transform:uppercase;letter-spacing:1px;padding:3px 8px;border-radius:5px}
+  .mtag.strong{background:rgba(48,209,88,.14);color:var(--green)}
+  .mtag.stretch{background:rgba(230,184,76,.14);color:var(--gold)}
+  .jc-title{font-size:15px;font-weight:600;line-height:1.35}
+  .jc-co{color:var(--muted);font-size:12.5px}
+  .rtag{font-size:11px;color:var(--accent);margin-top:auto}
+  #modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:8000;display:none;align-items:center;justify-content:center;padding:18px}
+  #modal.show{display:flex}
+  .mbox{background:var(--surface);border:1px solid var(--border);border-radius:14px;max-width:620px;width:100%;max-height:88vh;overflow-y:auto;padding:22px}
+  .mh{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:4px}
+  .mh h2{font-size:18px;line-height:1.3}
+  .mclose{background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:8px;width:30px;height:30px;flex:none;cursor:pointer;font-size:15px}
+  .mmeta{color:var(--muted);font-size:12.5px;margin-bottom:12px}
+  .mrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .chip{font-size:11.5px;padding:5px 10px;border-radius:7px;background:var(--surface2);border:1px solid var(--border)}
+  .chip b{color:var(--accent)}
+  .block{background:var(--surface2);border-radius:10px;padding:13px 15px;margin-bottom:11px}
+  .lbl{display:flex;justify-content:space-between;align-items:center;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:700;margin-bottom:8px}
+  .copybtn{background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;text-transform:none;letter-spacing:0}
+  .copybtn:hover{color:var(--text);border-color:var(--accent)}
+  .btext{font-size:13.5px;color:#e6e6ea;line-height:1.6}
+  .flags{color:var(--gold);font-size:12.5px}
+  .applybtn{display:inline-flex;align-items:center;gap:8px;margin-top:4px;font-size:14px;font-weight:700;color:#0a0a0a;background:var(--accent);padding:11px 18px;border-radius:9px}
+  /* profile page */
+  .vhead{margin-bottom:20px}
+  .vhead h1{font-size:24px}
+  .vhead p{color:var(--muted);font-size:13px;margin-top:5px}
+  .two{display:grid;gap:13px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-bottom:22px}
+  .rcard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px}
+  .rcard h3{font-size:15px;margin-bottom:4px}
+  .rcard p{color:var(--muted);font-size:12.5px;margin-bottom:14px}
+  .dl{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#0a0a0a;background:var(--accent);padding:9px 14px;border-radius:9px}
+  .sect{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px}
+  .sect h3{font-size:14px;margin-bottom:12px;color:var(--accent);text-transform:uppercase;letter-spacing:1px}
+  .info{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border)}
+  .info:last-child{border-bottom:none}
+  .info .k{color:var(--muted);font-size:12px;min-width:90px}
+  .info .v{flex:1;font-size:13.5px;word-break:break-word}
+  .info a.v{color:var(--accent)}
+  .plink{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:13.5px}
+  .plink:last-child{border-bottom:none}
+  .plink a{color:var(--accent)}
+  .credit{margin-top:34px;color:var(--muted);font-size:11.5px;border-top:1px solid var(--border);padding-top:16px}
+  .credit b{color:var(--text)}
+  .empty{color:var(--muted);font-size:13px;background:var(--surface);border:1px dashed var(--border);border-radius:12px;padding:18px;text-align:center}
+  #toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:11px 18px;border-radius:10px;font-size:13px;z-index:9000;opacity:0;transition:.25s;pointer-events:none}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  @media(max-width:820px){
+    .app{flex-direction:column}
+    .sidebar{width:100%;height:auto;position:sticky;top:0;z-index:50;flex-direction:column;gap:0;padding:12px 14px;border-right:none;border-bottom:1px solid var(--border)}
+    .sb-brand{padding:0;width:100%;margin:0}
+    .hamb{display:flex}
+    .nav{display:none;flex-direction:column;gap:3px;margin-top:12px}
+    .sidebar.open .nav{display:flex}
+    .nav a{padding:12px 12px;font-size:14px}
+    .sb-foot{display:none;margin-top:12px}
+    .sidebar.open .sb-foot{display:block}
+    .agent{display:none}
+    .sb-links{justify-content:flex-start;gap:22px;padding-top:12px;border-top:1px solid var(--border)}
+    .main{padding:18px 15px}
+    .greet h1{font-size:22px}
+    .actions{width:100%;gap:8px}
+    .btn.primary{flex:1;justify-content:center;padding:11px}
+    .badge{flex:1;text-align:center}
+    .grid{grid-template-columns:1fr}
+    .mbox{padding:18px}
+    .switch-menu{top:60px;left:0}
+    .day{min-width:44px;padding:8px 3px}
+  }
+</style>
+</head>
+<body>
+<div id="authgate">
+  <div class="gatebox">
+    <div class="gatelogo">🔒</div>
+    <h2>Anas Jobs Radar</h2>
+    <p>Enter password to continue</p>
+    <input id="pwin" type="password" placeholder="Password" autocomplete="off">
+    <button id="pwbtn">Unlock</button>
+    <div id="pwerr"></div>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='acm_unlocked', gate=document.getElementById('authgate');
+  function unlock(){ sessionStorage.setItem(KEY,'1'); gate.style.display='none'; }
+  function norm(s){ return (s||'').toLowerCase().replace(/[^a-z0-9]/g,''); }
+  if(sessionStorage.getItem(KEY)==='1' || norm(location.hash+location.search).indexOf('automation')>-1){ unlock(); return; }
+  function go(){ if(norm(document.getElementById('pwin').value)==='automation'){ unlock(); }
+    else { document.getElementById('pwerr').textContent='❌ Wrong password, try again'; } }
+  document.getElementById('pwbtn').onclick=go;
+  document.getElementById('pwin').addEventListener('keydown',function(e){ if(e.key==='Enter') go(); });
+  document.getElementById('pwin').focus();
+})();
+</script>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sb-brand" id="brandbtn">
+      <div class="sb-logo">J</div>
+      <div><b>Anas Jobs Radar <span class="sw-arrow">▾</span></b><span class="sub">Daily Job Hunter</span></div>
+      <button class="hamb" id="hamb" aria-label="Menu">☰</button>
+      <div class="switch-menu" id="switchmenu">
+        <a href="index.html">🏋️ Anas Content HQ<small>Fitness shorts radar</small></a>
+        <a href="copylab.html">✍️ Anas Copy Lab<small>Copywriting &amp; AI radar</small></a>
+        <a href="jobs.html" class="cur">💼 Anas Jobs Radar<small>Copywriting jobs</small></a>
+      </div>
+    </div>
+    <nav class="nav" id="nav">
+      <a data-view="jobs" class="active"><span class="ic">📋</span><span class="lbl">Jobs</span></a>
+      <a data-view="profile"><span class="ic">📄</span><span class="lbl">Resumes &amp; Profile</span></a>
+    </nav>
+    <div class="sb-foot">
+      <div class="agent">
+        <div class="row"><span class="dot"></span><b>Agent Live</b></div>
+        <small>9 AM PKT · Daily auto-run</small>
+      </div>
+      <div class="sb-links"><a id="signout">Sign out</a></div>
+    </div>
+  </aside>
+  <main class="main" id="view"></main>
+</div>
+
+<div id="modal"><div class="mbox" id="mbox"></div></div>
+<div id="toast"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+async function j(p){try{const r=await fetch(p+'?t='+Date.now());return r.ok?await r.json():null}catch(e){return null}}
+function esc(s){return(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400);}
+function copyText(t){navigator.clipboard.writeText(t).then(()=>toast('Copied ✓')).catch(()=>toast('Could not copy'));}
+function greeting(){const h=new Date().getHours();return h<12?'Good morning':h<18?'Good afternoon':'Good evening';}
+function todayStr(){return new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});}
+function fmtDate(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
+
+let DATA={pack:null}, VIEW='jobs', VIEW_DATE=null; const HIST={};
+function activePack(){ return VIEW_DATE?HIST[VIEW_DATE]:DATA.pack; }
+
+async function openDay(ds){
+  const today=fmtDate(new Date());
+  if(ds===today){ VIEW_DATE=null; render(); return; }
+  if(ds>today){ toast("The agent hasn't scanned this day yet — it unlocks after its 9 AM run."); return; }
+  if(HIST[ds]){ VIEW_DATE=ds; render(); return; }
+  const p=await j('history/jobs_'+ds+'.json');
+  if(p){ HIST[ds]=p; VIEW_DATE=ds; render(); }
+  else toast('No jobs were pulled on '+ds+' — the system was not running that day.');
+}
+function weekStrip(){
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const now=new Date(), jsDay=now.getDay(), idx=jsDay===0?6:jsDay-1;
+  const monday=new Date(now); monday.setDate(now.getDate()-idx);
+  const sel=VIEW_DATE||fmtDate(now);
+  return '<div class="week">'+days.map((dn,i)=>{ const dt=new Date(monday); dt.setDate(monday.getDate()+i);
+    const ds=fmtDate(dt); return `<div class="day${ds===sel?' active':''}" data-date="${ds}">${dn}<small>${dt.getDate()}</small></div>`;
+  }).join('')+'</div>';
+}
+function scoreClass(n){return n>=75?'hi':n>=45?'mid':'lo';}
+
+function jobCard(jb,i){
+  return `<div class="jcard" data-idx="${i}">
+    <div class="jc-top"><div class="score ${scoreClass(jb.fit_score)}">${jb.fit_score}</div>
+      <span class="mtag ${esc(jb.match)}">${esc(jb.match)}</span></div>
+    <div class="jc-title">${esc(jb.title)}</div>
+    <div class="jc-co">${esc(jb.company||'')}${jb.location?' · '+esc(jb.location):''}</div>
+    <div class="rtag">📄 ${esc(jb.resume)} · open →</div>
+  </div>`;
+}
+
+function renderJobs(){
+  const p=activePack(), jobs=(p&&p.jobs)||[];
+  const strong=jobs.filter(x=>x.match==='strong').length;
+  const actions=VIEW_DATE
+    ? `<span class="badge">📅 Archived day</span><button class="btn primary" id="backtoday">← Back to today</button>`
+    : `<span class="badge">${jobs.length} jobs · ${strong} strong</span><button class="btn primary" id="refresh">✨ Refresh</button>`;
+  const banner=VIEW_DATE?`<div class="histbanner">📅 Viewing jobs pulled on <b>&nbsp;${VIEW_DATE}</b></div>`:'';
+  $('view').innerHTML=`
+    <div class="head"><div class="greet"><h1>${greeting()}, Anas</h1>
+      <div class="meta">Fresh copywriting & creative jobs${p&&p.generated_at?' · '+esc(p.generated_at):''} · ${todayStr()}</div></div>
+      <div class="actions">${actions}</div></div>
+    ${weekStrip()}${banner}
+    <div class="grid" id="grid">${jobs.length?jobs.map(jobCard).join(''):'<div class="empty">No new jobs in this run — the 9 AM scan will refill this.</div>'}</div>
+    <div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
+  const r=$('refresh'); if(r) r.onclick=async()=>{toast('Pulling latest jobs…');await loadData();render();toast('Refreshed ✓');};
+  const b=$('backtoday'); if(b) b.onclick=()=>{VIEW_DATE=null;render();};
+  document.querySelectorAll('.day').forEach(d=>d.onclick=()=>openDay(d.dataset.date));
+  const g=$('grid'); if(g) g.querySelectorAll('.jcard').forEach(c=>c.onclick=()=>openJob(jobs[+c.dataset.idx]));
+}
+
+function openJob(jb){
+  window._op=jb.proposal_opener||'';
+  $('mbox').innerHTML=`
+    <div class="mh"><h2>${esc(jb.title)}</h2><button class="mclose" id="mclose">✕</button></div>
+    <div class="mmeta">${esc(jb.company||'')}${jb.location?' · '+esc(jb.location):''} · via ${esc(jb.source||'')}</div>
+    <div class="mrow">
+      <span class="chip">Fit <b>${jb.fit_score}/100</b></span>
+      <span class="chip">${jb.match==='strong'?'🟢 Strong match':'🟡 Stretch — apply anyway'}</span>
+      <span class="chip">Send: <b>${esc(jb.resume)}</b></span>
+    </div>
+    ${jb.why?`<div class="block"><div class="lbl"><span>Why it fits</span></div><div class="btext">${esc(jb.why)}</div></div>`:''}
+    ${jb.summary?`<div class="block"><div class="lbl"><span>What the role is</span></div><div class="btext">${esc(jb.summary)}</div></div>`:''}
+    ${jb.proposal_opener?`<div class="block"><div class="lbl"><span>✍️ Proposal opener</span><button class="copybtn" onclick="copyText(window._op)">Copy</button></div><div class="btext">${esc(jb.proposal_opener)}</div></div>`:''}
+    ${jb.flags?`<div class="block"><div class="lbl"><span>Heads-up</span></div><div class="flags">🚩 ${esc(jb.flags)}</div></div>`:''}
+    <a class="applybtn" href="${jb.url}" target="_blank" rel="noopener">Apply on ${esc(jb.source||'site')} →</a>`;
+  $('modal').classList.add('show');
+  $('mclose').onclick=()=>$('modal').classList.remove('show');
+}
+$('modal').onclick=e=>{if(e.target.id==='modal')$('modal').classList.remove('show');};
+
+const PROFILE={
+  name:"Muhammad Anas",
+  titles:["Facebook Ads Copywriter & Creative Strategist","Copywriter & Email Marketing Specialist"],
+  email:"anasnasir2208@gmail.com", phone:"+92 317 596 3083",
+  location:"Wazirabad, Punjab, Pakistan",
+  linkedin:"https://www.linkedin.com/in/muhammad-anas-9b8111306/",
+  upwork:"Upwork — Rising Talent · Open to Remote",
+  links:[
+    ["🎬 Ad & Video Ad Samples (Drive)","https://drive.google.com/drive/folders/1XNzSImQwmUN3l4SnRVTpMiehVO3EN1hb?usp=drive_link"],
+    ["📧 Sales Email Sequence","https://docs.google.com/document/d/1bwh1BBHu-rqQq9ca_Uzoo8RcdT7FgJySbPCAnzOTfGw/edit"],
+    ["📨 Cold Email Campaign + Follow-ups","https://docs.google.com/document/d/1UBZZfXxVPbBHxUJkNnuNd186GrFLStJwpyl2And75og/edit"],
+    ["📄 Landing Page Copy","https://docs.google.com/document/d/1KPXzJYzj-U4bJ-iPj0v5X5UK1UOChgJKcsP79wjPJ10/edit"],
+    ["🌐 Full Website Copy","https://docs.google.com/document/d/16uP9lGs1DqHEsOXwgQ4UOiqxdo5S-Hg5z4-_I9dv1C0/edit"],
+    ["📣 Facebook Ad Copy (3 variants)","https://docs.google.com/document/d/1gBWXHW2d6cldHka5PjENtwk7I7Fo1tkSpBv0xcND6Rk/edit"]
+  ]
+};
+function infoRow(k,v,isLink){
+  window._cp=window._cp||{}; const id='cp'+Object.keys(window._cp).length; window._cp[id]=v;
+  const val=isLink?`<a class="v" href="${v}" target="_blank">${esc(v)}</a>`:`<span class="v">${esc(v)}</span>`;
+  return `<div class="info"><span class="k">${esc(k)}</span>${val}<button class="copybtn" onclick="copyText(window._cp['${id}'])">Copy</button></div>`;
+}
+function renderProfile(){
+  window._cp={};
+  const P=PROFILE;
+  $('view').innerHTML=`
+    <div class="vhead"><h1>📄 Resumes & Profile</h1><p>Download a resume, copy any detail into an application, grab a portfolio link.</p></div>
+    <div class="two">
+      <div class="rcard"><h3>Creative Strategy Resume</h3><p>Facebook ads, VSL & short-form video ad scripts, static ads, creative strategy.</p>
+        <a class="dl" href="resumes/Anas-Creative-Strategy-Resume.docx" download>⬇ Download .docx</a></div>
+      <div class="rcard"><h3>Copywriting & Email Resume</h3><p>Email sequences, cold email, Klaviyo, landing pages, direct-response copy.</p>
+        <a class="dl" href="resumes/Anas-Copywriting-Email-Resume.docx" download>⬇ Download .docx</a></div>
+    </div>
+    <div class="sect"><h3>Personal Info (tap Copy)</h3>
+      ${infoRow('Name',P.name)}
+      ${infoRow('Title A',P.titles[0])}
+      ${infoRow('Title B',P.titles[1])}
+      ${infoRow('Email',P.email)}
+      ${infoRow('Phone',P.phone)}
+      ${infoRow('Location',P.location)}
+      ${infoRow('LinkedIn',P.linkedin,true)}
+      ${infoRow('Status',P.upwork)}
+    </div>
+    <div class="sect"><h3>Portfolio Samples</h3>
+      ${P.links.map(l=>`<div class="plink"><span>${esc(l[0])}</span><a href="${l[1]}" target="_blank">open ↗</a></div>`).join('')}
+    </div>
+    <div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
+}
+
+function render(){ if(VIEW==='jobs')renderJobs(); else renderProfile(); }
+function route(v){ VIEW=v; VIEW_DATE=null;
+  document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('active',a.dataset.view===v));
+  render();
+}
+async function loadData(){ DATA.pack=await j('jobs_pack.json'); }
+
+const _sb=document.querySelector('.sidebar');
+const _hamb=$('hamb'); if(_hamb) _hamb.onclick=e=>{e.stopPropagation();_sb.classList.toggle('open');};
+document.querySelectorAll('.nav a').forEach(a=>a.onclick=()=>{route(a.dataset.view);_sb.classList.remove('open');});
+$('signout').onclick=()=>{sessionStorage.removeItem('acm_unlocked');location.reload();};
+const _bb=$('brandbtn'), _sm=$('switchmenu');
+_bb.addEventListener('click',e=>{ if(e.target.id==='hamb')return; _sm.classList.toggle('open'); });
+document.addEventListener('click',e=>{ if(!_bb.contains(e.target)) _sm.classList.remove('open'); });
+
+(async()=>{ await loadData(); route('jobs'); })();
+</script>
+</body>
+</html>
