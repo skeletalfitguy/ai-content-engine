@@ -13,7 +13,6 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.5;font-size:14px}
   a{color:inherit;text-decoration:none}
-  /* password gate */
   #authgate{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
   .gatebox{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:34px 28px;text-align:center;max-width:340px;width:100%}
   .gatelogo{font-size:30px;margin-bottom:10px}
@@ -23,7 +22,6 @@
   .gatebox input:focus{border-color:var(--accent)}
   .gatebox button{width:100%;padding:11px;border-radius:9px;border:none;background:var(--accent);color:#111;font-weight:700;font-size:14px;cursor:pointer}
   #pwerr{color:var(--red);font-size:12.5px;margin-top:10px;min-height:16px}
-  /* shell */
   .app{display:flex;min-height:100vh}
   .sidebar{width:244px;flex:none;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;padding:20px 14px}
   .sb-brand{display:flex;align-items:center;gap:10px;padding:4px 8px 20px;cursor:pointer;position:relative}
@@ -53,7 +51,6 @@
   .sb-links{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:0 4px}
   .sb-links a{color:var(--muted);font-size:12px}
   .sb-links a:hover{color:var(--text)}
-  /* main */
   .main{flex:1;padding:26px 30px;min-width:0}
   .head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:22px}
   .greet h1{font-size:26px;font-weight:700;letter-spacing:-.5px}
@@ -63,7 +60,15 @@
   .btn{border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;padding:8px 14px;border-radius:9px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
   .btn:hover{border-color:var(--muted)}
   .btn.primary{background:var(--accent);border-color:var(--accent);color:#111;font-weight:700}
-  /* cards */
+  .week{display:flex;gap:7px;margin-bottom:16px;overflow-x:auto;padding-bottom:2px}
+  .day{flex:1;min-width:52px;text-align:center;padding:9px 4px;border-radius:9px;background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:12.5px;cursor:pointer}
+  .day small{display:block;font-size:15px;font-weight:700;color:var(--text);margin-top:2px}
+  .day.active{background:var(--accent);border-color:var(--accent);color:#111}
+  .day.active small{color:#111}
+  .subtabs{display:flex;gap:8px;margin:0 0 18px;flex-wrap:wrap}
+  .subtabs a{padding:8px 15px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12.5px;cursor:pointer}
+  .subtabs a.active{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);font-weight:600}
+  .histbanner{display:flex;align-items:center;background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:16px}
   .grid{display:grid;gap:13px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
   .pcard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:transform .12s,border-color .12s;display:flex;flex-direction:column;gap:9px}
   .pcard:hover{transform:translateY(-2px);border-color:var(--accent)}
@@ -74,7 +79,6 @@
   .pc-title{font-size:15px;font-weight:600;line-height:1.35}
   .pc-snip{font-size:12.5px;color:var(--muted)}
   .pc-open{font-size:12px;color:var(--accent);margin-top:auto}
-  /* modal */
   #modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:8000;display:none;align-items:center;justify-content:center;padding:18px}
   #modal.show{display:flex}
   .mbox{background:var(--surface);border:1px solid var(--border);border-radius:14px;max-width:620px;width:100%;max-height:88vh;overflow-y:auto;padding:22px}
@@ -94,7 +98,6 @@
   .slide p{font-size:13.5px;color:#e6e6ea}
   .caption{font-size:13px;color:#d6d6da;white-space:pre-wrap}
   .watchlink{display:inline-flex;gap:7px;margin-top:2px;font-size:13px;color:var(--accent);background:var(--accent-dim);border:1px solid var(--border);padding:9px 13px;border-radius:9px}
-  /* hook bank */
   .vhead{margin-bottom:20px}
   .vhead h1{font-size:24px}
   .vhead p{color:var(--muted);font-size:13px;margin-top:5px}
@@ -103,11 +106,32 @@
   .bank-item a{color:var(--muted)}
   .bank-item a:hover{color:var(--accent)}
   .empty{color:var(--muted);font-size:13px;background:var(--surface);border:1px dashed var(--border);border-radius:12px;padding:18px;text-align:center}
+  .trow{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:15px 17px;margin-bottom:11px}
+  .trow .tt{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+  .trow h4{font-size:15px;line-height:1.35}
+  .trow .hk{color:var(--accent);font-size:13.5px;margin-top:7px;font-weight:600}
+  .trow .why{color:var(--muted);font-size:12px;margin-top:6px}
+  .trow .tag2{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);background:var(--surface2);padding:2px 8px;border-radius:5px;margin-right:8px}
+  .scard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:17px 18px;margin-bottom:13px}
+  .scard h3{font-size:15px;margin-bottom:10px;color:var(--accent)}
+  .scard .snote{color:var(--muted);font-size:12.5px;margin-bottom:10px;font-style:italic}
+  .scard ul{margin-left:17px}
+  .scard li{font-size:13.5px;color:#d6d6da;margin-bottom:8px}
+  .scard li b{color:var(--text)}
+  .mm-today{background:linear-gradient(135deg,var(--surface),var(--surface2));border:1px solid var(--accent);border-radius:14px;padding:24px;margin-bottom:22px}
+  .mm-kicker{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:8px}
+  .mm-today h2{font-size:20px;margin-bottom:10px}
+  .mm-today p{font-size:14px;color:#d6d6da;margin-bottom:12px}
+  .mm-act{background:var(--accent-dim);border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13.5px}
+  .mm-grid{display:grid;gap:11px;grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
+  .mm-card{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:14px}
+  .mm-card b{font-size:13.5px;display:block;margin-bottom:5px}
+  .mm-card b .n{color:var(--accent);margin-right:6px}
+  .mm-card p{font-size:12.5px;color:var(--muted)}
   .credit{margin-top:34px;color:var(--muted);font-size:11.5px;border-top:1px solid var(--border);padding-top:16px}
   .credit b{color:var(--text)}
   #toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:11px 18px;border-radius:10px;font-size:13px;z-index:9000;opacity:0;transition:.25s;pointer-events:none}
   #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  /* mobile */
   @media(max-width:820px){
     .app{flex-direction:column}
     .sidebar{width:100%;height:auto;position:sticky;top:0;z-index:50;flex-direction:column;gap:0;padding:12px 14px;border-right:none;border-bottom:1px solid var(--border)}
@@ -129,6 +153,7 @@
     .grid{grid-template-columns:1fr}
     .mbox{padding:18px}
     .switch-menu{top:60px;left:0}
+    .day{min-width:44px;padding:8px 3px}
   }
 </style>
 </head>
@@ -173,6 +198,7 @@
     <nav class="nav" id="nav">
       <a data-view="instagram" class="active"><span class="ic">📸</span><span class="lbl">Instagram Content</span></a>
       <a data-view="linkedin"><span class="ic">💼</span><span class="lbl">LinkedIn Content</span></a>
+      <a data-view="mastermind"><span class="ic">🧠</span><span class="lbl">Mastermind</span></a>
       <a data-view="hookbank"><span class="ic">🏦</span><span class="lbl">Hook Bank</span></a>
     </nav>
     <div class="sb-foot">
@@ -200,9 +226,36 @@ function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');set
 function copyText(txt){ navigator.clipboard.writeText(txt).then(()=>toast('Copied to clipboard ✓')).catch(()=>toast('Could not copy')); }
 function greeting(){const h=new Date().getHours();return h<12?'Good morning':h<18?'Good afternoon':'Good evening';}
 function todayStr(){return new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});}
+function fmtDate(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
 
 let DATA={pack:null,outliers:[],bank:[]};
-let CLIP={}; // texts for copy buttons
+let VIEW='instagram', SUB='content', VIEW_DATE=null;
+const HIST={}; let CLIP={};
+
+function activePack(){ return VIEW_DATE?HIST[VIEW_DATE]:DATA.pack; }
+
+async function openDay(ds){
+  const today=fmtDate(new Date());
+  if(ds===today){ VIEW_DATE=null; render(); return; }
+  if(ds>today){ toast("The AI hasn't researched this day yet — it unlocks after its 9 AM run."); return; }
+  if(HIST[ds]){ VIEW_DATE=ds; render(); return; }
+  toast('Loading '+ds+'…');
+  const p=await j('history/copy_'+ds+'.json');
+  if(p){ HIST[ds]=p; VIEW_DATE=ds; render(); }
+  else toast('No pack was generated on '+ds+' — the system was not running that day.');
+}
+
+function weekStrip(){
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const now=new Date(); const jsDay=now.getDay(); const idx=jsDay===0?6:jsDay-1;
+  const monday=new Date(now); monday.setDate(now.getDate()-idx);
+  const sel=VIEW_DATE||fmtDate(now);
+  return '<div class="week">'+days.map((dn,i)=>{
+    const dt=new Date(monday); dt.setDate(monday.getDate()+i);
+    const ds=fmtDate(dt);
+    return `<div class="day${ds===sel?' active':''}" data-date="${ds}">${dn}<small>${dt.getDate()}</small></div>`;
+  }).join('')+'</div>';
+}
 
 function findSrc(t){
   const norm=s=>(s||'').toLowerCase().replace(/\[.*?\]/g,'').replace(/#\w+/g,'').replace(/[^a-z0-9 ]/g,'').replace(/\s+/g,' ').trim();
@@ -213,21 +266,161 @@ function findSrc(t){
   return null;
 }
 
-function header(sub, count, unit){
-  const p=DATA.pack;
+/* ============ STRATEGY PLAYBOOKS ============ */
+const IG_STRATEGY=[
+ {ic:'🎯',h:'Positioning — decide this before anything',note:'Your whole page answers one question in 2 seconds: "what does this guy do for me?"',pts:[
+  ['One line.','"Direct-response copywriter — I write the words that turn coach audiences into paying clients." Everything on the page serves this line.'],
+  ['Specific beats generic.','"Copywriter for online coaches" gets clients. "Copywriter" gets scrolled past. Specificity is what makes a coach think "this is for ME".'],
+  ['Your unfair angle.','You merge classic direct-response with AI workflows (Claude). Almost nobody in your market shows both. Own it.']]},
+ {ic:'👤',h:'Profile setup — your page is a landing page',pts:[
+  ['Name field = search bar.','Make it "Anas | Copywriter for Coaches" — the name field is searchable, so coaches searching "copywriter" can find you.'],
+  ['Bio formula (3 lines + CTA):','Line 1: who you help + result ("Sales pages & emails for coaches who want booked calendars"). Line 2: proof or belief ("Direct-response × AI"). Line 3: CTA ("DM \'AUDIT\' for a free teardown").'],
+  ['Link:','One link — your portfolio page (you already host it on GitHub). Later a booking link.'],
+  ['Highlights (the round circles):','Create 5 with covers in your brand style: 💬 Reviews · 🧾 Samples · 📜 Results · 🛠 Services · 👋 Start Here. Empty at first is fine — fill Reviews the moment you get one; even a classmate/teacher testimonial starts it.'],
+  ['Pinned posts:','Instagram lets you pin 3. Pin: your best value carousel, one teardown, one "who I am" post. That trio converts profile visitors.']]},
+ {ic:'🎨',h:'Visual brand system — black · gold · white',note:'Exactly the rotation you imagined — it makes the grid look designed, not random.',pts:[
+  ['The 3-template rotation:','Template A: white background, black text, gold accents. Template B: black background, gold headline, white body. Template C: gold/cream background, black text. Post in rotation → your grid becomes a clean checkerboard.'],
+  ['One font pair, forever.','One bold font for hooks (e.g. a strong serif), one clean sans for body. Never change it — recognition is the whole point of branding.'],
+  ['Carousel anatomy:','Cover: giant hook text + tiny logo. Slides: ONE thought each, huge text. Last slide: always your CTA in gold ("Save this · Follow @you · DM AUDIT").'],
+  ['Make it in Canva once.','Build the 3 templates one time, then every post is 15 minutes of fill-in.']]},
+ {ic:'📅',h:'Weekly content mix (5 posts)',pts:[
+  ['2 × value carousels','from your Copy Lab daily ideas — frameworks, mistakes, how-tos. These get saves.'],
+  ['1 × teardown','rewrite a real coach\'s bio/landing page/email (blur the name). This is your #1 authority weapon — it SHOWS skill instead of claiming it.'],
+  ['1 × AI-x-copy post','your edge: "how I use Claude to research a market in 10 minutes". Hot topic, positions you as current.'],
+  ['1 × story/personal post','a lesson, a behind-the-scenes, an opinion. People hire people. This is what makes followers trust you.'],
+  ['The relevance rule:','every post either speaks to a coach\'s problem OR proves your expertise. If it does neither — don\'t post it. And never open with "Coaches, listen…" — open with the pain, the number, or the mistake.']]},
+ {ic:'⚡',h:'Daily non-negotiables (45–60 min)',pts:[
+  ['Post at a fixed time','(test 6–9 PM US time — that\'s when US/UK coaches scroll). Consistency teaches the algorithm when to push you.'],
+  ['Share every post to your Story','immediately, with a poll or question sticker — stories drive the first hour of reach.'],
+  ['30 min engagement:','genuine 2+ line comments on 10 coach accounts + 5 fellow copywriter accounts from your list. Comments are how strangers find you.'],
+  ['Reply to every comment','on your posts within the first hour — replies double your comment count and signal the algorithm.'],
+  ['3 warm DMs a day:','reply to a coach\'s story, congratulate a launch, answer their question sticker. ZERO pitching. You\'re building familiarity, not begging.'],
+  ['Follow 10–15 targeted accounts/day','max — more looks like spam and risks a block. Don\'t mass-unfollow.']]},
+ {ic:'🔍',h:'Finding your 50 coaches (the target list)',pts:[
+  ['Build a private list of 50','coach accounts with 10k–200k followers — big enough to pay you, small enough to actually see your comments.'],
+  ['Where to find them:','search #businesscoach #fitnesscoach #mindsetcoach #onlinecoach · open a big coach guru\'s followers · after following 3–4, Instagram\'s "suggested" does the work for you.'],
+  ['Qualify before adding:','they sell a program (link in bio), they post stories actively, they run launches. A coach with no offer can\'t hire you.'],
+  ['Engage each 2–3× a week.','After 2 weeks of genuine comments they recognize your name. That\'s when DMs turn into conversations, and conversations into audits.']]},
+ {ic:'🗓️',h:'Your first 30 days',pts:[
+  ['Week 1 — Foundation:','profile + bio + highlights + 3 Canva templates + build the 50-coach list. Post your first 3 carousels.'],
+  ['Week 2 — Rhythm:','daily posting + engagement routine starts. Publish your first teardown.'],
+  ['Week 3 — Proof:','post a spec-work case study ("I rewrote this welcome email — here\'s why"). Start the 3-DMs-a-day habit.'],
+  ['Week 4 — Review & offer:','check what got saves/DMs, double down on it, and make your first soft offer post: "Opening 2 free audit slots this week — DM AUDIT."']]},
+ {ic:'📊',h:'Metrics that matter (check weekly, not daily)',pts:[
+  ['Ignore:','likes and follower count — vanity.'],
+  ['Watch:','saves (content value), shares (virality), profile visits (positioning works), DMs started (money), link taps.'],
+  ['Monthly audit:','find your top 3 posts by saves — make more of exactly that. Kill what nobody saved.']]}
+];
+
+const LI_STRATEGY=[
+ {ic:'👤',h:'Profile = sales page, not CV',pts:[
+  ['Headline formula:','not "Copywriter" — "I help coaches turn audiences into clients with direct-response copy | Sales pages · Emails · Funnels". The headline follows you into every comment you make.'],
+  ['Banner:','black/gold design, one-line promise + a proof element. It\'s free billboard space.'],
+  ['Featured section:','pin 2 samples + 1 teardown/case study. Visitors click Featured before anything else.'],
+  ['About section = mini sales letter:','their pain → what you believe about copy → how you work → proof → "DM me AUDIT". Write it like you\'d write a client\'s page.'],
+  ['Never look desperate:','no "open to work" banner. Your teacher\'s rule: "when you appear desperate, they will know."']]},
+ {ic:'📋',h:'The Lists Engine (your teacher\'s framework)',note:'This is the exact system from your lecture, applied to LinkedIn.',pts:[
+  ['List 1 — 10 big creators (500k+):','the Hormozi/Justin Welsh tier. You comment here for visibility surfing — their audience sees you.'],
+  ['List 2 — 50 relevant creators (50k–100k+):','marketing/copy/business voices. Your daily commenting ground.'],
+  ['List 3 — 50 niche peers (5k–50k):','copywriters + funnel builders + coaches. Community, referrals, engagement trades.'],
+  ['List 4 — 10 same-service people:','copywriters serving coaches. Study what wins for them, learn, differentiate.'],
+  ['Keep lists in a private sheet','and work FROM the lists daily — never scroll the raw feed, it eats your hour.']]},
+ {ic:'💬',h:'The comment system — your real growth engine',pts:[
+  ['5 thoughtful comments/day','on Lists 1 & 2, ideally within 30–60 minutes of their post going live (early comments get seen most).'],
+  ['2+ lines, add something:','a take, an example, a build-on, a respectful disagreement. Their audience reads it → clicks your profile → your headline sells you.'],
+  ['NEVER AI-generated comments.','Your teacher was explicit — genuine and thoughtful only. One real comment beats ten "Great post!" spam lines.'],
+  ['Comments come before content.','With 0 followers nobody sees your posts — but everybody sees your comment under a big account. That\'s the cold-start cheat code.']]},
+ {ic:'📅',h:'Posting cadence',pts:[
+  ['Until ~2,000 followers: work talk ONLY.','Your teacher\'s hyper-relevance rule — case studies, how-tos, teardowns, lessons, wins. No politics, no random life posts.'],
+  ['After 2,000:','add personal insights, opinions, stories — that\'s when personality scales trust.'],
+  ['3–5 posts/week','straight from your Copy Lab LinkedIn tab: hook line under 12 words, generous white space, one idea, end with a question.'],
+  ['Post timing:','Tue–Thu, 8–10 AM US Eastern performs best for B2B. Schedule it.']]},
+ {ic:'📨',h:'The DM system (salam-dua style)',note:'Straight from your teacher: build familiarity, never pitch cold.',pts:[
+  ['When someone follows/likes:','short friendly opener — "Thanks for the follow — what are you building these days?" Zero pitch.'],
+  ['When a coach posts about a launch:','congratulate genuinely. Later, if they mention a struggle your skill solves, THEN offer value ("want me to take a quick look at that email?").'],
+  ['The rule:','you\'re collecting relationships, not sending proposals. Your content does the selling in the background.'],
+  ['5 warm DMs/day.','Familiar name + helpful guy + visible skill = inbound work. That\'s the whole machine.']]},
+ {ic:'🥋',h:'Skill Hour (Alifia\'s rule — skill before clients)',pts:[
+  ['30–60 min daily hand-copying','great sales pages and emails before you write anything. Alifia hand-copied 100 sales pages over 6 months — that\'s what made her worth $10k fees.'],
+  ['AI only after mastery:','her words — AI replaces mediocre writers, never strategists. Use your pipeline for research and drafts, but keep training the muscle by hand.'],
+  ['One mistake, once:','keep a "mistakes log". Every client or copy mistake gets written down with its fix. Never pay for the same lesson twice.']]},
+ {ic:'🎯',h:'Creative pitching (when you\'re ready)',pts:[
+  ['Punch above your weight:','Alifia cold-pitched Laura Costa and Ali Abdaal as a beginner. The pitch: specific observation + "I think I can do better" + proof of thinking.'],
+  ['Performance structure:','her move — "If your launch hits $150k, my fee is $10k." No risk for them, big payday for you. Perfect when you lack testimonials.'],
+  ['Pitch the problem you SEE,','not the service you sell: "Your launch email buried the offer in paragraph 6" beats "I offer email copywriting services" every time.']]},
+ {ic:'🗓️',h:'Your first 30 days',pts:[
+  ['Week 1 — Profile:','headline, banner, about, featured. Build all 4 lists.'],
+  ['Week 2 — Visibility:','5 comments/day religiously. Post 2× this week from Copy Lab.'],
+  ['Week 3 — Rhythm:','3–4 posts + daily comments + 5 warm DMs/day begins.'],
+  ['Week 4 — Proof:','publish your first teardown post + case study. Review: which comments drove profile views? Double down.']]},
+ {ic:'📊',h:'Metrics that matter',pts:[
+  ['Watch:','profile views (comments working), connection acceptance rate, comment→profile clicks, inbound DMs.'],
+  ['Ignore:','impressions without profile views — reach that doesn\'t convert to curiosity is noise.'],
+  ['Monthly:','top 3 posts by profile views → make more of that exact type.']]}
+];
+
+/* ============ MASTERMIND — daily principle bank ============ */
+const MASTERMIND=[
+ {t:'Skill before clients',i:'Alifia\'s #1 rule: client acquisition comes second. There are always people hiring — they reject weak skill, not weak marketing.',a:'Do your Skill Hour before touching outreach today.'},
+ {t:'Hand-copy the greats',i:'She hand-copied 100 sales pages over 6 months, 6–8 hours a day, alongside university. That rewiring is why she commands $10k fees.',a:'Hand-copy one great email or page section for 30 minutes.'},
+ {t:'AI replaces mediocre writers',i:'Not strategists. If you only prompt, you\'re replaceable. If you think in markets, offers and angles, AI is your leverage.',a:'Write one hook yourself before asking AI for ten.'},
+ {t:'Never appear desperate',i:'"When you appear desperate, they will know." Desperation repels money. Warm, curious, useful — that attracts it.',a:'Send one DM today with zero ask in it.'},
+ {t:'Genuine comments only',i:'One thoughtful 3-line comment under a big account beats 50 generic ones. Their audience judges you by that comment.',a:'Leave 5 comments that actually add something.'},
+ {t:'Hyper-relevant until 2k',i:'Until 2,000 followers, talk work ONLY. Every off-topic post confuses the algorithm and your future clients.',a:'Check: does today\'s post prove expertise or speak to a coach\'s pain?'},
+ {t:'Punch above your weight',i:'Alifia pitched Ali Abdaal and Cody Sanchez early. Worst case: silence. Best case: your career changes.',a:'Write (don\'t send yet) a pitch to someone "too big" for you.'},
+ {t:'Creative fees beat no fees',i:'"If the launch hits $150k, pay me $10k." Performance deals remove the client\'s risk and your proof problem.',a:'Sketch one performance-based offer you could make.'},
+ {t:'One mistake, once',i:'Every mistake is tuition. Paying the same tuition twice is the only real failure.',a:'Write down your last mistake + its fix in your log.'},
+ {t:'Niche creatively',i:'The website copywriter for architects is booked 6 months out. Weird specific beats broad generic.',a:'Brainstorm 3 odd-but-rich sub-niches you could own.'},
+ {t:'Specificity sells',i:'"Copywriter" is noise. "I write launch emails for online coaches" is a category of one.',a:'Rewrite one line of your bio to be more specific.'},
+ {t:'Research is 80% of copy',i:'Great copy is assembled from the market\'s own words, not invented. The answer is always in the research.',a:'Spend 20 minutes reading your ICP\'s comments/reviews.'},
+ {t:'The hook decides everything',i:'Your dashboard exists because of one truth: the first 2 seconds decide if the rest gets read.',a:'Write 5 hooks for today\'s idea. Post the sharpest.'},
+ {t:'Write like SMS',i:'The 588× outlier proved it — short, direct, personal lines beat long corporate ones. Everywhere.',a:'Cut every sentence in today\'s post by 30%.'},
+ {t:'Proof beats promises',i:'A teardown SHOWS skill. A claim asks to be believed. Show, don\'t claim.',a:'Find one coach asset you could tear down this week.'},
+ {t:'One idea per piece',i:'A post with two messages has zero. Confusion never converts.',a:'Check today\'s post: can you state its point in one line?'},
+ {t:'Consistency compounds',i:'Alifia built the agency in 2 years of showing up. The algorithm forgets fast — and so does the market.',a:'Post today even if it feels average. Shipping beats perfect.'},
+ {t:'Engagement before content',i:'With 0 followers, nobody sees your posts — but everyone sees your comment under a big account. Borrow audiences.',a:'Do your comments BEFORE writing your post today.'},
+ {t:'Your feed is your portfolio',i:'A coach checking you out reads your last 9 posts. That grid IS the interview.',a:'Scroll your own profile as a stranger. Fix what\'s weak.'},
+ {t:'Sell the problem, not the service',i:'"Your launch email buried the offer" lands. "I offer email copywriting" doesn\'t. People buy diagnoses.',a:'Rewrite one pitch line as a diagnosis.'},
+ {t:'The fortune is in the follow-up',i:'Most replies come from the 2nd–4th touch. One message is not outreach — it\'s a lottery ticket.',a:'Follow up with 3 people who never answered.'},
+ {t:'Steal patterns, not posts',i:'Your Hook Bank is a swipe file. Copy the PATTERN (curiosity gap, VS, number), never the words.',a:'Take one bank hook and refit it to your niche.'},
+ {t:'Energy is the real currency',i:'One focused hour beats four tired ones. Guard your best hours for the hardest work — writing.',a:'Do your writing in your first fresh hour today.'},
+ {t:'Money loves speed',i:'The idea shipped today beats the perfect one shipped never. Iterate in public.',a:'Ship one thing today you\'ve been polishing too long.'},
+ {t:'Teach what you learn',i:'Learning in public builds authority WHILE you build skill. Yesterday\'s lesson is today\'s content.',a:'Turn something you learned this week into a post idea.'},
+ {t:'Don\'t trade brand for trends',i:'Trends get views; consistency gets clients. Ride trends only inside your black/gold/white system and your niche.',a:'If you use a trend today, force it through your positioning.'},
+ {t:'Every DM is a rep',i:'You\'re not "networking" — you\'re training the exact muscle that closes clients: starting human conversations.',a:'Send your 5 warm DMs. Count them like gym sets.'},
+ {t:'The market pays for outcomes',i:'Coaches don\'t buy "copy". They buy booked calls, launch revenue, opened emails. Speak in outcomes.',a:'Rewrite one service line as an outcome line.'}
+];
+
+/* ============ RENDERERS ============ */
+function header(sub,count,unit){
+  const p=activePack();
+  const actions=VIEW_DATE
+    ? `<span class="badge">📅 Archived pack</span><button class="btn primary" id="backtoday">← Back to today</button>`
+    : `<span class="badge">${count} ${unit} ready</span><button class="btn primary" id="refresh">✨ Refresh Data</button>`;
   return `<div class="head">
     <div class="greet"><h1>${greeting()}, Anas</h1>
       <div class="meta">${sub}${p&&p.generated_at?' · Generated '+esc(p.generated_at):''} · ${todayStr()}</div></div>
-    <div class="actions">
-      <span class="badge">${count} ${unit} ready</span>
-      <button class="btn primary" id="refresh">✨ Refresh Data</button>
-    </div>
+    <div class="actions">${actions}</div>
   </div>`;
 }
-function wireHeader(render){
+function wireHeader(){
   const r=$('refresh'); if(r) r.onclick=async()=>{toast('Pulling latest data…');await loadData();render();toast('Refreshed ✓');};
+  const b=$('backtoday'); if(b) b.onclick=()=>{VIEW_DATE=null;render();};
+  document.querySelectorAll('.day').forEach(d=>d.onclick=()=>openDay(d.dataset.date));
+  document.querySelectorAll('.subtabs a').forEach(t=>t.onclick=()=>{SUB=t.dataset.sub;render();});
 }
-
+function subtabs(){
+  const contentLabel=VIEW==='instagram'?'🖼️ Carousels':'📄 Posts';
+  const stratLabel=VIEW==='instagram'?'📈 Instagram Strategy':'📈 LinkedIn Strategy';
+  return `<div class="subtabs">
+    <a data-sub="content" class="${SUB==='content'?'active':''}">${contentLabel}</a>
+    <a data-sub="topics" class="${SUB==='topics'?'active':''}">🎯 Topics &amp; Hooks</a>
+    <a data-sub="strategy" class="${SUB==='strategy'?'active':''}">${stratLabel}</a>
+  </div>`;
+}
+function banner(){
+  return VIEW_DATE?`<div class="histbanner">📅 Viewing the pack from <b>&nbsp;${VIEW_DATE}</b>&nbsp;· everything below is that day's content</div>`:'';
+}
 function ideaCard(it,i,snipKey){
   const snip=snipKey==='ig'?(it.instagram_slides&&it.instagram_slides[0])||it.hook:(it.hook||'');
   return `<div class="pcard" data-idx="${i}">
@@ -239,19 +432,49 @@ function ideaCard(it,i,snipKey){
   </div>`;
 }
 
-function renderInstagram(){
-  const ideas=(DATA.pack&&DATA.pack.ideas)||[];
-  $('view').innerHTML = header('Instagram carousels — daily brief', ideas.length, 'carousels')
-    + `<div class="grid" id="grid">${ideas.length?ideas.map((it,i)=>ideaCard(it,i,'ig')).join(''):'<div class="empty">No pack yet — the 9 AM run fills this.</div>'}</div>`
-    + `<div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
-  wireHeader(renderInstagram);
-  $('grid')&&$('grid').querySelectorAll('.pcard').forEach(c=>c.onclick=()=>openIG(ideas[+c.dataset.idx]));
+function render(){
+  if(VIEW==='instagram'||VIEW==='linkedin') renderPlatform();
+  else if(VIEW==='mastermind') renderMastermind();
+  else renderHookBank();
+}
+
+function renderPlatform(){
+  const ideas=(activePack()&&activePack().ideas)||[];
+  const isIG=VIEW==='instagram';
+  const sub=isIG?'Instagram carousels — daily brief':'LinkedIn posts — daily brief';
+  const unit=isIG?'carousels':'posts';
+  let body='';
+  if(SUB==='content'){
+    body=`<div class="grid" id="grid">${ideas.length?ideas.map((it,i)=>ideaCard(it,i,isIG?'ig':'li')).join(''):'<div class="empty">No pack for this day.</div>'}</div>`;
+  } else if(SUB==='topics'){
+    body=ideas.length?ideas.map((it,i)=>{
+      const pair='Topic: '+(it.topic||'')+'\nHook: '+(it.hook||'');
+      CLIP['t'+i]=pair;
+      return `<div class="trow">
+        <div class="tt"><h4><span class="tag2">${esc(it.category||'')}</span>${esc(it.topic)}</h4>
+          <button class="copybtn" onclick="copyText(CLIP.t${i})">Copy topic + hook</button></div>
+        <div class="hk">🎣 ${esc(it.hook)}</div>
+        <div class="why">${esc(it.why||'')}</div>
+      </div>`;
+    }).join(''):'<div class="empty">No topics for this day.</div>';
+  } else {
+    const S=isIG?IG_STRATEGY:LI_STRATEGY;
+    body=S.map(sec=>`<div class="scard"><h3>${sec.ic} ${esc(sec.h)}</h3>
+      ${sec.note?`<p class="snote">${esc(sec.note)}</p>`:''}
+      <ul>${sec.pts.map(p=>`<li><b>${esc(p[0])}</b> ${esc(p[1])}</li>`).join('')}</ul></div>`).join('');
+  }
+  $('view').innerHTML=header(sub,ideas.length,unit)+weekStrip()+banner()+subtabs()+body
+    +`<div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
+  wireHeader();
+  if(SUB==='content'){
+    const g=$('grid'); if(g) g.querySelectorAll('.pcard').forEach(c=>c.onclick=()=>isIG?openIG(ideas[+c.dataset.idx]):openLI(ideas[+c.dataset.idx]));
+  }
 }
 
 function openIG(it){
   const slides=(it.instagram_slides||[]).map((s,i)=>`<div class="slide"><div class="sn">${i+1}</div><p>${esc(s)}</p></div>`).join('');
-  const allSlides=(it.instagram_slides||[]).map((s,i)=>`Slide ${i+1}: ${s}`).join('\n');
-  CLIP.slides=allSlides; CLIP.caption=it.instagram_caption||'';
+  CLIP.slides=(it.instagram_slides||[]).map((s,i)=>`Slide ${i+1}: ${s}`).join('\n');
+  CLIP.caption=it.instagram_caption||'';
   const src=findSrc(it.inspired_by_title);
   const watch=src?`<a class="watchlink" href="${src.url}" target="_blank">▶ Based on: ${(src.views||0).toLocaleString()} views (${src.ratio}×) — watch it</a>`:'';
   $('mbox').innerHTML=`
@@ -263,15 +486,6 @@ function openIG(it){
     ${watch}`;
   $('modal').classList.add('show');
   $('mclose').onclick=()=>$('modal').classList.remove('show');
-}
-
-function renderLinkedIn(){
-  const ideas=(DATA.pack&&DATA.pack.ideas)||[];
-  $('view').innerHTML = header('LinkedIn posts — daily brief', ideas.length, 'posts')
-    + `<div class="grid" id="grid">${ideas.length?ideas.map((it,i)=>ideaCard(it,i,'li')).join(''):'<div class="empty">No pack yet — the 9 AM run fills this.</div>'}</div>`
-    + `<div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
-  wireHeader(renderLinkedIn);
-  $('grid')&&$('grid').querySelectorAll('.pcard').forEach(c=>c.onclick=()=>openLI(ideas[+c.dataset.idx]));
 }
 
 function openLI(it){
@@ -289,6 +503,23 @@ function openLI(it){
   $('mclose').onclick=()=>$('modal').classList.remove('show');
 }
 
+function renderMastermind(){
+  const start=new Date(new Date().getFullYear(),0,0);
+  const doy=Math.floor((new Date()-start)/86400000);
+  const today=MASTERMIND[doy%MASTERMIND.length];
+  $('view').innerHTML=`
+    <div class="vhead"><h1>🧠 Mastermind</h1><p>One principle a day. Read it, apply it, come back tomorrow. This is your board of mentors.</p></div>
+    <div class="mm-today">
+      <div class="mm-kicker">Today's principle · ${todayStr()}</div>
+      <h2>${esc(today.t)}</h2>
+      <p>${esc(today.i)}</p>
+      <div class="mm-act">⚡ Do this today: ${esc(today.a)}</div>
+    </div>
+    <div class="vhead"><p>The full bank — ${MASTERMIND.length} principles rotating daily:</p></div>
+    <div class="mm-grid">${MASTERMIND.map((m,i)=>`<div class="mm-card"><b><span class="n">${String(i+1).padStart(2,'0')}</span>${esc(m.t)}</b><p>${esc(m.i)}</p></div>`).join('')}</div>
+    <div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
+}
+
 function renderHookBank(){
   const b=DATA.bank.slice().reverse();
   $('view').innerHTML=`<div class="vhead"><h1>🏦 Copy Hook Bank</h1><p>Every winning copywriting hook collected — your swipe file (${b.length}).</p></div>
@@ -299,10 +530,9 @@ function renderHookBank(){
 $('modal').onclick=e=>{if(e.target.id==='modal')$('modal').classList.remove('show');};
 
 function route(v){
+  VIEW=v; SUB='content'; VIEW_DATE=null;
   document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('active',a.dataset.view===v));
-  if(v==='instagram')renderInstagram();
-  else if(v==='linkedin')renderLinkedIn();
-  else renderHookBank();
+  render();
 }
 
 async function loadData(){

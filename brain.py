@@ -110,6 +110,23 @@ def main():
     with open("content_pack.json", "w", encoding="utf-8") as f:
         json.dump(pack, f, indent=4, ensure_ascii=False)
 
+    # archive today's brief so past days stay openable on the dashboard
+    os.makedirs("history", exist_ok=True)
+    day = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    with open(f"history/fit_{day}.json", "w", encoding="utf-8") as f:
+        json.dump(pack, f, indent=4, ensure_ascii=False)
+    try:
+        with open("history/index.json", encoding="utf-8") as f:
+            idx = json.load(f)
+    except Exception:
+        idx = {}
+    idx.setdefault("fit", [])
+    if day not in idx["fit"]:
+        idx["fit"].append(day)
+        idx["fit"].sort()
+    with open("history/index.json", "w", encoding="utf-8") as f:
+        json.dump(idx, f, indent=2)
+
     print("=" * 60)
     print("🎯 TODAY'S IDEAS (each with full script)")
     for i in pack.get("ideas", []):

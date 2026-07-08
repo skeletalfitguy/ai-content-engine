@@ -38,6 +38,10 @@ Writing rules:
   slide, slides 2-7 deliver the value fast, last slide = CTA (follow / save / DM).
 - Never invent fake client results or fake numbers about Anas. Teach principles, break down
   what's working, give frameworks — do not fabricate personal case studies.
+- BANNED: never open a post/slide with "Coaches," / "Coaches, listen" / "Hey coaches" or any
+  direct audience-address opener. It screams AI and Anas hates it. Open with a specific pain,
+  a number, a mistake, a story beat, or a curiosity gap instead. Content should either speak
+  to the ideal client's problem or prove expertise — never generic filler.
 Return ONLY valid JSON. No markdown, no commentary outside the JSON."""
 
 PROMPT = """Today's real copywriting-niche outliers (title = proven topic+hook; ratio = views/subs;
@@ -121,6 +125,23 @@ def main():
 
     with open("copy_pack.json", "w", encoding="utf-8") as f:
         json.dump(pack, f, indent=4, ensure_ascii=False)
+
+    # archive today's pack so past days stay openable on the dashboard
+    os.makedirs("history", exist_ok=True)
+    day = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    with open(f"history/copy_{day}.json", "w", encoding="utf-8") as f:
+        json.dump(pack, f, indent=4, ensure_ascii=False)
+    try:
+        with open("history/index.json", encoding="utf-8") as f:
+            idx = json.load(f)
+    except Exception:
+        idx = {}
+    idx.setdefault("copy", [])
+    if day not in idx["copy"]:
+        idx["copy"].append(day)
+        idx["copy"].sort()
+    with open("history/index.json", "w", encoding="utf-8") as f:
+        json.dump(idx, f, indent=2)
 
     print("=" * 60)
     print("✍️ TODAY'S COPY LAB IDEAS")

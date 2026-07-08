@@ -67,6 +67,11 @@
   .btn.used{color:var(--green);border-color:var(--green)}
   /* week strip */
   .week{display:flex;gap:7px;margin-bottom:24px;overflow-x:auto;padding-bottom:2px}
+  .histbanner{display:flex;align-items:center;background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:16px}
+  .hrow{display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:14px 16px;margin-bottom:10px;cursor:pointer}
+  .hrow:hover{border-color:var(--accent)}
+  .hrow b{font-size:14px}
+  .hrow span{color:var(--muted);font-size:12px}
   .day{flex:1;min-width:52px;text-align:center;padding:9px 4px;border-radius:9px;background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:12.5px;cursor:pointer}
   .day small{display:block;font-size:15px;font-weight:700;color:var(--text);margin-top:2px}
   .day.active{background:var(--accent);border-color:var(--accent);color:#fff}
@@ -260,8 +265,24 @@ function weekStrip(){
   const d=new Date(); const monday=new Date(d); monday.setDate(d.getDate()-idx);
   return '<div class="week">'+days.map((dn,i)=>{
     const dt=new Date(monday); dt.setDate(monday.getDate()+i);
-    return `<div class="day${i===idx?' active':''}" data-day="${i}">${dn}<small>${dt.getDate()}</small></div>`;
+    const ds=fmtDate(dt);
+    const sel=VIEW_DATE||fmtDate(new Date());
+    return `<div class="day${ds===sel?' active':''}" data-date="${ds}">${dn}<small>${dt.getDate()}</small></div>`;
   }).join('')+'</div>';
+}
+
+function fmtDate(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
+let VIEW_DATE=null; const HIST={};
+function activePack(){ return VIEW_DATE?HIST[VIEW_DATE]:DATA.pack; }
+async function openDay(ds){
+  const today=fmtDate(new Date());
+  if(ds===today){ VIEW_DATE=null; renderDaily(); return; }
+  if(ds>today){ toast("The AI hasn't researched this day yet — it unlocks after its 9 AM run."); return; }
+  if(HIST[ds]){ VIEW_DATE=ds; renderDaily(); return; }
+  toast('Loading '+ds+'…');
+  const p=await j('history/fit_'+ds+'.json');
+  if(p){ HIST[ds]=p; VIEW_DATE=ds; renderDaily(); }
+  else toast('No brief was generated on '+ds+' — the system was not running that day.');
 }
 
 function ideaCard(it,i){
@@ -274,7 +295,7 @@ function ideaCard(it,i){
 }
 
 function renderDaily(){
-  const p=DATA.pack, ideas=(p&&(p.ideas||p.scored_topics))||[];
+  const p=activePack(), ideas=(p&&(p.ideas||p.scored_topics))||[];
   const used=localStorage.getItem('used_'+ (p&&p.generated_at||''))==='1';
   const chans=[...new Set(DATA.outliers.map(o=>o.channel).filter(Boolean))];
   const src=`<div class="sh">
@@ -296,25 +317,31 @@ function renderDaily(){
     </div>
   </div>`;
 
+  const actions=VIEW_DATE
+    ? `<span class="badge">📅 Archived brief</span><button class="btn primary" id="backtoday">← Back to today</button>`
+    : `<span class="badge">${ideas.length} pieces ready</span>
+       <button class="btn ${used?'used':''}" id="markused">${used?'✓ Marked as used':'Mark as used'}</button>
+       <button class="btn primary" id="gennow">✨ Generate Brief Now</button>`;
+  const banner=VIEW_DATE
+    ? `<div class="histbanner">📅 Viewing the brief from <b>&nbsp;${VIEW_DATE}</b>&nbsp; · everything below is that day's pack</div>` : '';
+
   $('view').innerHTML=`
     <div class="head">
       <div class="greet"><h1>${greeting()}, Anas</h1>
         <div class="meta">Daily content brief${p&&p.generated_at?' · Generated '+esc(p.generated_at):''} · ${todayStr()}</div></div>
-      <div class="actions">
-        <span class="badge">${ideas.length} pieces ready</span>
-        <button class="btn ${used?'used':''}" id="markused">${used?'✓ Marked as used':'Mark as used'}</button>
-        <button class="btn primary" id="gennow">✨ Generate Brief Now</button>
-      </div>
+      <div class="actions">${actions}</div>
     </div>
     ${weekStrip()}
-    <div class="grid" id="grid">${ideas.length?ideas.map(ideaCard).join(''):'<div class="soon"><div class="e">🌙</div><h2>No new brief yet</h2><p>The 9 AM run will fill this with fresh ideas.</p></div>'}</div>
-    ${src}
+    ${banner}
+    <div class="grid" id="grid">${ideas.length?ideas.map(ideaCard).join(''):'<div class="soon"><div class="e">🌙</div><h2>No brief here</h2><p>Nothing was generated for this day.</p></div>'}</div>
+    ${VIEW_DATE?'':src}
     <div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
 
   $('grid').querySelectorAll('.pcard').forEach(c=>c.onclick=()=>openIdea(ideas[+c.dataset.idx]));
   const mu=$('markused'); if(mu) mu.onclick=()=>{const k='used_'+(p&&p.generated_at||'');localStorage.setItem(k,used?'0':'1');renderDaily();};
   const gn=$('gennow'); if(gn) gn.onclick=async()=>{toast('Brief auto-generates 9 AM PKT — pulling the latest…');await loadData();renderDaily();toast('Dashboard refreshed ✓');};
-  $('view').querySelectorAll('.day').forEach(d=>d.onclick=()=>{ if(!d.classList.contains('active')) toast('Past-day briefs live in History — coming soon.'); });
+  const bt=$('backtoday'); if(bt) bt.onclick=()=>{VIEW_DATE=null;renderDaily();};
+  $('view').querySelectorAll('.day').forEach(d=>d.onclick=()=>openDay(d.dataset.date));
 }
 
 function openIdea(it){
@@ -361,20 +388,36 @@ function renderSources(){
     <div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
 }
 
+async function renderHistory(){
+  const idx=await j('history/index.json')||{};
+  const dates=(idx.fit||[]).slice().reverse();
+  $('view').innerHTML=`<div class="vhead"><h1>🕑 History</h1><p>Every daily brief the agent has ever generated — tap one to reopen it.</p></div>
+    <div>${dates.length?dates.map(d=>{
+      const dt=new Date(d+'T00:00:00');
+      const label=dt.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+      return `<div class="hrow" data-date="${d}"><b>${label}</b><span>open brief →</span></div>`;
+    }).join(''):'<div class="soon"><div class="e">🕑</div><h2>No archives yet</h2><p>Every 9 AM run from now on saves its brief here automatically.</p></div>'}</div>
+    <div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
+  $('view').querySelectorAll('.hrow').forEach(r=>r.onclick=async()=>{
+    document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('active',a.dataset.view==='daily'));
+    await openDay(r.dataset.date);
+  });
+}
+
 const SOON={
   competitors:['🥊','Competitors','Track specific creators across YouTube, Instagram & X and see exactly what hooks they used. Arrives when we plug in the social module.'],
   media:['🖼️','Media Assets','Your image & thumbnail library — the pictures the agent will pull from to auto-build carousels and thumbnails.'],
   strategy:['🎯','Strategy','Your brand voice, tone, and content rules that the AI follows when writing every script.'],
-  history:['🕑','History','Browse every past daily brief by date, so nothing you were given ever gets lost.'],
   settings:['⚙️','Settings','Niche keywords, run schedule, password, and account settings for your pipeline.']
 };
 function renderSoon(v){const s=SOON[v];$('view').innerHTML=`<div style="display:flex;justify-content:center;padding-top:40px"><div class="soon"><div class="e">${s[0]}</div><h2>${s[1]}</h2><p>${s[2]}</p></div></div>`;}
 
 function route(v){
   document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('active',a.dataset.view===v));
-  if(v==='daily')renderDaily();
+  if(v==='daily'){VIEW_DATE=null;renderDaily();}
   else if(v==='hookbank')renderHookBank();
   else if(v==='sources')renderSources();
+  else if(v==='history')renderHistory();
   else renderSoon(v);
 }
 
