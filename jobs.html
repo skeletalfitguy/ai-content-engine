@@ -281,51 +281,82 @@ function openJob(jb){
 }
 $('modal').onclick=e=>{if(e.target.id==='modal')$('modal').classList.remove('show');};
 
-const PROFILE={
-  name:"Muhammad Anas",
-  titles:["Facebook Ads Copywriter & Creative Strategist","Copywriter & Email Marketing Specialist"],
-  email:"anasnasir2208@gmail.com", phone:"+92 317 596 3083",
-  location:"Wazirabad, Punjab, Pakistan",
-  linkedin:"https://www.linkedin.com/in/muhammad-anas-9b8111306/",
-  upwork:"Upwork — Rising Talent · Open to Remote",
-  links:[
-    ["🎬 Ad & Video Ad Samples (Drive)","https://drive.google.com/drive/folders/1XNzSImQwmUN3l4SnRVTpMiehVO3EN1hb?usp=drive_link"],
-    ["📧 Sales Email Sequence","https://docs.google.com/document/d/1bwh1BBHu-rqQq9ca_Uzoo8RcdT7FgJySbPCAnzOTfGw/edit"],
-    ["📨 Cold Email Campaign + Follow-ups","https://docs.google.com/document/d/1UBZZfXxVPbBHxUJkNnuNd186GrFLStJwpyl2And75og/edit"],
-    ["📄 Landing Page Copy","https://docs.google.com/document/d/1KPXzJYzj-U4bJ-iPj0v5X5UK1UOChgJKcsP79wjPJ10/edit"],
-    ["🌐 Full Website Copy","https://docs.google.com/document/d/16uP9lGs1DqHEsOXwgQ4UOiqxdo5S-Hg5z4-_I9dv1C0/edit"],
-    ["📣 Facebook Ad Copy (3 variants)","https://docs.google.com/document/d/1gBWXHW2d6cldHka5PjENtwk7I7Fo1tkSpBv0xcND6Rk/edit"]
-  ]
-};
+// Portfolio links are shareable (meant for clients) so they stay in the clear.
+const PORTFOLIO=[
+  ["🎬 Ad & Video Ad Samples (Drive)","https://drive.google.com/drive/folders/1XNzSImQwmUN3l4SnRVTpMiehVO3EN1hb?usp=drive_link"],
+  ["📧 Sales Email Sequence","https://docs.google.com/document/d/1bwh1BBHu-rqQq9ca_Uzoo8RcdT7FgJySbPCAnzOTfGw/edit"],
+  ["📨 Cold Email Campaign + Follow-ups","https://docs.google.com/document/d/1UBZZfXxVPbBHxUJkNnuNd186GrFLStJwpyl2And75og/edit"],
+  ["📄 Landing Page Copy","https://docs.google.com/document/d/1KPXzJYzj-U4bJ-iPj0v5X5UK1UOChgJKcsP79wjPJ10/edit"],
+  ["🌐 Full Website Copy","https://docs.google.com/document/d/16uP9lGs1DqHEsOXwgQ4UOiqxdo5S-Hg5z4-_I9dv1C0/edit"],
+  ["📣 Facebook Ad Copy (3 variants)","https://docs.google.com/document/d/1gBWXHW2d6cldHka5PjENtwk7I7Fo1tkSpBv0xcND6Rk/edit"]
+];
+// Resumes + contact live ENCRYPTED in vault.json. The password is NOT in this file,
+// so nobody can read them from the source — they only open inside the portal after unlock.
+let VAULT=null;
+function b64ToBytes(b){const s=atob(b);const a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return a;}
+async function unlockVault(pass){
+  const v=await j('vault.json'); if(!v){toast('Vault not found');return false;}
+  try{
+    const km=await crypto.subtle.importKey('raw',new TextEncoder().encode(pass),'PBKDF2',false,['deriveKey']);
+    const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64ToBytes(v.salt),iterations:v.iter,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['decrypt']);
+    const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64ToBytes(v.iv)},key,b64ToBytes(v.ct));
+    VAULT=JSON.parse(new TextDecoder().decode(pt)); return true;
+  }catch(e){ return false; }
+}
+function downloadResume(i){
+  const r=VAULT.resumes[i];
+  const blob=new Blob([b64ToBytes(r.b64)],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+  const u=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=u; a.download=r.name;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),1000);
+}
 function infoRow(k,v,isLink){
   window._cp=window._cp||{}; const id='cp'+Object.keys(window._cp).length; window._cp[id]=v;
   const val=isLink?`<a class="v" href="${v}" target="_blank">${esc(v)}</a>`:`<span class="v">${esc(v)}</span>`;
   return `<div class="info"><span class="k">${esc(k)}</span>${val}<button class="copybtn" onclick="copyText(window._cp['${id}'])">Copy</button></div>`;
 }
+function portfolioSect(){
+  return `<div class="sect"><h3>Portfolio Samples</h3>
+    ${PORTFOLIO.map(l=>`<div class="plink"><span>${esc(l[0])}</span><a href="${l[1]}" target="_blank">open ↗</a></div>`).join('')}</div>`;
+}
 function renderProfile(){
-  window._cp={};
-  const P=PROFILE;
-  $('view').innerHTML=`
-    <div class="vhead"><h1>📄 Resumes & Profile</h1><p>Download a resume, copy any detail into an application, grab a portfolio link.</p></div>
+  const head=`<div class="vhead"><h1>📄 Resumes & Profile</h1><p>Your resumes & contact info are encrypted — unlock them here, inside the portal.</p></div>`;
+  if(!VAULT){
+    $('view').innerHTML=head+`
+      <div class="sect"><h3>🔒 Private — unlock to view</h3>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:12px">Your resumes and contact details are AES-encrypted. Enter your <b>resume password</b> (separate from the portal password) to open them. No one without this password can read them — not even from the page source.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input id="vpw" type="password" placeholder="Resume password" style="flex:1;min-width:160px;padding:10px 13px;border-radius:9px;border:1px solid var(--border);background:var(--surface2);color:var(--text);outline:none">
+          <button class="btn primary" id="vbtn">Unlock</button>
+        </div>
+        <div id="verr" style="color:var(--red);font-size:12.5px;margin-top:10px;min-height:16px"></div>
+      </div>`+portfolioSect()+
+      `<div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
+    const doUnlock=async()=>{ $('vbtn').textContent='Unlocking…';
+      const ok=await unlockVault($('vpw').value);
+      if(ok){ renderProfile(); } else { $('verr').textContent='❌ Wrong resume password'; $('vbtn').textContent='Unlock'; } };
+    $('vbtn').onclick=doUnlock;
+    $('vpw').addEventListener('keydown',e=>{ if(e.key==='Enter') doUnlock(); });
+    return;
+  }
+  window._cp={}; const C=VAULT.contact;
+  $('view').innerHTML=head+`
     <div class="two">
       <div class="rcard"><h3>Creative Strategy Resume</h3><p>Facebook ads, VSL & short-form video ad scripts, static ads, creative strategy.</p>
-        <a class="dl" href="resumes/Anas-Creative-Strategy-Resume.docx" download>⬇ Download .docx</a></div>
+        <button class="dl" style="border:none;cursor:pointer;font-family:inherit" onclick="downloadResume(0)">⬇ Download .docx</button></div>
       <div class="rcard"><h3>Copywriting & Email Resume</h3><p>Email sequences, cold email, Klaviyo, landing pages, direct-response copy.</p>
-        <a class="dl" href="resumes/Anas-Copywriting-Email-Resume.docx" download>⬇ Download .docx</a></div>
+        <button class="dl" style="border:none;cursor:pointer;font-family:inherit" onclick="downloadResume(1)">⬇ Download .docx</button></div>
     </div>
     <div class="sect"><h3>Personal Info (tap Copy)</h3>
-      ${infoRow('Name',P.name)}
-      ${infoRow('Title A',P.titles[0])}
-      ${infoRow('Title B',P.titles[1])}
-      ${infoRow('Email',P.email)}
-      ${infoRow('Phone',P.phone)}
-      ${infoRow('Location',P.location)}
-      ${infoRow('LinkedIn',P.linkedin,true)}
-      ${infoRow('Status',P.upwork)}
+      ${infoRow('Name',C.name)}
+      ${infoRow('Title A',C.titleA)}
+      ${infoRow('Title B',C.titleB)}
+      ${infoRow('Email',C.email)}
+      ${infoRow('Phone',C.phone)}
+      ${infoRow('Location',C.location)}
+      ${infoRow('LinkedIn',C.linkedin,true)}
+      ${infoRow('Status',C.upwork)}
     </div>
-    <div class="sect"><h3>Portfolio Samples</h3>
-      ${P.links.map(l=>`<div class="plink"><span>${esc(l[0])}</span><a href="${l[1]}" target="_blank">open ↗</a></div>`).join('')}
-    </div>
+    ${portfolioSect()}
     <div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
 }
 
