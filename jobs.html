@@ -88,6 +88,12 @@
   .mrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
   .chip{font-size:11.5px;padding:5px 10px;border-radius:7px;background:var(--surface2);border:1px solid var(--border)}
   .chip b{color:var(--accent)}
+  .kd{display:flex;flex-direction:column}
+  .kdr{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px}
+  .kdr:last-child{border-bottom:none}
+  .kdr span{color:var(--muted);flex:none}
+  .kdr b{color:var(--text);text-align:right;font-weight:600;word-break:break-word}
+  .kdr b.fresh{color:var(--green)}
   .block{background:var(--surface2);border-radius:10px;padding:13px 15px;margin-bottom:11px}
   .lbl{display:flex;justify-content:space-between;align-items:center;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:700;margin-bottom:8px}
   .copybtn{background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;text-transform:none;letter-spacing:0}
@@ -207,6 +213,14 @@ function copyText(t){navigator.clipboard.writeText(t).then(()=>toast('Copied ✓
 function greeting(){const h=new Date().getHours();return h<12?'Good morning':h<18?'Good afternoon':'Good evening';}
 function todayStr(){return new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});}
 function fmtDate(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
+function relDate(ds){
+  if(!ds) return '';
+  const d=new Date(ds+'T00:00:00'); if(isNaN(d)) return ds;
+  const days=Math.floor((Date.now()-d.getTime())/86400000);
+  if(days<=0) return 'today'; if(days===1) return 'yesterday';
+  if(days<7) return days+' days ago'; if(days<30) return Math.floor(days/7)+'w ago';
+  return Math.floor(days/30)+'mo ago';
+}
 
 let DATA={pack:null}, VIEW='jobs', VIEW_DATE=null; const HIST={};
 function activePack(){ return VIEW_DATE?HIST[VIEW_DATE]:DATA.pack; }
@@ -237,6 +251,7 @@ function jobCard(jb,i){
       <span class="mtag ${esc(jb.match)}">${esc(jb.match)}</span></div>
     <div class="jc-title">${esc(jb.title)}</div>
     <div class="jc-co">${esc(jb.company||'')}${jb.location?' · '+esc(jb.location):''}</div>
+    <div class="jc-co" style="font-size:11.5px">📅 ${jb.date?esc(relDate(jb.date)):'date n/a'}${jb.date&&relDate(jb.date)==='today'?' 🟢':''} · ${esc(jb.source||'')}</div>
     <div class="rtag">📄 ${esc(jb.resume)} · open →</div>
   </div>`;
 }
@@ -270,6 +285,16 @@ function openJob(jb){
       <span class="chip">Fit <b>${jb.fit_score}/100</b></span>
       <span class="chip">${jb.match==='strong'?'🟢 Strong match':'🟡 Stretch — apply anyway'}</span>
       <span class="chip">Send: <b>${esc(jb.resume)}</b></span>
+    </div>
+    <div class="block"><div class="lbl"><span>Key details</span></div>
+      <div class="kd">
+        ${jb.date?`<div class="kdr"><span>📅 Posted</span><b class="${relDate(jb.date)==='today'?'fresh':''}">${esc(jb.date)} · ${esc(relDate(jb.date))}</b></div>`:`<div class="kdr"><span>📅 Posted</span><b>date not provided</b></div>`}
+        ${jb.job_type?`<div class="kdr"><span>💼 Type</span><b>${esc(jb.job_type)}</b></div>`:''}
+        <div class="kdr"><span>💰 Salary</span><b>${jb.salary?esc(jb.salary):'Not listed'}</b></div>
+        <div class="kdr"><span>📍 Location</span><b>${esc(jb.location||'Remote')}</b></div>
+        <div class="kdr"><span>🌐 Source</span><b>${esc(jb.source||'')}</b></div>
+        ${jb.tags?`<div class="kdr"><span>🏷️ Tags</span><b>${esc(jb.tags.split(',').slice(0,6).map(t=>t.trim()).filter(Boolean).join(', '))}</b></div>`:''}
+      </div>
     </div>
     ${jb.why?`<div class="block"><div class="lbl"><span>Why it fits</span></div><div class="btext">${esc(jb.why)}</div></div>`:''}
     ${jb.summary?`<div class="block"><div class="lbl"><span>What the role is</span></div><div class="btext">${esc(jb.summary)}</div></div>`:''}
@@ -318,24 +343,14 @@ function portfolioSect(){
   return `<div class="sect"><h3>Portfolio Samples</h3>
     ${PORTFOLIO.map(l=>`<div class="plink"><span>${esc(l[0])}</span><a href="${l[1]}" target="_blank">open ↗</a></div>`).join('')}</div>`;
 }
-function renderProfile(){
-  const head=`<div class="vhead"><h1>📄 Resumes & Profile</h1><p>Your resumes & contact info are encrypted — unlock them here, inside the portal.</p></div>`;
+async function renderProfile(){
+  const head=`<div class="vhead"><h1>📄 Resumes & Profile</h1><p>Download a resume, copy any detail into an application, grab a portfolio link.</p></div>`;
+  const credit=`<div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
   if(!VAULT){
-    $('view').innerHTML=head+`
-      <div class="sect"><h3>🔒 Private — unlock to view</h3>
-        <p style="color:var(--muted);font-size:13px;margin-bottom:12px">Your resumes and contact details are AES-encrypted. Enter your <b>resume password</b> (separate from the portal password) to open them. No one without this password can read them — not even from the page source.</p>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <input id="vpw" type="password" placeholder="Resume password" style="flex:1;min-width:160px;padding:10px 13px;border-radius:9px;border:1px solid var(--border);background:var(--surface2);color:var(--text);outline:none">
-          <button class="btn primary" id="vbtn">Unlock</button>
-        </div>
-        <div id="verr" style="color:var(--red);font-size:12.5px;margin-top:10px;min-height:16px"></div>
-      </div>`+portfolioSect()+
-      `<div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
-    const doUnlock=async()=>{ $('vbtn').textContent='Unlocking…';
-      const ok=await unlockVault($('vpw').value);
-      if(ok){ renderProfile(); } else { $('verr').textContent='❌ Wrong resume password'; $('vbtn').textContent='Unlock'; } };
-    $('vbtn').onclick=doUnlock;
-    $('vpw').addEventListener('keydown',e=>{ if(e.key==='Enter') doUnlock(); });
+    $('view').innerHTML=head+`<div class="sect"><p style="color:var(--muted);font-size:13px">Loading your resumes…</p></div>`+portfolioSect()+credit;
+    const ok=await unlockVault('automation');   // auto-open with the portal password — no extra step
+    if(ok){ renderProfile(); return; }
+    $('view').innerHTML=head+`<div class="sect"><p style="color:var(--red);font-size:13px">Couldn't load the resume vault — try refreshing the page.</p></div>`+portfolioSect()+credit;
     return;
   }
   window._cp={}; const C=VAULT.contact;

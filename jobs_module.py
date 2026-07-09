@@ -75,6 +75,7 @@ def norm(job):
         "title": job["title"], "company": job.get("company", ""),
         "location": job.get("location", "Remote"), "url": job["url"],
         "source": job["source"], "date": job.get("date", ""),
+        "job_type": job.get("job_type", ""), "salary": job.get("salary", ""),
         "tags": job.get("tags", ""), "description": clean(job.get("description", "")),
     }
 
@@ -89,7 +90,8 @@ def from_remotive():
                             "location": j.get("candidate_required_location", "Remote"),
                             "url": j.get("url", ""), "source": "Remotive",
                             "date": (j.get("publication_date") or "")[:10],
-                            "tags": " ".join(j.get("tags", [])), "description": j.get("description", "")})
+                            "job_type": j.get("job_type", ""), "salary": j.get("salary", ""),
+                            "tags": ", ".join(j.get("tags", [])), "description": j.get("description", "")})
         except Exception as e:
             print(f"  ❌ Remotive({term}): {e}")
     return out
@@ -101,10 +103,15 @@ def from_jobicy():
         try:
             r = requests.get(f"https://jobicy.com/api/v2/remote-jobs?count=50&tag={tag}", headers=UA, timeout=30)
             for j in r.json().get("jobs", []):
+                smin, smax, cur = j.get("annualSalaryMin"), j.get("annualSalaryMax"), j.get("salaryCurrency", "")
+                salary = f"{cur} {int(smin):,}–{int(smax):,}/yr" if smin and smax else ""
+                jt = j.get("jobType", [])
                 out.append({"title": j.get("jobTitle", ""), "company": j.get("companyName", ""),
                             "location": j.get("jobGeo", "Remote"), "url": j.get("url", ""),
                             "source": "Jobicy", "date": (j.get("pubDate") or "")[:10],
-                            "tags": " ".join(j.get("jobIndustry", []) if isinstance(j.get("jobIndustry"), list) else []),
+                            "job_type": ", ".join(jt) if isinstance(jt, list) else str(jt or ""),
+                            "salary": salary,
+                            "tags": ", ".join(j.get("jobIndustry", []) if isinstance(j.get("jobIndustry"), list) else []),
                             "description": j.get("jobExcerpt", "")})
         except Exception as e:
             print(f"  ❌ Jobicy({tag}): {e}")
@@ -116,10 +123,18 @@ def from_arbeitnow():
     try:
         r = requests.get("https://www.arbeitnow.com/api/job-board-api", headers=UA, timeout=30)
         for j in r.json().get("data", []):
+            date = ""
+            try:
+                ts = j.get("created_at")
+                if ts:
+                    date = datetime.fromtimestamp(int(ts), timezone.utc).strftime("%Y-%m-%d")
+            except Exception:
+                pass
             out.append({"title": j.get("title", ""), "company": j.get("company_name", ""),
                         "location": j.get("location", "Remote"), "url": j.get("url", ""),
-                        "source": "Arbeitnow", "date": "",
-                        "tags": " ".join(j.get("tags", []) + j.get("job_types", [])),
+                        "source": "Arbeitnow", "date": date,
+                        "job_type": ", ".join(j.get("job_types", [])), "salary": "",
+                        "tags": ", ".join(j.get("tags", [])),
                         "description": j.get("description", "")})
     except Exception as e:
         print(f"  ❌ Arbeitnow: {e}")
@@ -133,10 +148,13 @@ def from_remoteok():
         for j in r.json():
             if not isinstance(j, dict) or "position" not in j:
                 continue
+            smin, smax = j.get("salary_min"), j.get("salary_max")
+            salary = f"${int(smin):,}–${int(smax):,}" if smin and smax else ""
             out.append({"title": j.get("position", ""), "company": j.get("company", ""),
                         "location": j.get("location", "Remote"), "url": j.get("url", ""),
                         "source": "RemoteOK", "date": (j.get("date") or "")[:10],
-                        "tags": " ".join(j.get("tags", [])), "description": j.get("description", "")})
+                        "job_type": "", "salary": salary,
+                        "tags": ", ".join(j.get("tags", [])), "description": j.get("description", "")})
     except Exception as e:
         print(f"  ❌ RemoteOK: {e}")
     return out
