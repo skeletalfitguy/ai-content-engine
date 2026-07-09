@@ -190,14 +190,16 @@ def from_weworkremotely():
     return out
 
 
-def is_recent(ds, max_days=25):
+def is_recent(ds, max_days=1):
+    # Only genuinely FRESH jobs: posted today or yesterday. If a posting has no
+    # verifiable date we can't prove it's fresh, so we drop it (better empty than stale).
     if not ds:
-        return True   # keep undated postings
+        return False
     try:
         d = datetime.strptime(ds, "%Y-%m-%d").date()
-        return (datetime.now(timezone.utc).date() - d).days <= max_days
+        return 0 <= (datetime.now(timezone.utc).date() - d).days <= max_days
     except Exception:
-        return True
+        return False
 
 
 def main():
