@@ -3,6 +3,8 @@ import re
 import sys
 import json
 import html
+import email.utils
+from collections import defaultdict
 from datetime import datetime, timezone
 import requests
 
@@ -160,11 +162,50 @@ def from_remoteok():
     return out
 
 
+def from_weworkremotely():
+    out = []
+    for cat in ["remote-marketing-jobs", "remote-copywriting-jobs", "remote-sales-and-marketing-jobs"]:
+        try:
+            r = requests.get(f"https://weworkremotely.com/categories/{cat}.rss", headers=UA, timeout=30)
+            for it in re.findall(r"<item>(.*?)</item>", r.text, re.S):
+                def g(tag):
+                    m = re.search(rf"<{tag}>(.*?)</{tag}>", it, re.S)
+                    if not m:
+                        return ""
+                    return re.sub(r"<!\[CDATA\[(.*?)\]\]>", r"\1", m.group(1), flags=re.S).strip()
+                pub, date = g("pubDate"), ""
+                try:
+                    if pub:
+                        date = email.utils.parsedate_to_datetime(pub).strftime("%Y-%m-%d")
+                except Exception:
+                    pass
+                title_raw = g("title")
+                company, sep, jt = title_raw.partition(":")
+                out.append({"title": (jt or title_raw).strip(), "company": company.strip() if sep else "",
+                            "location": g("region") or "Remote", "url": g("link"),
+                            "source": "WeWorkRemotely", "date": date, "job_type": "", "salary": "",
+                            "tags": g("category"), "description": g("description")})
+        except Exception as e:
+            print(f"  ❌ WWR({cat}): {e}")
+    return out
+
+
+def is_recent(ds, max_days=25):
+    if not ds:
+        return True   # keep undated postings
+    try:
+        d = datetime.strptime(ds, "%Y-%m-%d").date()
+        return (datetime.now(timezone.utc).date() - d).days <= max_days
+    except Exception:
+        return True
+
+
 def main():
     print("💼 Anas Jobs Radar — scanning free job boards\n")
     seen = set(load_json(SEEN_FILE, []))
-    raw = from_remotive() + from_jobicy() + from_arbeitnow() + from_remoteok()
-    print(f"📦 {len(raw)} raw postings pulled\n")
+    raw = (from_remotive() + from_jobicy() + from_arbeitnow()
+           + from_remoteok() + from_weworkremotely())
+    print(f"📦 {len(raw)} raw postings pulled from 5 sites\n")
 
     jobs, ids = [], set()
     for j in raw:
@@ -175,18 +216,35 @@ def main():
         jid = j["url"]
         if jid in seen or jid in ids:
             continue
+        nj = norm(j)
+        if not is_recent(nj["date"]):     # drop stale postings
+            continue
         ids.add(jid)
-        jobs.append(norm(j))
-        print(f"✅ {j['source']:<9} {j['title'][:55]}  @ {j.get('company','')[:24]}")
+        jobs.append(nj)
 
-    jobs = jobs[:30]  # keep the pack tight for the brain
+    # freshest first, then cap per source so no single website dominates the list
+    jobs.sort(key=lambda x: x.get("date", ""), reverse=True)
+    per_src, balanced = defaultdict(int), []
+    for jb in jobs:
+        if per_src[jb["source"]] >= 8:
+            continue
+        per_src[jb["source"]] += 1
+        balanced.append(jb)
+    jobs = balanced[:32]
+
+    for jb in jobs:
+        print(f"✅ {jb['source']:<14} {jb['date'] or '(no date) ':<11} {jb['title'][:44]}")
+
     with open(RAW_FILE, "w", encoding="utf-8") as f:
         json.dump(jobs, f, indent=4, ensure_ascii=False)
     seen.update(j["url"] for j in jobs)
     with open(SEEN_FILE, "w", encoding="utf-8") as f:
         json.dump(sorted(seen), f, indent=2)
 
-    print(f"\n✅ {len(jobs)} new relevant jobs saved to {RAW_FILE}")
+    dist = {}
+    for jb in jobs:
+        dist[jb["source"]] = dist.get(jb["source"], 0) + 1
+    print(f"\n✅ {len(jobs)} jobs saved · sources: {dist}")
 
 
 if __name__ == "__main__":

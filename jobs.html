@@ -78,6 +78,11 @@
   .jc-title{font-size:15px;font-weight:600;line-height:1.35}
   .jc-co{color:var(--muted);font-size:12.5px}
   .rtag{font-size:11px;color:var(--accent);margin-top:auto}
+  .legend{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:12.5px;color:var(--muted);margin-bottom:16px;line-height:1.6}
+  .legend b{color:var(--text)}
+  .scorewrap{display:flex;flex-direction:column;align-items:center;min-width:44px}
+  .scorelbl{font-size:8.5px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-top:-3px}
+  .newbadge{font-size:10px;font-weight:700;letter-spacing:.5px;padding:3px 7px;border-radius:5px;background:rgba(48,209,88,.16);color:var(--green)}
   #modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:8000;display:none;align-items:center;justify-content:center;padding:18px}
   #modal.show{display:flex}
   .mbox{background:var(--surface);border:1px solid var(--border);border-radius:14px;max-width:620px;width:100%;max-height:88vh;overflow-y:auto;padding:22px}
@@ -221,6 +226,7 @@ function relDate(ds){
   if(days<7) return days+' days ago'; if(days<30) return Math.floor(days/7)+'w ago';
   return Math.floor(days/30)+'mo ago';
 }
+function isFresh(ds){ if(!ds) return false; const d=new Date(ds+'T00:00:00'); if(isNaN(d)) return false; return Math.floor((Date.now()-d.getTime())/86400000)<=2; }
 
 let DATA={pack:null}, VIEW='jobs', VIEW_DATE=null; const HIST={};
 function activePack(){ return VIEW_DATE?HIST[VIEW_DATE]:DATA.pack; }
@@ -247,8 +253,8 @@ function scoreClass(n){return n>=75?'hi':n>=45?'mid':'lo';}
 
 function jobCard(jb,i){
   return `<div class="jcard" data-idx="${i}">
-    <div class="jc-top"><div class="score ${scoreClass(jb.fit_score)}">${jb.fit_score}</div>
-      <span class="mtag ${esc(jb.match)}">${esc(jb.match)}</span></div>
+    <div class="jc-top"><div class="scorewrap"><div class="score ${scoreClass(jb.fit_score)}">${jb.fit_score}</div><div class="scorelbl">fit</div></div>
+      <div style="display:flex;gap:6px;align-items:center">${isFresh(jb.date)?'<span class="newbadge">🟢 NEW</span>':''}<span class="mtag ${esc(jb.match)}">${esc(jb.match)}</span></div></div>
     <div class="jc-title">${esc(jb.title)}</div>
     <div class="jc-co">${esc(jb.company||'')}${jb.location?' · '+esc(jb.location):''}</div>
     <div class="jc-co" style="font-size:11.5px">📅 ${jb.date?esc(relDate(jb.date)):'date n/a'}${jb.date&&relDate(jb.date)==='today'?' 🟢':''} · ${esc(jb.source||'')}</div>
@@ -268,6 +274,7 @@ function renderJobs(){
       <div class="meta">Fresh copywriting & creative jobs${p&&p.generated_at?' · '+esc(p.generated_at):''} · ${todayStr()}</div></div>
       <div class="actions">${actions}</div></div>
     ${weekStrip()}${banner}
+    <div class="legend">The big number is the <b>Fit Score</b> — how well each job matches your two resumes (0–100). <b style="color:var(--green)">75+ = strong match</b> · below 75 = a stretch (still worth applying — every job is a win). Sorted <b>best match first</b>; all jobs are recent, and a <b style="color:var(--green)">🟢 NEW</b> tag marks anything posted in the last 2 days.</div>
     <div class="grid" id="grid">${jobs.length?jobs.map(jobCard).join(''):'<div class="empty">No new jobs in this run — the 9 AM scan will refill this.</div>'}</div>
     <div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
   const r=$('refresh'); if(r) r.onclick=async()=>{toast('Pulling latest jobs…');await loadData();render();toast('Refreshed ✓');};

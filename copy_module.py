@@ -69,6 +69,7 @@ NICHE_QUERIES = [
     "linkedin personal branding copywriter",
     "personal branding on instagram",
     "instagram growth for coaches",
+    "conversion rate optimization copy",
 ]
 
 # Title must clearly be about copy / marketing / AI-for-business

@@ -42,6 +42,9 @@ NICHE_QUERIES = [
     "what happens inside your body when you do pull ups",
     "what happens to your body when you cycle everyday",
     "what happens to your body when you skip the gym",
+    "what happens to your body when you do burpees everyday",
+    "what happens to your body when you jump rope everyday",
+    "what happens inside your body when you sprint",
 ]
 
 # Only keep videos whose title is clearly FITNESS (kills diet/pregnancy/random noise)

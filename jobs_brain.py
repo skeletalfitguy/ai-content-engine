@@ -103,7 +103,9 @@ def main():
                          "resume": a.get("resume", "Copywriting & Email"), "why": a.get("why", ""),
                          "proposal_opener": a.get("proposal_opener", ""), "flags": a.get("flags", ""),
                          "summary": a.get("summary", j["description"][:200])})
-    enriched.sort(key=lambda x: x["fit_score"], reverse=True)
+    # best match first (what he actually applies to); the recency filter already
+    # guarantees every job is fresh, and the dashboard flags brand-new ones.
+    enriched.sort(key=lambda x: (x.get("fit_score", 0), x.get("date", "")), reverse=True)
 
     pack = {"generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"), "jobs": enriched}
     with open(PACK_FILE, "w", encoding="utf-8") as f:
