@@ -125,6 +125,21 @@
   .acc .sbody{display:none;margin-top:11px}
   .acc.open .sbody{display:block}
   .acc.assembly{border-color:var(--accent);background:linear-gradient(135deg,var(--surface),var(--surface2))}
+  .gpost{max-width:680px}
+  .gp-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .gp-badge{background:var(--accent);color:#111;font-weight:700;font-size:12px;padding:6px 12px;border-radius:8px;letter-spacing:.5px}
+  .gp-day{color:var(--muted);font-size:12.5px}
+  .rhythm{display:flex;gap:8px;margin-bottom:14px}
+  .rcell{flex:1;text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:8px 4px;color:var(--muted);font-size:11px}
+  .rcell b{display:block;font-size:14px;color:var(--text)}
+  .rcell.on{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
+  .rcell.on b{color:var(--accent)}
+  .frame{display:flex;gap:11px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border)}
+  .frame:last-child{border-bottom:none}
+  .frame .ft{flex:none;min-width:52px;color:var(--accent);font-weight:700;font-size:12px}
+  .frame p{font-size:13.5px;color:#e6e6ea}
+  .btext{font-size:13.5px;color:#e6e6ea;line-height:1.6}
+  .dmtrig{margin-top:10px;background:rgba(48,209,88,.12);border:1px solid rgba(48,209,88,.4);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--green)}
   .mm-today{background:linear-gradient(135deg,var(--surface),var(--surface2));border:1px solid var(--accent);border-radius:14px;padding:24px;margin-bottom:22px}
   .mm-kicker{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:8px}
   .mm-today h2{font-size:20px;margin-bottom:10px}
@@ -436,7 +451,7 @@ function wireHeader(){
   document.querySelectorAll('.subtabs a').forEach(t=>t.onclick=()=>{SUB=t.dataset.sub;render();});
 }
 function subtabs(){
-  const contentLabel=VIEW==='instagram'?'🖼️ Carousels':'📄 Posts';
+  const contentLabel=VIEW==='instagram'?'🗓️ Grid Post':'📄 Posts';
   const stratLabel=VIEW==='instagram'?'📈 Instagram Strategy':'📈 LinkedIn Strategy';
   return `<div class="subtabs">
     <a data-sub="content" class="${SUB==='content'?'active':''}">${contentLabel}</a>
@@ -464,14 +479,42 @@ function render(){
   else renderHookBank();
 }
 
+function gridPostHTML(g){
+  const isReel=!!(g.reel_frames&&g.reel_frames.length);
+  const rhythm=`<div class="rhythm">${[1,2,3].map(n=>`<div class="rcell${g.post_number===n?' on':''}"><b>${n}</b><span>${n===1?'Quote Carousel':n===2?'Motion Reel':'Mechanism'}</span></div>`).join('')}</div>`;
+  const assets=isReel
+    ? g.reel_frames.map(f=>`<div class="frame"><span class="ft">${esc(f.time)}</span><p>${esc(f.overlay)}</p></div>`).join('')
+    : (g.slides||[]).map((s,i)=>`<div class="slide"><div class="sn">${i+1}</div><p>${esc(s)}</p></div>`).join('');
+  CLIP.gassets=isReel ? g.reel_frames.map(f=>`[${f.time}] ${f.overlay}`).join('\n')
+                      : (g.slides||[]).map((s,i)=>`Slide ${i+1}: ${s}`).join('\n');
+  CLIP.gcap=(g.caption||'')+(g.dm_trigger?'\n'+g.dm_trigger:'');
+  return `<div class="gpost">
+    <div class="gp-head"><span class="gp-badge">POST ${g.post_number} · ${esc(g.post_type)}</span>
+      <span class="gp-day">${esc(g.for_day)} · Row ${esc(g.row)}</span></div>
+    ${rhythm}
+    <div class="block"><div class="lbl"><span>🧭 Strategic rationale — cohesion check</span></div><div class="btext">${esc(g.strategic_rationale)}</div></div>
+    <div class="block"><div class="lbl"><span>${isReel?'🎞️ 10-second reel — frame by frame':'🖼️ Carousel — slide by slide'}</span><button class="copybtn" onclick="copyText(CLIP.gassets)">Copy all</button></div>${assets}</div>
+    <div class="block"><div class="lbl"><span>📝 Caption & CTA</span><button class="copybtn" onclick="copyText(CLIP.gcap)">Copy</button></div><div class="caption">${esc(g.caption)}</div>
+      ${g.dm_trigger?`<div class="dmtrig">💬 ManyChat DM trigger: <b>${esc(g.dm_trigger)}</b></div>`:''}</div>
+    ${g.theme_note?`<div class="block"><div class="lbl"><span>🎨 Visual theme (Black · Gold · White)</span></div><div class="btext" style="color:var(--muted)">${esc(g.theme_note)}</div></div>`:''}
+  </div>`;
+}
+
 function renderPlatform(){
-  const ideas=(activePack()&&activePack().ideas)||[];
+  const pk=activePack();
+  const ideas=(pk&&pk.ideas)||[];
+  const gpost=pk&&pk.instagram_grid;
   const isIG=VIEW==='instagram';
-  const sub=isIG?'Instagram carousels — daily brief':'LinkedIn posts — daily brief';
-  const unit=isIG?'carousels':'posts';
+  const sub=isIG?(gpost?'Instagram grid — the 1-2-3 row rhythm':'Instagram carousels — daily brief'):'LinkedIn posts — daily brief';
+  const count=isIG&&gpost?1:ideas.length;
+  const unit=isIG?(gpost?'grid post':'carousels'):'posts';
   let body='';
   if(SUB==='content'){
-    body=`<div class="grid" id="grid">${ideas.length?ideas.map((it,i)=>ideaCard(it,i,isIG?'ig':'li')).join(''):'<div class="empty">No pack for this day.</div>'}</div>`;
+    if(isIG&&gpost){
+      body=gridPostHTML(gpost);
+    } else {
+      body=`<div class="grid" id="grid">${ideas.length?ideas.map((it,i)=>ideaCard(it,i,isIG?'ig':'li')).join(''):'<div class="empty">No pack for this day.</div>'}</div>`;
+    }
   } else if(SUB==='topics'){
     body=ideas.length?ideas.map((it,i)=>{
       const pair='Topic: '+(it.topic||'')+'\nHook: '+(it.hook||'');
@@ -492,10 +535,10 @@ function renderPlatform(){
         <ul>${sec.pts.map(p=>`<li><b>${esc(p[0])}</b> ${esc(p[1])}</li>`).join('')}</ul>
       </div></div>`).join('');
   }
-  $('view').innerHTML=header(sub,ideas.length,unit)+weekStrip()+banner()+subtabs()+body
+  $('view').innerHTML=header(sub,count,unit)+weekStrip()+banner()+subtabs()+body
     +`<div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
   wireHeader();
-  if(SUB==='content'){
+  if(SUB==='content'&&!(isIG&&gpost)){
     const g=$('grid'); if(g) g.querySelectorAll('.pcard').forEach(c=>c.onclick=()=>isIG?openIG(ideas[+c.dataset.idx]):openLI(ideas[+c.dataset.idx]));
   }
   document.querySelectorAll('.acc-h').forEach(h=>h.onclick=()=>h.parentElement.classList.toggle('open'));

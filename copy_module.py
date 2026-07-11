@@ -20,65 +20,95 @@ if not YOUTUBE_API_KEY:
 youtube = build("youtube", "v3", developerKey=YOUTUBE_API_KEY)
 
 # ---------------------------------------------------------------------------
-# ANAS COPY LAB — copywriting / AI+copy / emails / funnels / coaching niche.
-# ~40% of daily YouTube quota (39 searches x 100 = 3,900 + ~65 overhead ≈ 3,965).
+# ANAS COPY LAB — research engine for the HIGH-TICKET FITNESS COACHING brand grid.
+# ~65% of daily YouTube quota (65 searches x 100 = 6,500 + ~80 overhead ≈ 6,580).
+# Feeds: quote-carousel material (mindset/identity), mechanism breakdowns
+# (training/nutrition/coaching science), reel concepts (high-status aesthetic),
+# and coaching-business positioning angles.
 # ---------------------------------------------------------------------------
 NICHE_QUERIES = [
-    # core copywriting
-    "copywriting tips",
-    "how to write a sales page",
-    "direct response copywriting",
-    "headline formulas copywriting",
-    "viral hooks copywriting",
-    "how to write viral hooks",
-    "copywriting for beginners",
-    "sales page breakdown",
-    "landing page mistakes",
-    "high converting landing page",
-    "persuasion psychology in marketing",
-    "marketing psychology hooks",
-    # emails
-    "email copywriting",
-    "email marketing strategy",
-    "email marketing for coaches",
-    "email sequence that converts",
-    "email newsletter growth",
-    "cold email that gets clients",
-    # funnels & offers
-    "sales funnel explained",
-    "offer that sells marketing",
-    "alex hormozi offer",
-    "vsl video sales letter script",
-    "facebook ads copywriting",
-    # AI x copywriting
-    "ai copywriting chatgpt",
-    "will ai replace copywriters",
-    "claude ai for copywriting",
-    "chatgpt prompts for marketing",
-    "best ai marketing tools 2026",
-    # storytelling & content
-    "storytelling marketing",
-    "brand storytelling examples",
-    "content marketing for coaches",
-    # client acquisition & branding
-    "how to get copywriting clients",
-    "how to get clients on linkedin",
-    "freelance copywriting",
-    "how to build a copywriting portfolio",
-    "how i became a copywriter",
-    "linkedin personal branding copywriter",
-    "personal branding on instagram",
-    "instagram growth for coaches",
-    "conversion rate optimization copy",
+    # high-ticket coaching business (13)
+    "high ticket fitness coaching",
+    "online fitness coaching business",
+    "how to get fitness coaching clients",
+    "fitness coach content strategy",
+    "personal trainer business",
+    "online coaching offer",
+    "high ticket coaching clients",
+    "fitness coaching sales",
+    "why most fitness coaches fail",
+    "fitness coach marketing",
+    "scale online coaching business",
+    "premium coaching brand",
+    "coaching business mistakes",
+    # mindset / identity / discipline (13)
+    "discipline over motivation",
+    "mindset of high achievers",
+    "identity change habits",
+    "self discipline rules",
+    "delayed gratification success",
+    "stoic discipline",
+    "mental toughness training",
+    "why discipline beats talent",
+    "habits of successful men",
+    "dopamine detox discipline",
+    "hard truths about success",
+    "standards over goals",
+    "high standards lifestyle",
+    # contrarian fitness / training truths (13)
+    "fitness industry lies",
+    "why your workout doesn't work",
+    "training mistakes lifters make",
+    "hypertrophy science explained",
+    "why cardio is overrated",
+    "strength training truths",
+    "muscle building myths",
+    "fat loss myths",
+    "why you're not building muscle",
+    "minimalist training",
+    "training frequency science",
+    "progressive overload explained",
+    "natural lifter limits",
+    # transformation / physique psychology (13)
+    "body transformation psychology",
+    "physique transformation lessons",
+    "what getting lean teaches you",
+    "aesthetic physique",
+    "body recomposition explained",
+    "why transformations fail",
+    "12 week transformation truth",
+    "lessons from losing fat",
+    "building muscle changed my life",
+    "gym changed my life",
+    "fitness attractiveness science",
+    "testosterone lifestyle optimization",
+    "sleep recovery muscle growth",
+    # high-status aesthetic / reel material (6)
+    "old money aesthetic",
+    "luxury lifestyle motivation",
+    "high status body language",
+    "quiet luxury brand",
+    "cinematic gym motivation",
+    "gym aesthetic edit",
+    # instagram growth / dm funnel for coaches (7)
+    "manychat instagram automation",
+    "instagram dm funnel",
+    "instagram carousel strategy",
+    "instagram grid aesthetic",
+    "content strategy for coaches",
+    "storytelling for coaches",
+    "alex hormozi coaching business",
 ]
 
-# Title must clearly be about copy / marketing / AI-for-business
-CORE = ("copywrit", "copy writ", "sales page", "landing page", "email", "funnel",
-        "freelanc", "headline", "hook", "offer", "persuas", "storytell",
-        "marketing", "cold email", "sales letter", "direct response", "client",
-        "personal brand", "high converting", "conversion")
+# Title must clearly be in the fitness-coaching / discipline / high-status world
+CORE = ("coach", "fitness", "gym", "train", "muscle", "physique", "transformation",
+        "fat loss", "lean", "hypertrophy", "lifter", "lifting", "workout", "cardio",
+        "strength", "discipline", "mindset", "habit", "dopamine", "stoic", "success",
+        "high ticket", "high-ticket", "testosterone", "recovery", "aesthetic",
+        "old money", "luxury", "status", "instagram", "carousel", "manychat",
+        "dm funnel", "content", "offer", "client", "motivation", "standards", "body")
 AI_T = ("chatgpt", "claude", "gemini", "artificial intelligence", "ai tool")
-BIZ = ("copy", "writ", "market", "content", "business", "sell", "sales", "brand", "client", "coach")
+BIZ = ("coach", "fitness", "content", "business", "brand", "client", "market", "sell")
 
 DAYS_BACK = 120
 MAX_PER_QUERY = 40
@@ -165,7 +195,10 @@ def find_outliers(video_ids, seen):
             if vid in seen:
                 continue
             views = int(item["statistics"].get("viewCount", 0))
-            duration = isodate.parse_duration(item["contentDetails"]["duration"]).total_seconds()
+            dur_raw = item.get("contentDetails", {}).get("duration")
+            if not dur_raw:
+                continue  # live streams / premieres have no duration
+            duration = isodate.parse_duration(dur_raw).total_seconds()
             title = item["snippet"]["title"]
             subs = subs_map.get(item["snippet"]["channelId"], 0)
 

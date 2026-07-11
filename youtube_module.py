@@ -137,7 +137,10 @@ def find_outliers(video_ids, seen):
             if vid in seen:
                 continue  # already shown on a previous day
             views = int(item["statistics"].get("viewCount", 0))
-            duration = isodate.parse_duration(item["contentDetails"]["duration"]).total_seconds()
+            dur_raw = item.get("contentDetails", {}).get("duration")
+            if not dur_raw:
+                continue  # live streams / premieres have no duration
+            duration = isodate.parse_duration(dur_raw).total_seconds()
             title = item["snippet"]["title"]
             subs = subs_map.get(item["snippet"]["channelId"], 0)
 
