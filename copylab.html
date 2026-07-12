@@ -71,6 +71,14 @@
   .ddot.off{background:var(--border)}
   .ddot.rest{width:auto;height:auto;border-radius:0;font-size:8px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
   .day.active .ddot.on{background:#111}
+  .weeknav{display:flex;align-items:stretch;gap:8px}
+  .weeknav .week{flex:1;margin-bottom:0}
+  .wk-arrow{flex:0 0 auto;width:38px;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:9px;cursor:pointer;font-size:14px;transition:.15s}
+  .wk-arrow:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+  .wk-arrow:disabled{opacity:.3;cursor:default}
+  .wk-range{font-size:12.5px;color:var(--muted);margin:8px 0 16px;text-align:center}
+  .wk-range a{color:var(--accent);cursor:pointer;text-decoration:none}
+  .wk-range a:hover{text-decoration:underline}
   .subtabs{display:flex;gap:8px;margin:0 0 18px;flex-wrap:wrap}
   .subtabs a{padding:8px 15px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12.5px;cursor:pointer}
   .subtabs a.active{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);font-weight:600}
@@ -316,6 +324,18 @@ function activePack(){ return VIEW_DATE?HIST[VIEW_DATE]:DATA.pack; }
 
 function liveDate(){ return (DATA.pack&&DATA.pack.post_date)||fmtDate(new Date()); }
 
+let WEEK_MONDAY=null;   // Monday (YYYY-MM-DD) of the week the strip is showing; null = live week
+function mondayOf(ds){ const d=new Date(ds+'T00:00:00'); const j=d.getDay(); d.setDate(d.getDate()-(j===0?6:j-1)); return fmtDate(d); }
+function curWeekMonday(){ return WEEK_MONDAY||mondayOf(VIEW_DATE||liveDate()); }
+function oldestMonday(){ return HISTIDX.length?mondayOf(HISTIDX.slice().sort()[0]):mondayOf(liveDate()); }
+function shiftWeek(n){
+  const m=new Date(curWeekMonday()+'T00:00:00'); m.setDate(m.getDate()+n*7);
+  const nm=fmtDate(m);
+  if(nm>mondayOf(liveDate())||nm<oldestMonday()) return;   // stay within stored range
+  WEEK_MONDAY=nm; render();
+}
+function jumpThisWeek(){ WEEK_MONDAY=null; render(); }
+
 async function openDay(ds){
   const live=liveDate();
   const dow=new Date(ds+'T00:00:00').getDay();     // 0 = Sunday
@@ -334,17 +354,26 @@ function weekStrip(){
   const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
   const live=liveDate();
   const sel=VIEW_DATE||live;
-  const anchor=new Date(sel+'T00:00:00');   // show the week that CONTAINS the selected/target day
-  const jsDay=anchor.getDay(); const idx=jsDay===0?6:jsDay-1;
-  const monday=new Date(anchor); monday.setDate(anchor.getDate()-idx);
-  return '<div class="week">'+days.map((dn,i)=>{
+  const monday=new Date(curWeekMonday()+'T00:00:00');
+  const cells=days.map((dn,i)=>{
     const dt=new Date(monday); dt.setDate(monday.getDate()+i);
     const ds=fmtDate(dt);
     const isSun=(i===6);
     const has=HISTIDX.includes(ds)||ds===live;
     const dot=isSun?'<span class="ddot rest">rest</span>':(has?'<span class="ddot on"></span>':'<span class="ddot off"></span>');
     return `<div class="day${ds===sel?' active':''}${isSun?' sun':''}" data-date="${ds}">${dn}<small>${dt.getDate()}</small>${dot}</div>`;
-  }).join('')+'</div>';
+  }).join('');
+  const sun=new Date(monday); sun.setDate(monday.getDate()+6);
+  const opt={month:'short',day:'numeric'};
+  const range=monday.toLocaleDateString('en-US',opt)+' – '+sun.toLocaleDateString('en-US',opt);
+  const atLive=curWeekMonday()>=mondayOf(live);
+  const atOldest=curWeekMonday()<=oldestMonday();
+  return `<div class="weeknav" id="weeknav">
+      <button class="wk-arrow" id="wkprev" ${atOldest?'disabled':''} title="Older week">◀</button>
+      <div class="week">${cells}</div>
+      <button class="wk-arrow" id="wknext" ${atLive?'disabled':''} title="Newer week">▶</button>
+    </div>
+    <div class="wk-range">📆 ${range}${atLive?'':' · <a id="wktoday">jump to current week ⤶</a>'}</div>`;
 }
 
 function findSrc(t){
@@ -513,9 +542,18 @@ function header(sub,count,unit){
 }
 function wireHeader(){
   const r=$('refresh'); if(r) r.onclick=async()=>{toast('Pulling latest data…');await loadData();render();toast('Refreshed ✓');};
-  const b=$('backtoday'); if(b) b.onclick=()=>{VIEW_DATE=null;render();};
+  const b=$('backtoday'); if(b) b.onclick=()=>{VIEW_DATE=null;WEEK_MONDAY=null;render();};
   document.querySelectorAll('.day').forEach(d=>d.onclick=()=>openDay(d.dataset.date));
   document.querySelectorAll('.subtabs a').forEach(t=>t.onclick=()=>{SUB=t.dataset.sub;render();});
+  const wp=$('wkprev'); if(wp) wp.onclick=()=>shiftWeek(-1);
+  const wn=$('wknext'); if(wn) wn.onclick=()=>shiftWeek(1);
+  const wt=$('wktoday'); if(wt) wt.onclick=jumpThisWeek;
+  const nav=$('weeknav');                       // touch swipe: left = older, right = newer
+  if(nav){ let x0=null;
+    nav.addEventListener('touchstart',e=>{x0=e.changedTouches[0].clientX;},{passive:true});
+    nav.addEventListener('touchend',e=>{ if(x0===null)return; const dx=e.changedTouches[0].clientX-x0;
+      if(Math.abs(dx)>45) shiftWeek(dx<0?-1:1); x0=null; },{passive:true});
+  }
 }
 function subtabs(){
   const isIG=VIEW==='instagram';
@@ -731,7 +769,7 @@ async function openHistory(ds){
 $('modal').onclick=e=>{if(e.target.id==='modal')$('modal').classList.remove('show');};
 
 function route(v){
-  VIEW=v; SUB='content'; VIEW_DATE=null;
+  VIEW=v; SUB='content'; VIEW_DATE=null; WEEK_MONDAY=null;
   document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('active',a.dataset.view===v));
   render();
 }
