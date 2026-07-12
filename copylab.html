@@ -151,6 +151,8 @@
   .stag{font-size:11px;font-weight:700;border-radius:6px;padding:3px 8px;letter-spacing:.2px}
   .stag.yt{background:rgba(255,64,64,.14);color:#ff5a5a}
   .stag.ig{background:rgba(214,41,118,.16);color:#e1568f}
+  .hbintro{font-size:13.5px;color:var(--muted);margin:2px 0 14px;line-height:1.5}
+  .hbintro b{color:var(--accent)}
   .hbfilter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
   .hbf{border:1px solid var(--border);background:transparent;color:var(--muted);border-radius:8px;padding:7px 14px;cursor:pointer;font:inherit;font-size:13px;transition:.15s}
   .hbf:hover{border-color:var(--accent)}
@@ -268,7 +270,6 @@
       <a data-view="instagram" class="active"><span class="ic">📸</span><span class="lbl">Instagram Content</span></a>
       <a data-view="linkedin"><span class="ic">💼</span><span class="lbl">LinkedIn Content</span></a>
       <a data-view="mastermind"><span class="ic">🧠</span><span class="lbl">Mastermind</span></a>
-      <a data-view="hookbank"><span class="ic">🏦</span><span class="lbl">Hook Bank</span></a>
       <a data-view="history"><span class="ic">📚</span><span class="lbl">History</span></a>
     </nav>
     <div class="sb-foot">
@@ -517,11 +518,13 @@ function wireHeader(){
   document.querySelectorAll('.subtabs a').forEach(t=>t.onclick=()=>{SUB=t.dataset.sub;render();});
 }
 function subtabs(){
-  const contentLabel=VIEW==='instagram'?'🗓️ Grid Post':'📄 Posts';
-  const stratLabel=VIEW==='instagram'?'📈 Instagram Strategy':'📈 LinkedIn Strategy';
+  const isIG=VIEW==='instagram';
+  const contentLabel=isIG?'🗓️ Grid Post':'📄 Posts';
+  const stratLabel=isIG?'📈 Instagram Strategy':'📈 LinkedIn Strategy';
   return `<div class="subtabs">
     <a data-sub="content" class="${SUB==='content'?'active':''}">${contentLabel}</a>
     <a data-sub="topics" class="${SUB==='topics'?'active':''}">🎯 Topics &amp; Hooks</a>
+    ${isIG?`<a data-sub="hookbank" class="${SUB==='hookbank'?'active':''}">🏦 Hook Bank</a>`:''}
     <a data-sub="strategy" class="${SUB==='strategy'?'active':''}">${stratLabel}</a>
   </div>`;
 }
@@ -543,7 +546,7 @@ function render(){
   if(VIEW==='instagram'||VIEW==='linkedin') renderPlatform();
   else if(VIEW==='mastermind') renderMastermind();
   else if(VIEW==='history') renderHistory();
-  else renderHookBank();
+  else renderPlatform();
 }
 
 function gridPostHTML(g){
@@ -580,11 +583,15 @@ function renderPlatform(){
   if(GOPT>=gopts.length) GOPT=0;
   const gpost=gopts[GOPT]||null;
   const isIG=VIEW==='instagram';
-  const sub=isIG?(gpost?'Instagram grid — the 1-2-3 row rhythm':'Instagram carousels — daily brief'):'LinkedIn posts — daily brief';
-  const count=isIG&&gpost?1:ideas.length;
-  const unit=isIG?(gpost?'grid post':'carousels'):'posts';
+  let sub=isIG?(gpost?'Instagram grid — the 1-2-3 row rhythm':'Instagram carousels — daily brief'):'LinkedIn posts — daily brief';
+  let count=isIG&&gpost?1:ideas.length;
+  let unit=isIG?(gpost?'grid post':'carousels'):'posts';
   let body='';
-  if(SUB==='content'){
+  if(SUB==='hookbank'){
+    sub='Hook &amp; Quote Bank — single-line quotes from both platforms';
+    count=DATA.bank.length; unit='quotes';
+    body=hookBankBody();
+  } else if(SUB==='content'){
     if(isIG && pk && pk.rest_day){
       body=`<div class="empty" style="padding:46px 22px"><div style="font-size:38px">☕</div>
         <h2 style="margin:12px 0 6px;color:var(--text)">Sunday — rest day</h2>
@@ -677,15 +684,14 @@ function srcTag(s){
     ? '<span class="stag ig">📸 Instagram</span>'
     : '<span class="stag yt">📺 YouTube</span>';
 }
-function renderHookBank(){
+function hookBankBody(){
   const all=DATA.bank.slice().reverse();
   const counts={all:all.length,youtube:0,instagram:0};
   all.forEach(x=>{counts[(x.source==='instagram')?'instagram':'youtube']++;});
   const list=all.filter(x=>HB_SRC==='all'||(x.source||'youtube')===HB_SRC);
   const filt=[['all','All'],['youtube','📺 YouTube'],['instagram','📸 Instagram']]
     .map(([k,l])=>`<button class="hbf${HB_SRC===k?' on':''}" onclick="setHBSrc('${k}')">${l} (${counts[k]})</button>`).join('');
-  $('view').innerHTML=`<div class="vhead"><h1>🏦 Hook & Quote Bank</h1>
-      <p>Every single quote harvested from both platforms — tagged by source. Copy any one to hand-build a post yourself.</p></div>
+  return `<div class="hbintro">Every single quote harvested from both platforms — tagged by source. Copy any one line to post as a <b>single-image quote</b> instead of a full carousel.</div>
     <div class="hbfilter">${filt}</div>
     <div class="hblist">${list.length?list.map((x,i)=>{
       const quote=x.hook&&x.hook.length>4?x.hook:x.title;
@@ -698,8 +704,7 @@ function renderHookBank(){
         ${x.title&&x.title!==quote?`<div class="hbctx">${esc(x.title)}</div>`:''}
         ${tags.length?`<div class="tagwrap">${tags.map(t=>`<span class="tagchip sm">${esc(t)}</span>`).join('')}</div>`:''}
       </div>`;
-    }).join(''):'<div class="empty">Fills as the pipeline runs daily.</div>'}</div>
-    <div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
+    }).join(''):'<div class="empty">Fills as the pipeline runs daily.</div>'}</div>`;
 }
 
 function renderHistory(){
