@@ -80,17 +80,21 @@ TODAY'S ROTATING TREND POOL (fuel — extract patterns, never copy):
 
 Return JSON with EXACTLY these keys:
 
-"instagram_grid": {{
-  "for_day": "{for_day}",
-  "post_number": {post_no},
-  "post_type": "{post_type_short}",
-  "row": "{row}",
-  "strategic_rationale": "2-3 sentences: how this post links visually and thematically to the rest of the current row (the Cohesion Check)",
-  {assets_field}
-  "caption": "hyper-short scannable caption with clean emojis{dm_caption}",
-  "dm_trigger": {dm_field},
-  "theme_note": "one line describing the visual thread (colors/motif) to carry through this row"
-}},
+"grid_options": array of EXACTLY 3 DISTINCT versions of this SAME post (all are POST {post_no} for {for_day}).
+Anas will CHOOSE his favorite to publish, so the 3 must each use a clearly DIFFERENT hook, angle, and
+belief-shift — never overlapping with each other or with the recent posts. Each object:
+  {{
+    "for_day": "{for_day}",
+    "post_number": {post_no},
+    "post_type": "{post_type_short}",
+    "row": "{row}",
+    "option_label": "2-4 word label naming THIS version's angle (e.g. 'Comfort trap', 'Identity shift')",
+    "strategic_rationale": "2-3 sentences: how this post links visually and thematically to the rest of the current row (the Cohesion Check)",
+    {assets_field}
+    "caption": "hyper-short scannable caption with clean emojis{dm_caption}",
+    "dm_trigger": {dm_field},
+    "theme_note": "one line describing the visual thread (colors/motif) to carry through this row"
+  }},
 
 "ideas": array of 6 FRESH content ideas from the pool (for the Topics & Hooks page + future LinkedIn),
 each different from the recent posts:
@@ -240,27 +244,36 @@ def main():
         dm_field='"Comment <3-digit number>"' if dm_required else '""',
     )
 
-    print(f"🧠 Grid Manager (a day ahead): preparing {for_day} ({post_date}) → POST {post_no}\n")
+    print(f"🧠 Grid Manager (a day ahead): preparing 3 options for {for_day} ({post_date}) → POST {post_no}\n")
     pack = json.loads(call_gemini(prompt))
     pack["generated_at"] = now
     pack["rest_day"] = False
     pack["post_date"] = post_date        # the day this post should be published
     pack["for_day"] = for_day
-    if pack.get("instagram_grid"):
-        pack["instagram_grid"]["post_date"] = post_date
-        pack["instagram_grid"]["for_day"] = for_day
+
+    # 3 options to choose from (fall back gracefully if the model returned a single grid)
+    opts = pack.get("grid_options")
+    if not opts and pack.get("instagram_grid"):
+        opts = [pack["instagram_grid"]]
+    opts = opts or []
+    for g in opts:
+        g["post_date"] = post_date
+        g["for_day"] = for_day
+    pack["grid_options"] = opts
+    pack["instagram_grid"] = opts[0] if opts else {}   # default selection = option 1 (HTML compat)
 
     with open(PACK_FILE, "w", encoding="utf-8") as f:
         json.dump(pack, f, indent=4, ensure_ascii=False)
     archive(pack, post_date)             # archive under the POSTING date, not the run date
 
-    g = pack.get("instagram_grid", {})
     print("=" * 60)
-    print(f"🗓️  PREPARED for {g.get('for_day')} ({post_date}) · POST {g.get('post_number')} · {g.get('post_type')} · row {g.get('row')}")
-    assets = g.get("slides") or g.get("reel_frames") or []
-    print(f"🖼️  {len(assets)} {'slides' if g.get('slides') else 'frames'} · hook: {(assets[0] if isinstance(assets[0], str) else assets[0].get('overlay','')) if assets else '—'}")
-    if g.get("dm_trigger"):
-        print(f"📩 DM: {g['dm_trigger']}")
+    print(f"🗓️  PREPARED for {for_day} ({post_date}) · POST {post_no} · {len(opts)} options to choose from:")
+    for i, g in enumerate(opts, 1):
+        assets = g.get("slides") or g.get("reel_frames") or []
+        hook = (assets[0] if isinstance(assets[0], str) else assets[0].get("overlay", "")) if assets else "—"
+        print(f"   Option {i} [{g.get('option_label','')}] · {len(assets)} {'slides' if g.get('slides') else 'frames'} · hook: {hook}")
+    if opts and opts[0].get("dm_trigger"):
+        print(f"📩 DM: {opts[0]['dm_trigger']}")
     print("\n✅ Saved to copy_pack.json")
 
 
