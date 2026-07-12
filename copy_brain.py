@@ -3,7 +3,7 @@ import sys
 import json
 import time
 import random
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import requests
 from dotenv import load_dotenv
 
@@ -112,14 +112,19 @@ def _load(path, default):
         return default
 
 
-def grid_today():
-    wd = datetime.now(timezone.utc).weekday()  # Mon=0 ... Sun=6
-    if wd == 6:  # Sunday — rest day, no posting
-        return 0, "Sunday", "-", "", False
-    post_no = [1, 2, 3, 1, 2, 3][wd]
-    row = "Mon–Wed" if wd <= 2 else "Thu–Sat"
-    day = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][wd]
-    return post_no, day, row, "", (wd == 5)
+def grid_target():
+    """Runs a day AHEAD: today's run prepares TOMORROW's post so Anas schedules it in advance.
+    Tomorrow = Sunday (rest) means nothing to prepare → the pipeline is OFF today (that off-day
+    is Saturday). Returns (post_no, target_day_name, row, target_date, dm_required)."""
+    now = datetime.now(timezone.utc)
+    tw = (now.weekday() + 1) % 7                       # tomorrow's weekday: Mon=0 .. Sun=6
+    post_date = (now + timedelta(days=1)).strftime("%Y-%m-%d")
+    if tw == 6:                                         # tomorrow is Sunday → nothing to prepare
+        return 0, "Sunday", "-", post_date, False
+    post_no = [1, 2, 3, 1, 2, 3][tw]
+    row = "Mon–Wed" if tw <= 2 else "Thu–Sat"
+    day = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][tw]
+    return post_no, day, row, post_date, (tw == 5)     # dm required when tomorrow is Saturday
 
 
 def _recent_grids(n):
@@ -191,9 +196,10 @@ def call_gemini(prompt, retries=3):
     raise RuntimeError("All Gemini models failed after retries")
 
 
-def archive(pack):
+def archive(pack, day=None):
     os.makedirs("history", exist_ok=True)
-    day = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    if day is None:
+        day = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     with open(f"history/copy_{day}.json", "w", encoding="utf-8") as f:
         json.dump(pack, f, indent=4, ensure_ascii=False)
     idx = _load("history/index.json", {})
@@ -206,17 +212,13 @@ def archive(pack):
 
 
 def main():
-    post_no, for_day, row, _prep, dm_required = grid_today()
+    post_no, for_day, row, post_date, dm_required = grid_target()
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
-    # SUNDAY → rest day, generate nothing
+    # OFF day (Saturday): tomorrow is Sunday (rest). Nothing to prepare — leave the
+    # already-showing Saturday post in place and exit without touching anything.
     if post_no == 0:
-        pack = {"rest_day": True, "for_day": "Sunday", "generated_at": now,
-                "ideas": [], "winning_templates": []}
-        with open(PACK_FILE, "w", encoding="utf-8") as f:
-            json.dump(pack, f, indent=4, ensure_ascii=False)
-        archive(pack)
-        print("☕ Sunday — rest day. No post generated.")
+        print("🛑 Pipeline off today (Saturday). Tomorrow is Sunday — no post to prepare.")
         return
 
     # Build a FRESH, varied post every posting day (rotating pool + anti-repeat)
@@ -238,18 +240,23 @@ def main():
         dm_field='"Comment <3-digit number>"' if dm_required else '""',
     )
 
-    print(f"🧠 Grid Manager: {for_day} → POST {post_no} ({POST_TYPES[post_no].split(' (')[0]})\n")
+    print(f"🧠 Grid Manager (a day ahead): preparing {for_day} ({post_date}) → POST {post_no}\n")
     pack = json.loads(call_gemini(prompt))
     pack["generated_at"] = now
     pack["rest_day"] = False
+    pack["post_date"] = post_date        # the day this post should be published
+    pack["for_day"] = for_day
+    if pack.get("instagram_grid"):
+        pack["instagram_grid"]["post_date"] = post_date
+        pack["instagram_grid"]["for_day"] = for_day
 
     with open(PACK_FILE, "w", encoding="utf-8") as f:
         json.dump(pack, f, indent=4, ensure_ascii=False)
-    archive(pack)
+    archive(pack, post_date)             # archive under the POSTING date, not the run date
 
     g = pack.get("instagram_grid", {})
     print("=" * 60)
-    print(f"🗓️  {g.get('for_day')} · POST {g.get('post_number')} · {g.get('post_type')} · row {g.get('row')}")
+    print(f"🗓️  PREPARED for {g.get('for_day')} ({post_date}) · POST {g.get('post_number')} · {g.get('post_type')} · row {g.get('row')}")
     assets = g.get("slides") or g.get("reel_frames") or []
     print(f"🖼️  {len(assets)} {'slides' if g.get('slides') else 'frames'} · hook: {(assets[0] if isinstance(assets[0], str) else assets[0].get('overlay','')) if assets else '—'}")
     if g.get("dm_trigger"):

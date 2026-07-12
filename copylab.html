@@ -132,6 +132,8 @@
   .acc.open .sbody{display:block}
   .acc.assembly{border-color:var(--accent);background:linear-gradient(135deg,var(--surface),var(--surface2))}
   .gpost{max-width:680px}
+  .prepbanner{background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:10px 14px;font-size:13.5px;margin-bottom:14px}
+  .prepbanner b{color:var(--accent)}
   .gp-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
   .gp-badge{background:var(--accent);color:#111;font-weight:700;font-size:12px;padding:6px 12px;border-radius:8px;letter-spacing:.5px}
   .gp-day{color:var(--muted);font-size:12.5px}
@@ -263,30 +265,34 @@ const HIST={}; let CLIP={}; let HISTIDX=[];   // dates that actually have a copy
 
 function activePack(){ return VIEW_DATE?HIST[VIEW_DATE]:DATA.pack; }
 
+function liveDate(){ return (DATA.pack&&DATA.pack.post_date)||fmtDate(new Date()); }
+
 async function openDay(ds){
-  const today=fmtDate(new Date());
+  const live=liveDate();
   const dow=new Date(ds+'T00:00:00').getDay();     // 0 = Sunday
-  if(ds===today){ VIEW_DATE=null; render(); return; }
-  if(ds>today){ toast("Upcoming day — the grid post for this day is created on its own morning."); return; }
-  if(dow===0 && !HISTIDX.includes(ds)){ toast("Sunday is a rest day — no post is made on Sundays."); return; }
+  if(ds===live){ VIEW_DATE=null; render(); return; }     // the freshly-prepared next post
+  if(dow===0){ toast("Sunday is a rest day — no post is made on Sundays."); return; }
   if(HIST[ds]){ VIEW_DATE=ds; render(); return; }
-  if(!HISTIDX.includes(ds)){ toast("No post for "+ds+" — this was before the grid started running."); return; }
-  toast('Loading '+ds+'…');
-  const p=await j('history/copy_'+ds+'.json');
-  if(p){ HIST[ds]=p; VIEW_DATE=ds; render(); }
-  else toast("Couldn't load "+ds+".");
+  if(HISTIDX.includes(ds)){
+    const p=await j('history/copy_'+ds+'.json');
+    if(p){ HIST[ds]=p; VIEW_DATE=ds; render(); return; }
+  }
+  if(ds>live){ toast("Not prepared yet — each post is created the day before it goes out."); return; }
+  toast("No post for "+ds+" — this was before the grid started running.");
 }
 
 function weekStrip(){
   const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  const now=new Date(); const jsDay=now.getDay(); const idx=jsDay===0?6:jsDay-1;
-  const monday=new Date(now); monday.setDate(now.getDate()-idx);
-  const sel=VIEW_DATE||fmtDate(now); const todayS=fmtDate(now);
+  const live=liveDate();
+  const sel=VIEW_DATE||live;
+  const anchor=new Date(sel+'T00:00:00');   // show the week that CONTAINS the selected/target day
+  const jsDay=anchor.getDay(); const idx=jsDay===0?6:jsDay-1;
+  const monday=new Date(anchor); monday.setDate(anchor.getDate()-idx);
   return '<div class="week">'+days.map((dn,i)=>{
     const dt=new Date(monday); dt.setDate(monday.getDate()+i);
     const ds=fmtDate(dt);
     const isSun=(i===6);
-    const has=HISTIDX.includes(ds)||ds===todayS;
+    const has=HISTIDX.includes(ds)||ds===live;
     const dot=isSun?'<span class="ddot rest">rest</span>':(has?'<span class="ddot on"></span>':'<span class="ddot off"></span>');
     return `<div class="day${ds===sel?' active':''}${isSun?' sun':''}" data-date="${ds}">${dn}<small>${dt.getDate()}</small>${dot}</div>`;
   }).join('')+'</div>';
@@ -501,6 +507,7 @@ function gridPostHTML(g){
                       : (g.slides||[]).map((s,i)=>`Slide ${i+1}: ${s}`).join('\n');
   CLIP.gcap=(g.caption||'')+(g.dm_trigger?'\n'+g.dm_trigger:'');
   return `<div class="gpost">
+    ${g.post_date?`<div class="prepbanner">📅 Create this <b>today</b> — schedule / post it on <b>${esc(g.for_day)}</b>${g.post_date?` (${esc(g.post_date)})`:''}</div>`:''}
     <div class="gp-head"><span class="gp-badge">POST ${g.post_number} · ${esc(g.post_type)}</span>
       <span class="gp-day">${esc(g.for_day)} · Row ${esc(g.row)}</span></div>
     ${rhythm}
