@@ -61,8 +61,14 @@ CONTENT & STYLE CONSTRAINTS (STRICT):
 - NO TUTORIALS: we position, not teach. No "How-to" headlines. Focus on identity and belief shifts.
 - Never fabricate client results or fake numbers.
 
-You are handed a ROTATING pool of real trending topics from the niche as raw fuel — extract the
-winning PATTERN into an original belief-shift, never copy the topic.
+You are handed a ROTATING pool of real trending topics from the niche as raw fuel. Each item is
+TAGGED with the platform it came from ([YouTube] or [Instagram]). Extract the winning PATTERN into
+an original belief-shift — never copy the topic. When the pool contains items from BOTH platforms
+that touch the SAME theme, MERGE them: fuse the YouTube angle and the Instagram angle into one
+sharper belief-shift (that cross-platform overlap is the strongest signal).
+
+HASHTAGS: every generated post MUST include a set of relevant, mixed-reach Instagram hashtags
+(a blend of niche + broader tags). Never invent fake/branded tags.
 
 Return ONLY valid JSON. No markdown, no commentary outside the JSON."""
 
@@ -80,8 +86,8 @@ TODAY'S ROTATING TREND POOL (fuel — extract patterns, never copy):
 
 Return JSON with EXACTLY these keys:
 
-"grid_options": array of EXACTLY 3 DISTINCT versions of this SAME post (all are POST {post_no} for {for_day}).
-Anas will CHOOSE his favorite to publish, so the 3 must each use a clearly DIFFERENT hook, angle, and
+"grid_options": array of EXACTLY 5 DISTINCT versions of this SAME post (all are POST {post_no} for {for_day}).
+Anas will CHOOSE his favorite to publish, so the 5 must each use a clearly DIFFERENT hook, angle, and
 belief-shift — never overlapping with each other or with the recent posts. Each object:
   {{
     "for_day": "{for_day}",
@@ -89,9 +95,11 @@ belief-shift — never overlapping with each other or with the recent posts. Eac
     "post_type": "{post_type_short}",
     "row": "{row}",
     "option_label": "2-4 word label naming THIS version's angle (e.g. 'Comfort trap', 'Identity shift')",
+    "source_mix": "which platform(s) fueled this variant — 'YouTube', 'Instagram', or 'YouTube + Instagram' if you merged both",
     "strategic_rationale": "2-3 sentences: how this post links visually and thematically to the rest of the current row (the Cohesion Check)",
     {assets_field}
     "caption": "hyper-short scannable caption with clean emojis{dm_caption}",
+    "hashtags": ["8-15 relevant Instagram hashtags (mix of niche + broad reach), no # symbol, no duplicates"],
     "dm_trigger": {dm_field},
     "theme_note": "one line describing the visual thread (colors/motif) to carry through this row"
   }},
@@ -156,18 +164,35 @@ def cohesion_context():
     return "\n".join(lines) or "(no previous grid posts — set this row's theme)"
 
 
+SRC_LABEL = {"youtube": "YouTube", "instagram": "Instagram"}
+
+
 def load_pool():
-    """Rotating pool from the WHOLE accumulated hook bank + today's fresh outliers,
-    shuffled by day-of-year so the material (and therefore the post) differs every day."""
-    outs = _load(OUTLIERS_FILE, [])
-    bank = _load(HOOK_BANK_FILE, [])
-    titles = [o.get("title", "") for o in outs] + [b.get("title", "") for b in bank]
-    titles = [t for t in dict.fromkeys(titles) if t]  # dedup, keep order
-    if titles:
-        random.seed(datetime.now(timezone.utc).timetuple().tm_yday)
-        random.shuffle(titles)
-        titles = titles[:30]
-    return "\n".join(f"- {t}" for t in titles) or "(no material yet)"
+    """Rotating pool from the WHOLE accumulated hook bank + today's fresh outliers, each item
+    TAGGED with its source platform, shuffled by day-of-year so the material differs every day.
+    When Instagram data is present it lands here alongside YouTube so the brain can merge them."""
+    yt = _load(OUTLIERS_FILE, []) + _load(HOOK_BANK_FILE, [])
+    ig = _load("instagram_outliers.json", []) + _load("instagram_hook_bank.json", [])
+    random.seed(datetime.now(timezone.utc).timetuple().tm_yday)
+
+    def prep(items, src):
+        seen, out = set(), []
+        for it in items:
+            t = (it.get("title") or "").strip()
+            if not t or t.lower() in seen:
+                continue
+            seen.add(t.lower())
+            out.append(f"[{src}] {t}")
+        random.shuffle(out)
+        return out
+
+    yt_rows, ig_rows = prep(yt, "YouTube"), prep(ig, "Instagram")
+    # balanced mix so BOTH platforms feed the merge (15 each when available)
+    rows = yt_rows[:15] + ig_rows[:15]
+    if len(rows) < 30:                       # backfill from whichever has more
+        rows += yt_rows[15:15 + (30 - len(rows))] + ig_rows[15:15 + (30 - len(rows))]
+    random.shuffle(rows)
+    return "\n".join(f"- {r}" for r in rows[:30]) or "(no material yet)"
 
 
 def call_gemini(prompt, retries=3):
@@ -244,7 +269,7 @@ def main():
         dm_field='"Comment <3-digit number>"' if dm_required else '""',
     )
 
-    print(f"🧠 Grid Manager (a day ahead): preparing 3 options for {for_day} ({post_date}) → POST {post_no}\n")
+    print(f"🧠 Grid Manager (a day ahead): preparing options for {for_day} ({post_date}) → POST {post_no}\n")
     pack = json.loads(call_gemini(prompt))
     pack["generated_at"] = now
     pack["rest_day"] = False

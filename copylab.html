@@ -142,6 +142,36 @@
   .opttab.on{border-color:var(--accent);background:var(--accent-dim);color:var(--text)}
   .opttab b{display:block;color:var(--accent);font-size:12px;margin-bottom:3px}
   .opttab span{font-size:12.5px;line-height:1.3;display:block}
+  /* source + hashtags + history */
+  .srcmix{font-size:12.5px;color:var(--muted);margin:2px 0 12px}
+  .srcmix b{color:var(--accent)}
+  .tagwrap{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+  .tagchip{background:var(--accent-dim);color:var(--accent);border-radius:20px;padding:4px 10px;font-size:12px;font-weight:600}
+  .tagchip.sm{font-size:11px;padding:3px 8px;background:transparent;border:1px solid var(--border);color:var(--muted)}
+  .stag{font-size:11px;font-weight:700;border-radius:6px;padding:3px 8px;letter-spacing:.2px}
+  .stag.yt{background:rgba(255,64,64,.14);color:#ff5a5a}
+  .stag.ig{background:rgba(214,41,118,.16);color:#e1568f}
+  .hbfilter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .hbf{border:1px solid var(--border);background:transparent;color:var(--muted);border-radius:8px;padding:7px 14px;cursor:pointer;font:inherit;font-size:13px;transition:.15s}
+  .hbf:hover{border-color:var(--accent)}
+  .hbf.on{border-color:var(--accent);background:var(--accent-dim);color:var(--text)}
+  .hblist{display:flex;flex-direction:column;gap:12px}
+  .hbcard{border:1px solid var(--border);border-radius:12px;padding:14px 16px;background:var(--card)}
+  .hbtop{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+  .hbtop .r{color:var(--accent);font-weight:700;font-size:12.5px}
+  .hbtop .hbv{color:var(--muted);font-size:12px}
+  .hbtop .hbsp{flex:1}
+  .hbwatch{color:var(--muted);font-size:12px;text-decoration:none}
+  .hbwatch:hover{color:var(--accent)}
+  .hbquote{font-size:15px;line-height:1.45;color:var(--text);font-weight:500}
+  .hbctx{font-size:12.5px;color:var(--muted);margin-top:5px}
+  .hbcard .tagwrap{margin-top:9px}
+  .histgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+  .histcard{border:1px solid var(--border);border-radius:12px;padding:16px 14px;background:var(--card);cursor:pointer;text-align:left;font:inherit;transition:.15s;display:flex;flex-direction:column;gap:3px}
+  .histcard:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .histcard b{color:var(--text);font-size:15px}
+  .histcard .hd{color:var(--accent);font-size:12.5px;font-weight:600}
+  .histcard .ht{color:var(--muted);font-size:12px}
   .gp-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
   .gp-badge{background:var(--accent);color:#111;font-weight:700;font-size:12px;padding:6px 12px;border-radius:8px;letter-spacing:.5px}
   .gp-day{color:var(--muted);font-size:12.5px}
@@ -239,6 +269,7 @@
       <a data-view="linkedin"><span class="ic">💼</span><span class="lbl">LinkedIn Content</span></a>
       <a data-view="mastermind"><span class="ic">🧠</span><span class="lbl">Mastermind</span></a>
       <a data-view="hookbank"><span class="ic">🏦</span><span class="lbl">Hook Bank</span></a>
+      <a data-view="history"><span class="ic">📚</span><span class="lbl">History</span></a>
     </nav>
     <div class="sb-foot">
       <div class="agent">
@@ -268,10 +299,11 @@ function todayStr(){return new Date().toLocaleDateString('en-US',{weekday:'long'
 function fmtDate(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
 
 let DATA={pack:null,outliers:[],bank:[]};
-let VIEW='instagram', SUB='content', VIEW_DATE=null, GOPT=0;
+let VIEW='instagram', SUB='content', VIEW_DATE=null, GOPT=0, HB_SRC='all';
 function selOpt(i){ GOPT=i; render(); }
+function setHBSrc(s){ HB_SRC=s; render(); }
 function optBar(gopts){
-  return `<div class="optwrap"><div class="optlbl">Pick your favourite — 3 versions of this post</div><div class="optbar">`+
+  return `<div class="optwrap"><div class="optlbl">Pick your favourite — ${gopts.length} versions of this post</div><div class="optbar">`+
     gopts.map((g,i)=>{
       const a=(g.slides&&g.slides[0])||(g.reel_frames&&g.reel_frames[0]&&g.reel_frames[0].overlay)||'';
       return `<button class="opttab${i===GOPT?' on':''}" onclick="selOpt(${i})"><b>Option ${i+1}${g.option_label?' · '+esc(g.option_label):''}</b><span>${esc(a)}</span></button>`;
@@ -510,6 +542,7 @@ function ideaCard(it,i,snipKey){
 function render(){
   if(VIEW==='instagram'||VIEW==='linkedin') renderPlatform();
   else if(VIEW==='mastermind') renderMastermind();
+  else if(VIEW==='history') renderHistory();
   else renderHookBank();
 }
 
@@ -521,16 +554,21 @@ function gridPostHTML(g){
     : (g.slides||[]).map((s,i)=>`<div class="slide"><div class="sn">${i+1}</div><p>${esc(s)}</p></div>`).join('');
   CLIP.gassets=isReel ? g.reel_frames.map(f=>`[${f.time}] ${f.overlay}`).join('\n')
                       : (g.slides||[]).map((s,i)=>`Slide ${i+1}: ${s}`).join('\n');
-  CLIP.gcap=(g.caption||'')+(g.dm_trigger?'\n'+g.dm_trigger:'');
+  const tags=(g.hashtags||[]).map(h=>'#'+String(h).replace(/^#/,''));
+  const tagline=tags.join(' ');
+  CLIP.gcap=(g.caption||'')+(g.dm_trigger?'\n'+g.dm_trigger:'')+(tagline?'\n\n'+tagline:'');
+  const srcMix=g.source_mix||'YouTube';
   return `<div class="gpost">
     ${g.post_date?`<div class="prepbanner">📅 Create this <b>today</b> — schedule / post it on <b>${esc(g.for_day)}</b>${g.post_date?` (${esc(g.post_date)})`:''}</div>`:''}
     <div class="gp-head"><span class="gp-badge">POST ${g.post_number} · ${esc(g.post_type)}</span>
       <span class="gp-day">${esc(g.for_day)} · Row ${esc(g.row)}</span></div>
+    <div class="srcmix">🔎 Fueled by: <b>${esc(srcMix)}</b></div>
     ${rhythm}
     <div class="block"><div class="lbl"><span>🧭 Strategic rationale — cohesion check</span></div><div class="btext">${esc(g.strategic_rationale)}</div></div>
     <div class="block"><div class="lbl"><span>${isReel?'🎞️ 10-second reel — frame by frame':'🖼️ Carousel — slide by slide'}</span><button class="copybtn" onclick="copyText(CLIP.gassets)">Copy all</button></div>${assets}</div>
-    <div class="block"><div class="lbl"><span>📝 Caption & CTA</span><button class="copybtn" onclick="copyText(CLIP.gcap)">Copy</button></div><div class="caption">${esc(g.caption)}</div>
+    <div class="block"><div class="lbl"><span>📝 Caption & CTA</span><button class="copybtn" onclick="copyText(CLIP.gcap)">Copy caption + tags</button></div><div class="caption">${esc(g.caption)}</div>
       ${g.dm_trigger?`<div class="dmtrig">💬 ManyChat DM trigger: <b>${esc(g.dm_trigger)}</b></div>`:''}</div>
+    ${tags.length?`<div class="block"><div class="lbl"><span># Hashtags (${tags.length})</span><button class="copybtn" onclick="copyText('${esc(tagline)}')">Copy tags</button></div><div class="tagwrap">${tags.map(t=>`<span class="tagchip">${esc(t)}</span>`).join('')}</div></div>`:''}
     ${g.theme_note?`<div class="block"><div class="lbl"><span>🎨 Visual theme (Black · Gold · White)</span></div><div class="btext" style="color:var(--muted)">${esc(g.theme_note)}</div></div>`:''}
   </div>`;
 }
@@ -634,11 +672,55 @@ function renderMastermind(){
     <div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
 }
 
+function srcTag(s){
+  return s==='instagram'
+    ? '<span class="stag ig">📸 Instagram</span>'
+    : '<span class="stag yt">📺 YouTube</span>';
+}
 function renderHookBank(){
-  const b=DATA.bank.slice().reverse();
-  $('view').innerHTML=`<div class="vhead"><h1>🏦 Copy Hook Bank</h1><p>Every winning copywriting hook collected — your swipe file (${b.length}).</p></div>
-    <div>${b.length?b.map(x=>`<div class="bank-item"><span class="r">${x.ratio}×</span><span style="flex:1">${esc(x.title)}</span><a href="${x.url}" target="_blank">watch ↗</a></div>`).join(''):'<div class="empty">Fills as the pipeline runs daily.</div>'}</div>
+  const all=DATA.bank.slice().reverse();
+  const counts={all:all.length,youtube:0,instagram:0};
+  all.forEach(x=>{counts[(x.source==='instagram')?'instagram':'youtube']++;});
+  const list=all.filter(x=>HB_SRC==='all'||(x.source||'youtube')===HB_SRC);
+  const filt=[['all','All'],['youtube','📺 YouTube'],['instagram','📸 Instagram']]
+    .map(([k,l])=>`<button class="hbf${HB_SRC===k?' on':''}" onclick="setHBSrc('${k}')">${l} (${counts[k]})</button>`).join('');
+  $('view').innerHTML=`<div class="vhead"><h1>🏦 Hook & Quote Bank</h1>
+      <p>Every single quote harvested from both platforms — tagged by source. Copy any one to hand-build a post yourself.</p></div>
+    <div class="hbfilter">${filt}</div>
+    <div class="hblist">${list.length?list.map((x,i)=>{
+      const quote=x.hook&&x.hook.length>4?x.hook:x.title;
+      const tags=(x.hashtags||[]).map(h=>'#'+String(h).replace(/^#/,''));
+      CLIP['hb'+i]=quote+(tags.length?'\n\n'+tags.join(' '):'');
+      return `<div class="hbcard">
+        <div class="hbtop">${srcTag(x.source)}${x.ratio?`<span class="r">${x.ratio}×</span>`:''}${x.views?`<span class="hbv">${(x.views).toLocaleString()} views</span>`:''}
+          <span class="hbsp"></span><button class="copybtn" onclick="copyText(CLIP.hb${i})">Copy quote</button>${x.url?`<a class="hbwatch" href="${esc(x.url)}" target="_blank">open ↗</a>`:''}</div>
+        <div class="hbquote">${esc(quote)}</div>
+        ${x.title&&x.title!==quote?`<div class="hbctx">${esc(x.title)}</div>`:''}
+        ${tags.length?`<div class="tagwrap">${tags.map(t=>`<span class="tagchip sm">${esc(t)}</span>`).join('')}</div>`:''}
+      </div>`;
+    }).join(''):'<div class="empty">Fills as the pipeline runs daily.</div>'}</div>
     <div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
+}
+
+function renderHistory(){
+  const dates=HISTIDX.slice().sort().reverse();
+  const type=ds=>{const d=new Date(ds+'T00:00:00').getDay();return d===1||d===4?'Quote Carousel':d===2||d===5?'Motion Reel':d===3||d===6?'Mechanism Breakdown':'—';};
+  $('view').innerHTML=`<div class="vhead"><h1>📚 Full History</h1>
+      <p>Every post ever prepared — all ${dates.length} days. Click any day to open its full pack.</p></div>
+    <div class="histgrid">${dates.length?dates.map(ds=>{
+      const d=new Date(ds+'T00:00:00');
+      const dow=d.toLocaleDateString('en-US',{weekday:'long'});
+      return `<button class="histcard" data-date="${ds}"><b>${dow}</b><span class="hd">${ds}</span><span class="ht">${type(ds)}</span></button>`;
+    }).join(''):'<div class="empty">History fills as the pipeline runs daily.</div>'}</div>
+    <div class="credit">AI Automation Pipeline created and designed by <b>Muhammad Anas</b></div>`;
+  document.querySelectorAll('.histcard').forEach(c=>c.onclick=()=>openHistory(c.dataset.date));
+}
+async function openHistory(ds){
+  if(!HIST[ds]){ const p=await j('history/copy_'+ds+'.json'); if(p) HIST[ds]=p; }
+  if(!HIST[ds]){ toast('No archive stored for '+ds); return; }
+  VIEW='instagram'; VIEW_DATE=ds; SUB='content';
+  document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('active',a.dataset.view==='instagram'));
+  render();
 }
 
 $('modal').onclick=e=>{if(e.target.id==='modal')$('modal').classList.remove('show');};
@@ -651,8 +733,11 @@ function route(v){
 
 async function loadData(){
   DATA.pack=await j('copy_pack.json');
-  DATA.outliers=await j('copy_outliers.json')||[];
-  DATA.bank=await j('copy_hook_bank.json')||[];
+  const tag=(arr,s)=>(arr||[]).map(x=>({...x,source:x.source||s}));
+  const yo=await j('copy_outliers.json'), io=await j('instagram_outliers.json');
+  const yb=await j('copy_hook_bank.json'), ib=await j('instagram_hook_bank.json');
+  DATA.outliers=[...tag(yo,'youtube'),...tag(io,'instagram')];
+  DATA.bank=[...tag(yb,'youtube'),...tag(ib,'instagram')];
   HISTIDX=((await j('history/index.json'))||{}).copy||[];
 }
 

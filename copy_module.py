@@ -216,6 +216,8 @@ def find_outliers(video_ids, seen):
 
             tl = title.lower()
             is_ai = bool(re.search(r"\bai\b", tl)) or any(a in tl for a in AI_T)
+            desc = item["snippet"].get("description", "")
+            hashtags = list(dict.fromkeys(re.findall(r"#(\w+)", title + " " + desc)))[:12]
             outliers.append({
                 "video_id": vid,
                 "title": title,
@@ -227,6 +229,8 @@ def find_outliers(video_ids, seen):
                 "ratio": round(ratio, 2),
                 "is_short": duration <= 62,
                 "is_ai": is_ai,
+                "source": "youtube",
+                "hashtags": hashtags,
                 "hook": extract_hook(transcript) or title,
                 "transcript": transcript,
             })
@@ -255,6 +259,7 @@ def main():
         if o["title"] not in known:
             bank.append({"title": o["title"], "hook": o["hook"], "ratio": o["ratio"],
                          "views": o["views"], "url": o["url"],
+                         "source": o.get("source", "youtube"), "hashtags": o.get("hashtags", []),
                          "added": datetime.now(timezone.utc).strftime("%Y-%m-%d")})
     with open(HOOK_BANK_FILE, "w", encoding="utf-8") as f:
         json.dump(bank, f, indent=4, ensure_ascii=False)
