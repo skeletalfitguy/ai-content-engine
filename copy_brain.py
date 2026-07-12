@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import time
+import random
 from datetime import datetime, timezone
 import requests
 from dotenv import load_dotenv
@@ -18,13 +19,16 @@ if not GEMINI_API_KEY:
 
 MODELS = ["gemini-flash-latest", "gemini-2.5-flash", "gemini-2.0-flash"]  # fallback chain
 BASE = "https://generativelanguage.googleapis.com/v1beta"
+OUTLIERS_FILE = "copy_outliers.json"
+HOOK_BANK_FILE = "copy_hook_bank.json"
+PACK_FILE = "copy_pack.json"
 
 # ---------------------------------------------------------------------------
-# THE GRID LOGIC (1-2-3 Row Rhythm) — Mon-Wed and Thu-Sat are cohesive rows.
+# THE GRID LOGIC (1-2-3 Row Rhythm) — posts run MONDAY–SATURDAY only.
 # Post 1 (Mon/Thu): Minimalist Quote Carousel (3-5 slides)
 # Post 2 (Tue/Fri): High-Status Motion Reel (10s loop, frame-by-frame overlays)
 # Post 3 (Wed/Sat): Structural Mechanism Breakdown Carousel (6-8 slides)
-# Sunday: prepare Monday's Post 1 in advance.
+# SUNDAY: rest day — nothing is generated.
 # ---------------------------------------------------------------------------
 POST_TYPES = {
     1: "Minimalist Quote Carousel (3-5 slides, high-level philosophical hook)",
@@ -35,42 +39,43 @@ POST_TYPES = {
 SYSTEM = """ACT AS: Muhammad Anas's Creative Strategist & Automated Grid Manager.
 GOAL: Build a high-authority Instagram grid for a high-ticket fitness coaching brand.
 
-THE GRID LOGIC (The 1-2-3 Row Rhythm):
-The grid is structured in horizontal 3-post rows. Every 3-day block (Mon-Wed and Thu-Sat) is a
-single cohesive unit, in this sequence:
+THE GRID LOGIC (The 1-2-3 Row Rhythm), running Monday-Saturday:
 - POST 1 (Monday/Thursday): Minimalist Quote Carousel (3-5 slides). High-level philosophical hook.
 - POST 2 (Tuesday/Friday): High-Status Motion Reel (10s minimal loop). Minimal text overlays.
-- POST 3 (Wednesday/Saturday): Structural Mechanism Breakdown Carousel (6-8 slides). Tactical,
-  proof-heavy content.
+- POST 3 (Wednesday/Saturday): Structural Mechanism Breakdown Carousel (6-8 slides). Tactical, proof-heavy.
 
-COHESION: Before generating, check the context of the previous 1-2 posts in the CURRENT row.
-The visual theme (Gold/Black/White), the tone, and the message must flow into the next post
-like an editorial magazine.
+COHESION: the visual theme (Gold/Black/White), tone, and message must flow into the next post in
+the current 3-day row like an editorial magazine.
+
+FRESHNESS (critical): every single day must be a DISTINCTLY DIFFERENT post — a new angle, a new
+hook, a new belief-shift. NEVER reuse a hook, theme, or angle from the recent posts you are shown.
+Repetition kills a personal brand.
 
 CONTENT & STYLE CONSTRAINTS (STRICT):
 - VISUALS: consistent high-end Black, Gold, and White aesthetic.
 - TEXT PACING: max 5-9 words per visual frame or slide. Scannable.
 - TONE: high-status, clinical, contrarian.
 - FORBIDDEN: never use AI-slop words ("delve", "unleash", "tapestry", "game-changer").
-- THE DM FUNNEL: every SATURDAY post MUST conclude with a frictionless, number-based ManyChat
-  DM trigger (e.g. "Comment 402").
-- NO TUTORIALS: we are positioning, not teaching. No "How-to" headlines. Focus on identity and
-  belief shifts.
+- THE DM FUNNEL: every SATURDAY post MUST conclude with a frictionless, number-based ManyChat DM
+  trigger (e.g. "Comment 402").
+- NO TUTORIALS: we position, not teach. No "How-to" headlines. Focus on identity and belief shifts.
 - Never fabricate client results or fake numbers.
 
-You are also handed today's REAL trending outliers from the niche (videos massively beating
-their channel size). Use them as raw material for angles and belief-shift hooks — extract the
-winning PATTERN, never copy the content.
+You are handed a ROTATING pool of real trending topics from the niche as raw fuel — extract the
+winning PATTERN into an original belief-shift, never copy the topic.
 
 Return ONLY valid JSON. No markdown, no commentary outside the JSON."""
 
-PROMPT = """TODAY: {for_day}{prep_note} → generate POST {post_no}: {post_type}. Row: {row}.
+PROMPT = """TODAY: {for_day} → generate POST {post_no}: {post_type}. Row: {row}.
 {dm_line}
 
-PREVIOUS POSTS IN THIS ROW (cohesion context):
+RECENT POSTS — DO NOT repeat any of these hooks, themes, or angles (make today clearly different):
+{recent}
+
+COHESION CONTEXT (flow visually/thematically with the current row):
 {cohesion}
 
-TODAY'S REAL NICHE OUTLIERS (trend fuel — extract patterns, don't copy):
+TODAY'S ROTATING TREND POOL (fuel — extract patterns, never copy):
 {data}
 
 Return JSON with EXACTLY these keys:
@@ -87,59 +92,80 @@ Return JSON with EXACTLY these keys:
   "theme_note": "one line describing the visual thread (colors/motif) to carry through this row"
 }},
 
-"ideas": array of 6 content ideas from the outlier data (used for the Topics & Hooks page and
-future LinkedIn work), each:
+"ideas": array of 6 FRESH content ideas from the pool (for the Topics & Hooks page + future LinkedIn),
+each different from the recent posts:
   {{"topic": "...", "score": 0-100, "category": "mindset" | "mechanism" | "coaching-business" | "aesthetic",
     "why": "1 sentence why it's hot", "hook": "scroll-stopper line (no how-to phrasing)",
     "linkedin_post": "complete 120-180 word post with \\n line breaks, high-status tone, ends with a question",
-    "x_hook": "1-2 line X version", "inspired_by_title": "exact outlier title (title only)"}},
+    "x_hook": "1-2 line X version", "inspired_by_title": "exact pool title (title only)"}},
 
 "winning_templates": array of up to 3:
-  {{"template": "reusable hook pattern with ___ blanks", "why_it_works": "1 sentence",
-    "proof": "highest-ratio real example from the data"}}
+  {{"template": "reusable hook pattern with ___ blanks", "why_it_works": "1 sentence", "proof": "a real pool example"}}
 """
 
 
+def _load(path, default):
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return default
+
+
 def grid_today():
-    wd = datetime.now(timezone.utc).weekday()  # Mon=0 (9AM PKT run = same UTC date)
-    if wd == 6:  # Sunday → prepare Monday's Post 1
-        return 1, "Monday", "Mon–Wed", " (prepared today, Sunday, for tomorrow)", False
+    wd = datetime.now(timezone.utc).weekday()  # Mon=0 ... Sun=6
+    if wd == 6:  # Sunday — rest day, no posting
+        return 0, "Sunday", "-", "", False
     post_no = [1, 2, 3, 1, 2, 3][wd]
     row = "Mon–Wed" if wd <= 2 else "Thu–Sat"
     day = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][wd]
     return post_no, day, row, "", (wd == 5)
 
 
+def _recent_grids(n):
+    idx = _load("history/index.json", {}).get("copy", [])
+    out = []
+    for day in sorted(idx)[-n:]:
+        p = _load(f"history/copy_{day}.json", {})
+        g = p.get("instagram_grid")
+        if g:
+            first = (g.get("slides") or [f.get("overlay", "") for f in g.get("reel_frames", [])] or [""])[0]
+            out.append((day, g, first))
+    return out
+
+
+def recent_hooks(n=8):
+    rows = _recent_grids(n)
+    lines = [f'- {day}: "{first}" ({g.get("post_type","")})' for day, g, first in rows if first]
+    return "\n".join(lines) or "(none yet — this is one of the first posts)"
+
+
 def cohesion_context():
-    try:
-        idx = json.load(open("history/index.json", encoding="utf-8")).get("copy", [])
-    except Exception:
-        idx = []
-    ctx = []
-    for day in sorted(idx)[-3:]:
-        try:
-            p = json.load(open(f"history/copy_{day}.json", encoding="utf-8"))
-            g = p.get("instagram_grid")
-            if g:
-                first = (g.get("slides") or [f.get("overlay", "") for f in g.get("reel_frames", [])] or [""])[0]
-                ctx.append(f"- {day}: POST {g.get('post_number')} ({g.get('post_type')}) · theme: "
-                           f"{g.get('theme_note','')} · opened with: \"{first}\"")
-        except Exception:
-            pass
-    return "\n".join(ctx[-2:]) or "(no previous grid posts yet — this post starts the grid; set the row's theme)"
+    rows = _recent_grids(3)[-2:]
+    lines = [f"- {day}: POST {g.get('post_number')} · theme: {g.get('theme_note','')} · opened: \"{first}\""
+             for day, g, first in rows]
+    return "\n".join(lines) or "(no previous grid posts — set this row's theme)"
 
 
-def load_outliers(path="copy_outliers.json"):
-    with open(path, encoding="utf-8") as f:
-        data = json.load(f)
-    return "\n".join(f"- [{o['ratio']}x | {o['views']:,} views] {o['title']}" for o in data) or "(no new outliers today)"
+def load_pool():
+    """Rotating pool from the WHOLE accumulated hook bank + today's fresh outliers,
+    shuffled by day-of-year so the material (and therefore the post) differs every day."""
+    outs = _load(OUTLIERS_FILE, [])
+    bank = _load(HOOK_BANK_FILE, [])
+    titles = [o.get("title", "") for o in outs] + [b.get("title", "") for b in bank]
+    titles = [t for t in dict.fromkeys(titles) if t]  # dedup, keep order
+    if titles:
+        random.seed(datetime.now(timezone.utc).timetuple().tm_yday)
+        random.shuffle(titles)
+        titles = titles[:30]
+    return "\n".join(f"- {t}" for t in titles) or "(no material yet)"
 
 
 def call_gemini(prompt, retries=3):
     payload = {
         "systemInstruction": {"parts": [{"text": SYSTEM}]},
         "contents": [{"parts": [{"text": prompt}]}],
-        "generationConfig": {"temperature": 0.85, "responseMimeType": "application/json",
+        "generationConfig": {"temperature": 0.95, "responseMimeType": "application/json",
                              "maxOutputTokens": 24576},
     }
     for model in MODELS:
@@ -165,48 +191,12 @@ def call_gemini(prompt, retries=3):
     raise RuntimeError("All Gemini models failed after retries")
 
 
-def main():
-    with open("copy_outliers.json", encoding="utf-8") as f:
-        raw = json.load(f)
-    if not raw:
-        print("😴 No new outliers today — keeping the last good pack.")
-        return
-
-    post_no, for_day, row, prep_note, dm_required = grid_today()
-    if post_no == 2:
-        assets_field = ('"reel_frames": [{"time": "0-2s", "overlay": "5-9 word overlay"}, '
-                        '... 4-6 frames covering the full 10-second loop ...],')
-    else:
-        n = "3-5" if post_no == 1 else "6-8"
-        assets_field = f'"slides": ["{n} slides, each max 5-9 words, slide 1 = the hook"],'
-    dm_line = ("⚠️ IT IS SATURDAY: the post MUST end with a frictionless number-based ManyChat DM "
-               "trigger (e.g. \"Comment 402\").") if dm_required else "No DM trigger required today (only Saturdays)."
-    prompt = PROMPT.format(
-        for_day=for_day, prep_note=prep_note, post_no=post_no,
-        post_type=POST_TYPES[post_no], post_type_short=POST_TYPES[post_no].split(" (")[0],
-        row=row, dm_line=dm_line, cohesion=cohesion_context(), data=load_outliers(),
-        assets_field=assets_field,
-        dm_caption=", ending with the DM trigger" if dm_required else "",
-        dm_field='"Comment <3-digit number>"' if dm_required else '""',
-    )
-
-    print(f"🧠 Grid Manager: {for_day}{prep_note} → POST {post_no} ({POST_TYPES[post_no].split(' (')[0]})\n")
-    pack = json.loads(call_gemini(prompt))
-    pack["generated_at"] = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-
-    with open("copy_pack.json", "w", encoding="utf-8") as f:
-        json.dump(pack, f, indent=4, ensure_ascii=False)
-
-    # archive today's pack so past days stay openable on the dashboard
+def archive(pack):
     os.makedirs("history", exist_ok=True)
     day = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     with open(f"history/copy_{day}.json", "w", encoding="utf-8") as f:
         json.dump(pack, f, indent=4, ensure_ascii=False)
-    try:
-        with open("history/index.json", encoding="utf-8") as f:
-            idx = json.load(f)
-    except Exception:
-        idx = {}
+    idx = _load("history/index.json", {})
     idx.setdefault("copy", [])
     if day not in idx["copy"]:
         idx["copy"].append(day)
@@ -214,15 +204,56 @@ def main():
     with open("history/index.json", "w", encoding="utf-8") as f:
         json.dump(idx, f, indent=2)
 
+
+def main():
+    post_no, for_day, row, _prep, dm_required = grid_today()
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+
+    # SUNDAY → rest day, generate nothing
+    if post_no == 0:
+        pack = {"rest_day": True, "for_day": "Sunday", "generated_at": now,
+                "ideas": [], "winning_templates": []}
+        with open(PACK_FILE, "w", encoding="utf-8") as f:
+            json.dump(pack, f, indent=4, ensure_ascii=False)
+        archive(pack)
+        print("☕ Sunday — rest day. No post generated.")
+        return
+
+    # Build a FRESH, varied post every posting day (rotating pool + anti-repeat)
+    if post_no == 2:
+        assets_field = ('"reel_frames": [{"time": "0-2s", "overlay": "5-9 word overlay"}, '
+                        '... 4-6 frames covering the full 10-second loop ...],')
+    else:
+        n = "3-5" if post_no == 1 else "6-8"
+        assets_field = f'"slides": ["{n} slides, each max 5-9 words, slide 1 = the hook"],'
+    dm_line = ("⚠️ IT IS SATURDAY: the post MUST end with a frictionless number-based ManyChat DM "
+               "trigger (e.g. \"Comment 402\").") if dm_required else "No DM trigger today (Saturdays only)."
+
+    prompt = PROMPT.format(
+        for_day=for_day, post_no=post_no, post_type=POST_TYPES[post_no],
+        post_type_short=POST_TYPES[post_no].split(" (")[0], row=row, dm_line=dm_line,
+        recent=recent_hooks(), cohesion=cohesion_context(), data=load_pool(),
+        assets_field=assets_field,
+        dm_caption=", ending with the DM trigger" if dm_required else "",
+        dm_field='"Comment <3-digit number>"' if dm_required else '""',
+    )
+
+    print(f"🧠 Grid Manager: {for_day} → POST {post_no} ({POST_TYPES[post_no].split(' (')[0]})\n")
+    pack = json.loads(call_gemini(prompt))
+    pack["generated_at"] = now
+    pack["rest_day"] = False
+
+    with open(PACK_FILE, "w", encoding="utf-8") as f:
+        json.dump(pack, f, indent=4, ensure_ascii=False)
+    archive(pack)
+
     g = pack.get("instagram_grid", {})
     print("=" * 60)
     print(f"🗓️  {g.get('for_day')} · POST {g.get('post_number')} · {g.get('post_type')} · row {g.get('row')}")
     assets = g.get("slides") or g.get("reel_frames") or []
-    print(f"🖼️  assets: {len(assets)} {'slides' if g.get('slides') else 'reel frames'}")
-    print(f"💬 caption: {(g.get('caption') or '')[:70]}")
+    print(f"🖼️  {len(assets)} {'slides' if g.get('slides') else 'frames'} · hook: {(assets[0] if isinstance(assets[0], str) else assets[0].get('overlay','')) if assets else '—'}")
     if g.get("dm_trigger"):
-        print(f"📩 DM trigger: {g['dm_trigger']}")
-    print(f"📋 ideas for topics/LinkedIn: {len(pack.get('ideas', []))}")
+        print(f"📩 DM: {g['dm_trigger']}")
     print("\n✅ Saved to copy_pack.json")
 
 
