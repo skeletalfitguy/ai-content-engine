@@ -150,6 +150,10 @@
   .opttab.on{border-color:var(--accent);background:var(--accent-dim);color:var(--text)}
   .opttab b{display:block;color:var(--accent);font-size:12px;margin-bottom:3px}
   .opttab span{font-size:12.5px;line-height:1.3;display:block}
+  .otopic{display:inline-block;font-style:normal;font-size:9.5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;border-radius:5px;padding:2px 6px;margin-bottom:4px}
+  .gp-topic{font-size:10.5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;border-radius:6px;padding:3px 8px}
+  .otopic.co,.gp-topic.co{background:var(--accent-dim);color:var(--accent)}
+  .otopic.cw,.gp-topic.cw{background:rgba(120,170,255,.16);color:#7aa8ff}
   /* source + hashtags + history */
   .srcmix{font-size:12.5px;color:var(--muted);margin:2px 0 12px}
   .srcmix b{color:var(--accent)}
@@ -320,7 +324,8 @@ function optBar(gopts){
   return `<div class="optwrap"><div class="optlbl">Pick your favourite — ${gopts.length} versions of this post</div><div class="optbar">`+
     gopts.map((g,i)=>{
       const a=(g.slides&&g.slides[0])||g.reel_line||((g.word_sequence||[]).join(' '))||'';
-      return `<button class="opttab${i===GOPT?' on':''}" onclick="selOpt(${i})"><b>Option ${i+1}${g.option_label?' · '+esc(g.option_label):''}</b><span>${esc(a)}</span></button>`;
+      const tp=g.topic?`<em class="otopic ${/copy/i.test(g.topic)?'cw':'co'}">${esc(g.topic)}</em>`:'';
+      return `<button class="opttab${i===GOPT?' on':''}" onclick="selOpt(${i})"><b>Option ${i+1}${g.option_label?' · '+esc(g.option_label):''}</b>${tp}<span>${esc(a)}</span></button>`;
     }).join('')+`</div></div>`;
 }
 const HIST={}; let CLIP={}; let HISTIDX=[];   // dates that actually have a copy archive
@@ -611,6 +616,7 @@ function gridPostHTML(g){
   return `<div class="gpost">
     ${g.post_date?`<div class="prepbanner">📅 Create this <b>today</b> — schedule / post it on <b>${esc(g.for_day)}</b>${g.post_date?` (${esc(g.post_date)})`:''}</div>`:''}
     <div class="gp-head"><span class="gp-badge">POST ${g.post_number} · ${esc(g.post_type)}</span>
+      ${g.topic?`<span class="gp-topic ${/copy/i.test(g.topic)?'cw':'co'}">${esc(g.topic)}</span>`:''}
       <span class="gp-day">${esc(g.for_day)} · Row ${esc(g.row)}</span></div>
     <div class="srcmix">🔎 Fueled by: <b>${esc(srcMix)}</b></div>
     ${rhythm}

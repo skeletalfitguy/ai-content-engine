@@ -90,12 +90,13 @@ Return JSON with EXACTLY these keys:
 
 "grid_options": array of EXACTLY 5 DISTINCT versions of this SAME post (all are POST {post_no} for {for_day}).
 Anas will CHOOSE his favorite to publish, so the 5 must each use a clearly DIFFERENT hook, angle, and
-belief-shift — never overlapping with each other or with the recent posts. Each object:
+belief-shift — never overlapping with each other or with the recent posts.{mix_note} Each object:
   {{
     "for_day": "{for_day}",
     "post_number": {post_no},
     "post_type": "{post_type_short}",
     "row": "{row}",
+    "topic": "'Coaching' (the fitness brand) OR 'Copywriting' (universal writing/persuasion wisdom) — what THIS option is about",
     "option_label": "2-4 word label naming THIS version's angle (e.g. 'Comfort trap', 'Identity shift')",
     "source_mix": "which platform(s) fueled this variant — 'YouTube', 'Instagram', or 'YouTube + Instagram' if you merged both",
     "strategic_rationale": "2-3 sentences: how this post links visually and thematically to the rest of the current row (the Cohesion Check)",
@@ -265,11 +266,19 @@ def main():
     dm_line = ("⚠️ IT IS SATURDAY: the post MUST end with a frictionless number-based ManyChat DM "
                "trigger (e.g. \"Comment 402\").") if dm_required else "No DM trigger today (Saturdays only)."
 
+    # Reel day (Post 2) also flexes Anas's copywriter identity: 3 coaching + 2 universal copywriting.
+    mix_note = (" MIX (important): of the 5 options make exactly 3 about the FITNESS/COACHING brand "
+                "(topic 'Coaching') and 2 about COPYWRITING (topic 'Copywriting') — universal, punchy lines on how "
+                "great copywriting / persuasive words help ANYONE sell or be understood (founders, freelancers, "
+                "creators, any person), not just coaches. The copywriting ones keep the same black/gold/white look "
+                "and the same one-line kinetic format.") if post_no == 2 else \
+               " Every option has topic 'Coaching'."
+
     prompt = PROMPT.format(
         for_day=for_day, post_no=post_no, post_type=POST_TYPES[post_no],
         post_type_short=POST_TYPES[post_no].split(" (")[0], row=row, dm_line=dm_line,
         recent=recent_hooks(), cohesion=cohesion_context(), data=load_pool(),
-        assets_field=assets_field,
+        assets_field=assets_field, mix_note=mix_note,
         dm_caption=", ending with the DM trigger" if dm_required else "",
         dm_field='"Comment <3-digit number>"' if dm_required else '""',
     )
@@ -304,7 +313,7 @@ def main():
         else:
             slides = g.get("slides") or []
             hook, n, unit = (slides[0] if slides else "—"), len(slides), "slides"
-        print(f"   Option {i} [{g.get('option_label','')}] · {n} {unit} · hook: {hook}")
+        print(f"   Option {i} ({g.get('topic','Coaching')}) [{g.get('option_label','')}] · {n} {unit} · hook: {hook}")
     if opts and opts[0].get("dm_trigger"):
         print(f"📩 DM: {opts[0]['dm_trigger']}")
     print("\n✅ Saved to copy_pack.json")
