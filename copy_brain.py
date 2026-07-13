@@ -32,7 +32,7 @@ PACK_FILE = "copy_pack.json"
 # ---------------------------------------------------------------------------
 POST_TYPES = {
     1: "Minimalist Quote Carousel (3-5 slides, high-level philosophical hook)",
-    2: "High-Status Motion Reel (10-second minimal loop, minimal text overlays)",
+    2: "Kinetic Typography Reel (ONE punchy line, animated one word at a time)",
     3: "Structural Mechanism Breakdown Carousel (6-8 slides, tactical, proof-heavy)",
 }
 
@@ -41,7 +41,9 @@ GOAL: Build a high-authority Instagram grid for a high-ticket fitness coaching b
 
 THE GRID LOGIC (The 1-2-3 Row Rhythm), running Monday-Saturday:
 - POST 1 (Monday/Thursday): Minimalist Quote Carousel (3-5 slides). High-level philosophical hook.
-- POST 2 (Tuesday/Friday): High-Status Motion Reel (10s minimal loop). Minimal text overlays.
+- POST 2 (Tuesday/Friday): Kinetic Typography Reel. The ENTIRE reel is ONE single punchy line
+  (one sentence, ~8-16 words) animated ONE WORD AT A TIME on alternating black/white screens.
+  NOT multiple lines, NOT timed overlays — just one flowing statement revealed word by word.
 - POST 3 (Wednesday/Saturday): Structural Mechanism Breakdown Carousel (6-8 slides). Tactical, proof-heavy.
 
 COHESION: the visual theme (Gold/Black/White), tone, and message must flow into the next post in
@@ -252,8 +254,11 @@ def main():
 
     # Build a FRESH, varied post every posting day (rotating pool + anti-repeat)
     if post_no == 2:
-        assets_field = ('"reel_frames": [{"time": "0-2s", "overlay": "5-9 word overlay"}, '
-                        '... 4-6 frames covering the full 10-second loop ...],')
+        assets_field = ('"reel_line": "the ENTIRE reel as ONE punchy line — a single sentence of about '
+                        '8-16 words, NO line breaks, that reads as one flowing statement and gets animated '
+                        'one word at a time (kinetic typography)",'
+                        '"word_sequence": ["reel_line", "split", "into", "its", "individual", "words", '
+                        '"in", "order", "each", "one", "is", "a", "single", "on-screen", "beat"],')
     else:
         n = "3-5" if post_no == 1 else "6-8"
         assets_field = f'"slides": ["{n} slides, each max 5-9 words, slide 1 = the hook"],'
@@ -294,9 +299,12 @@ def main():
     print("=" * 60)
     print(f"🗓️  PREPARED for {for_day} ({post_date}) · POST {post_no} · {len(opts)} options to choose from:")
     for i, g in enumerate(opts, 1):
-        assets = g.get("slides") or g.get("reel_frames") or []
-        hook = (assets[0] if isinstance(assets[0], str) else assets[0].get("overlay", "")) if assets else "—"
-        print(f"   Option {i} [{g.get('option_label','')}] · {len(assets)} {'slides' if g.get('slides') else 'frames'} · hook: {hook}")
+        if g.get("reel_line"):
+            hook, n, unit = g["reel_line"], len(g.get("word_sequence") or []), "words"
+        else:
+            slides = g.get("slides") or []
+            hook, n, unit = (slides[0] if slides else "—"), len(slides), "slides"
+        print(f"   Option {i} [{g.get('option_label','')}] · {n} {unit} · hook: {hook}")
     if opts and opts[0].get("dm_trigger"):
         print(f"📩 DM: {opts[0]['dm_trigger']}")
     print("\n✅ Saved to copy_pack.json")

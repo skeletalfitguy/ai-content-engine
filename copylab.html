@@ -194,6 +194,11 @@
   .frame:last-child{border-bottom:none}
   .frame .ft{flex:none;min-width:52px;color:var(--accent);font-weight:700;font-size:12px}
   .frame p{font-size:13.5px;color:#e6e6ea}
+  .reelline{font-size:20px;line-height:1.4;font-weight:700;color:var(--text);text-align:center;padding:14px 10px;background:var(--accent-dim);border-radius:10px;margin-bottom:12px}
+  .reelnote{font-size:12.5px;color:var(--muted);margin-bottom:10px}
+  .wordseq{display:flex;flex-wrap:wrap;gap:7px}
+  .wbeat{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px 8px 14px;font-size:14px;font-weight:600;color:var(--text)}
+  .wbeat small{position:absolute;top:-7px;left:-6px;background:var(--accent);color:#111;font-size:9px;font-weight:700;width:16px;height:16px;line-height:16px;text-align:center;border-radius:50%}
   .btext{font-size:13.5px;color:#e6e6ea;line-height:1.6}
   .dmtrig{margin-top:10px;background:rgba(48,209,88,.12);border:1px solid rgba(48,209,88,.4);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--green)}
   .mm-today{background:linear-gradient(135deg,var(--surface),var(--surface2));border:1px solid var(--accent);border-radius:14px;padding:24px;margin-bottom:22px}
@@ -314,7 +319,7 @@ function setHBSrc(s){ HB_SRC=s; render(); }
 function optBar(gopts){
   return `<div class="optwrap"><div class="optlbl">Pick your favourite — ${gopts.length} versions of this post</div><div class="optbar">`+
     gopts.map((g,i)=>{
-      const a=(g.slides&&g.slides[0])||(g.reel_frames&&g.reel_frames[0]&&g.reel_frames[0].overlay)||'';
+      const a=(g.slides&&g.slides[0])||g.reel_line||((g.word_sequence||[]).join(' '))||'';
       return `<button class="opttab${i===GOPT?' on':''}" onclick="selOpt(${i})"><b>Option ${i+1}${g.option_label?' · '+esc(g.option_label):''}</b><span>${esc(a)}</span></button>`;
     }).join('')+`</div></div>`;
 }
@@ -588,12 +593,16 @@ function render(){
 }
 
 function gridPostHTML(g){
-  const isReel=!!(g.reel_frames&&g.reel_frames.length);
-  const rhythm=`<div class="rhythm">${[1,2,3].map(n=>`<div class="rcell${g.post_number===n?' on':''}"><b>${n}</b><span>${n===1?'Quote Carousel':n===2?'Motion Reel':'Mechanism'}</span></div>`).join('')}</div>`;
+  const isReel=!!(g.reel_line||(g.word_sequence&&g.word_sequence.length));
+  const rhythm=`<div class="rhythm">${[1,2,3].map(n=>`<div class="rcell${g.post_number===n?' on':''}"><b>${n}</b><span>${n===1?'Quote Carousel':n===2?'Kinetic Reel':'Mechanism'}</span></div>`).join('')}</div>`;
+  const words=isReel?((g.word_sequence&&g.word_sequence.length)?g.word_sequence:(g.reel_line||'').split(/\s+/).filter(Boolean)):[];
+  const line=isReel?(g.reel_line||words.join(' ')):'';
   const assets=isReel
-    ? g.reel_frames.map(f=>`<div class="frame"><span class="ft">${esc(f.time)}</span><p>${esc(f.overlay)}</p></div>`).join('')
+    ? `<div class="reelline">${esc(line)}</div>
+       <div class="reelnote">🎬 Animated one word at a time — type this line into your kinetic typography tool:</div>
+       <div class="wordseq">${words.map((w,i)=>`<span class="wbeat"><small>${i+1}</small>${esc(w)}</span>`).join('')}</div>`
     : (g.slides||[]).map((s,i)=>`<div class="slide"><div class="sn">${i+1}</div><p>${esc(s)}</p></div>`).join('');
-  CLIP.gassets=isReel ? g.reel_frames.map(f=>`[${f.time}] ${f.overlay}`).join('\n')
+  CLIP.gassets=isReel ? line
                       : (g.slides||[]).map((s,i)=>`Slide ${i+1}: ${s}`).join('\n');
   const tags=(g.hashtags||[]).map(h=>'#'+String(h).replace(/^#/,''));
   const tagline=tags.join(' ');
@@ -606,7 +615,7 @@ function gridPostHTML(g){
     <div class="srcmix">🔎 Fueled by: <b>${esc(srcMix)}</b></div>
     ${rhythm}
     <div class="block"><div class="lbl"><span>🧭 Strategic rationale — cohesion check</span></div><div class="btext">${esc(g.strategic_rationale)}</div></div>
-    <div class="block"><div class="lbl"><span>${isReel?'🎞️ 10-second reel — frame by frame':'🖼️ Carousel — slide by slide'}</span><button class="copybtn" onclick="copyText(CLIP.gassets)">Copy all</button></div>${assets}</div>
+    <div class="block"><div class="lbl"><span>${isReel?'🎞️ Kinetic reel — one line, word by word':'🖼️ Carousel — slide by slide'}</span><button class="copybtn" onclick="copyText(CLIP.gassets)">${isReel?'Copy line':'Copy all'}</button></div>${assets}</div>
     <div class="block"><div class="lbl"><span>📝 Caption & CTA</span><button class="copybtn" onclick="copyText(CLIP.gcap)">Copy caption + tags</button></div><div class="caption">${esc(g.caption)}</div>
       ${g.dm_trigger?`<div class="dmtrig">💬 ManyChat DM trigger: <b>${esc(g.dm_trigger)}</b></div>`:''}</div>
     ${tags.length?`<div class="block"><div class="lbl"><span># Hashtags (${tags.length})</span><button class="copybtn" onclick="copyText('${esc(tagline)}')">Copy tags</button></div><div class="tagwrap">${tags.map(t=>`<span class="tagchip">${esc(t)}</span>`).join('')}</div></div>`:''}
