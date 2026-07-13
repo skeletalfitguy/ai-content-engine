@@ -204,4 +204,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    from runstate import run_once
+    run_once("youtube", main)

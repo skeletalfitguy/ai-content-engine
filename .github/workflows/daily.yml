@@ -2,8 +2,16 @@ name: Daily Content Pipeline
 
 on:
   schedule:
-    # 04:00 UTC = 09:00 AM Pakistan time (PKT, UTC+5)
-    - cron: '0 4 * * *'
+    # GitHub's scheduler is best-effort (delays/drops runs), so we fire FIVE times
+    # across the morning. An idempotency guard (run_state.json) means the work runs
+    # only ONCE per day — the rest are silent safety nets. All times are the SAME
+    # UTC day (hours 0-9) so the "prepare tomorrow's post" logic stays consistent.
+    # Minute :17 avoids GitHub's top-of-hour peak load. PKT = UTC+5.
+    - cron: '17 0 * * *'    # 05:17 AM PKT — primary (post ready before you wake)
+    - cron: '17 2 * * *'    # 07:17 AM PKT — backup 1
+    - cron: '17 4 * * *'    # 09:17 AM PKT — backup 2
+    - cron: '17 6 * * *'    # 11:17 AM PKT — backup 3
+    - cron: '17 9 * * *'    # 02:17 PM PKT — final catch-up
   workflow_dispatch:        # lets you run it manually from the Actions tab too
 
 permissions:
@@ -71,7 +79,8 @@ jobs:
         run: |
           git config user.name "content-bot"
           git config user.email "bot@users.noreply.github.com"
-          git add youtube_outliers.json content_pack.json hook_bank.json seen_videos.json \
+          git add run_state.json \
+                  youtube_outliers.json content_pack.json hook_bank.json seen_videos.json \
                   copy_outliers.json copy_pack.json copy_hook_bank.json copy_seen.json \
                   instagram_outliers.json instagram_hook_bank.json instagram_seen.json \
                   jobs_raw.json jobs_pack.json jobs_seen.json history/

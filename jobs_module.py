@@ -250,4 +250,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    from runstate import run_once
+    run_once("jobs_module", main)
