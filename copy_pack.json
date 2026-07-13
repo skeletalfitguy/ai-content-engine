@@ -3,178 +3,37 @@
         {
             "for_day": "Tuesday",
             "post_number": 2,
-            "post_type": "High-Status Motion Reel",
+            "post_type": "Kinetic Typography Reel",
             "row": "Mon–Wed",
-            "option_label": "Kinetic Capital",
+            "option_label": "Daily standards",
             "source_mix": "Instagram",
-            "strategic_rationale": "This reel connects directly to Monday's warning about hidden risks by highlighting how a neglected physical presence silently damages leadership authority. Visually, the slow-looping dark luxury background with razor-thin gold accents maintains the editorial, high-status tone of the current row.",
-            "reel_frames": [
-                {
-                    "time": "0-2s",
-                    "overlay": "Your physical frame speaks first."
-                },
-                {
-                    "time": "2-4s",
-                    "overlay": "It is your ultimate kinetic resume."
-                },
-                {
-                    "time": "4-6s",
-                    "overlay": "Neglecting it dilutes your authority."
-                },
-                {
-                    "time": "6-8s",
-                    "overlay": "Discipline cannot be outsourced or faked."
-                },
-                {
-                    "time": "8-10s",
-                    "overlay": "Build a frame that commands respect."
-                }
+            "strategic_rationale": "Maintains the clinical, editorial vibe of Monday's post. The transition from Monday's 'risk' theme to Tuesday's daily execution standards creates a seamless progression of self-mastery.",
+            "reel_line": "Your daily standards dictate your tax bracket far more than your talent ever will.",
+            "word_sequence": [
+                "Your",
+                "daily",
+                "standards",
+                "dictate",
+                "your",
+                "tax",
+                "bracket",
+                "far",
+                "more",
+                "than",
+                "your",
+                "talent",
+                "ever",
+                "will."
             ],
-            "caption": "Your presence negotiates for you before you open your mouth. A high-status intellect trapped in a low-standard frame is an operational contradiction. Real leverage is physical. ⚖️",
+            "caption": "True authority isn't announced. It is engineered daily through your physical disciplines. ⚖️",
             "hashtags": [
-                "executivefitness",
                 "highperformance",
-                "physicalexcellence",
-                "leadershipdevelopment",
-                "physiqueengineering",
-                "disciplinedlife",
-                "executivecoaching",
-                "selfmastery",
-                "highstatus"
-            ],
-            "dm_trigger": "",
-            "theme_note": "Midnight black canvas with hairline brushed gold borders and razor-sharp white editorial typography.",
-            "post_date": "2026-07-14"
-        },
-        {
-            "for_day": "Tuesday",
-            "post_number": 2,
-            "post_type": "High-Status Motion Reel",
-            "row": "Mon–Wed",
-            "option_label": "Standard Over Motivation",
-            "source_mix": "YouTube + Instagram",
-            "strategic_rationale": "Contrasts the chaos of emotional 'grind' with high-status clinical systems, fitting the Monday-to-Wednesday transition. The minimal visual of a dark, slow-moving gold geometric line symbolizes structure replacing chaotic emotion.",
-            "reel_frames": [
-                {
-                    "time": "0-2s",
-                    "overlay": "Motivation is a low-status trap."
-                },
-                {
-                    "time": "2-4s",
-                    "overlay": "High performers rely on architecture."
-                },
-                {
-                    "time": "4-6s",
-                    "overlay": "Standards keep you executing silently."
-                },
-                {
-                    "time": "6-8s",
-                    "overlay": "Long after temporary feelings have faded."
-                },
-                {
-                    "time": "8-10s",
-                    "overlay": "Systemize your discipline, protect your focus."
-                }
-            ],
-            "caption": "Relying on motivation is an admission of operational instability. Elite executors do not wait for inspiration; they install unyielding structural baselines. ♟️",
-            "hashtags": [
-                "systemicdiscipline",
-                "executivewellness",
-                "mindsetarchitecture",
-                "peakperformance",
-                "highstandard",
-                "nonnegotiable",
-                "elitehabits",
-                "clinicalfitness"
-            ],
-            "dm_trigger": "",
-            "theme_note": "Midnight black canvas with hairline brushed gold borders and razor-sharp white editorial typography.",
-            "post_date": "2026-07-14"
-        },
-        {
-            "for_day": "Tuesday",
-            "post_number": 2,
-            "post_type": "High-Status Motion Reel",
-            "row": "Mon–Wed",
-            "option_label": "The Quiet Accumulation",
-            "source_mix": "Instagram",
-            "strategic_rationale": "Flows seamlessly from Monday's quote on hidden risk by showing that the loudest strategies are often the riskiest. Uses the black and gold color palette to project quiet, understated luxury and clinical execution.",
-            "reel_frames": [
-                {
-                    "time": "0-2s",
-                    "overlay": "Quiet execution breeds visible dominance."
-                },
-                {
-                    "time": "2-4s",
-                    "overlay": "The loudest rooms build nothing."
-                },
-                {
-                    "time": "4-6s",
-                    "overlay": "True leverage is accumulated in silence."
-                },
-                {
-                    "time": "6-8s",
-                    "overlay": "Monitored daily with clinical precision."
-                },
-                {
-                    "time": "8-10s",
-                    "overlay": "Let your metrics do the talking."
-                }
-            ],
-            "caption": "True high status requires zero noise. While others broadcast their efforts, the elite quietly refine their operations and let their physical reality dictate their authority. 🤫",
-            "hashtags": [
-                "quietluxury",
-                "highperformancelifestyle",
-                "physicalleverage",
-                "disciplinesilence",
-                "executivelife",
-                "strategicexecution",
-                "bodycomposition",
-                "elitefitness"
-            ],
-            "dm_trigger": "",
-            "theme_note": "Midnight black canvas with hairline brushed gold borders and razor-sharp white editorial typography.",
-            "post_date": "2026-07-14"
-        },
-        {
-            "for_day": "Tuesday",
-            "post_number": 2,
-            "post_type": "High-Status Motion Reel",
-            "row": "Mon–Wed",
-            "option_label": "The Price of Admission",
-            "source_mix": "YouTube + Instagram",
-            "strategic_rationale": "Positioning physical mastery as the ultimate un-buyable asset. Directly complements Monday's post on internal standards by introducing the physical body as an indicator of self-sovereignty.",
-            "reel_frames": [
-                {
-                    "time": "0-2s",
-                    "overlay": "True physical status cannot be purchased."
-                },
-                {
-                    "time": "2-4s",
-                    "overlay": "It must be physically forged."
-                },
-                {
-                    "time": "4-6s",
-                    "overlay": "Wealth buys comfort, not systemic capability."
-                },
-                {
-                    "time": "6-8s",
-                    "overlay": "Respect is earned through daily habits."
-                },
-                {
-                    "time": "8-10s",
-                    "overlay": "Elevate your standard of physical ownership."
-                }
-            ],
-            "caption": "You can buy luxury assets, but you cannot buy a high-performance metabolism or a disciplined frame. It is the ultimate equalizer in high-status circles. 💎",
-            "hashtags": [
-                "unbuyableasset",
+                "discipline",
                 "executivehealth",
-                "physicalwealth",
-                "physiquemastery",
-                "highnetworthhealth",
-                "lifestyleengineering",
-                "personalstandards"
+                "mindsetshift",
+                "fitnessstandards",
+                "selfmastery",
+                "habits"
             ],
             "dm_trigger": "",
             "theme_note": "Midnight black canvas with hairline brushed gold borders and razor-sharp white editorial typography.",
@@ -183,42 +42,145 @@
         {
             "for_day": "Tuesday",
             "post_number": 2,
-            "post_type": "High-Status Motion Reel",
+            "post_type": "Kinetic Typography Reel",
             "row": "Mon–Wed",
-            "option_label": "The Discipline Paradox",
-            "source_mix": "YouTube",
-            "strategic_rationale": "Addresses the breakdown of unmanaged talent vs. systematic discipline. The dark visual loop of a gold pendulum represents predictable, systematic execution vs chaotic talent, bridging smoothly to Wednesday's mechanism post.",
-            "reel_frames": [
-                {
-                    "time": "0-2s",
-                    "overlay": "Talent is a volatile asset."
-                },
-                {
-                    "time": "2-4s",
-                    "overlay": "Structured discipline delivers compounding returns."
-                },
-                {
-                    "time": "4-6s",
-                    "overlay": "Unmanaged potential inevitably decays."
-                },
-                {
-                    "time": "6-8s",
-                    "overlay": "Build a system that outlasts talent."
-                },
-                {
-                    "time": "8-10s",
-                    "overlay": "Elevate your baseline operational control."
-                }
+            "option_label": "Silent execution",
+            "source_mix": "Instagram + YouTube",
+            "strategic_rationale": "Fuses the quiet build theme of the pool with the elite aesthetic of the current row, presenting self-discipline as a silent, unyielding structure.",
+            "reel_line": "The quietest rooms in the world always produce the most violent physical transformations.",
+            "word_sequence": [
+                "The",
+                "quietest",
+                "rooms",
+                "in",
+                "the",
+                "world",
+                "always",
+                "produce",
+                "the",
+                "most",
+                "violent",
+                "physical",
+                "transformations."
             ],
-            "caption": "Raw talent without operational structure is a liability. True dominance belongs to those who install clinical systems that remove decision fatigue from their performance. ⚙️",
+            "caption": "No noise. No excuses. Just raw, biological compounding. 💀",
             "hashtags": [
-                "operationaldiscipline",
-                "performanceoptimization",
-                "talentvssystem",
-                "highperformancemindset",
-                "strategicfitness",
-                "executivesystems",
-                "precisionperformance"
+                "disciplineovermotivation",
+                "elitefitness",
+                "quietgrowth",
+                "menshealth",
+                "executivelifestyle",
+                "strength"
+            ],
+            "dm_trigger": "",
+            "theme_note": "Midnight black canvas with hairline brushed gold borders and razor-sharp white editorial typography.",
+            "post_date": "2026-07-14"
+        },
+        {
+            "for_day": "Tuesday",
+            "post_number": 2,
+            "post_type": "Kinetic Typography Reel",
+            "row": "Mon–Wed",
+            "option_label": "Motivation trap",
+            "source_mix": "YouTube",
+            "strategic_rationale": "Deconstructs the reliance on mood, continuing the high-status, anti-comfort philosophy set up on Monday.",
+            "reel_line": "Relying on motivation is the fastest way to build an incredibly average physique.",
+            "word_sequence": [
+                "Relying",
+                "on",
+                "motivation",
+                "is",
+                "the",
+                "fastest",
+                "way",
+                "to",
+                "build",
+                "an",
+                "incredibly",
+                "average",
+                "physique."
+            ],
+            "caption": "Systems run the world. High-performers run on strict physical protocols, not feelings. ⚙️",
+            "hashtags": [
+                "consistency",
+                "physiqueengineering",
+                "clinicalfitness",
+                "highstatushabits",
+                "nomotivationneeded"
+            ],
+            "dm_trigger": "",
+            "theme_note": "Midnight black canvas with hairline brushed gold borders and razor-sharp white editorial typography.",
+            "post_date": "2026-07-14"
+        },
+        {
+            "for_day": "Tuesday",
+            "post_number": 2,
+            "post_type": "Kinetic Typography Reel",
+            "row": "Mon–Wed",
+            "option_label": "Capital asset",
+            "source_mix": "Instagram",
+            "strategic_rationale": "Directly targets high-net-worth individuals by framing their body as their ultimate capital asset, bridging business wealth with physical health.",
+            "reel_line": "Cheap habits will eventually bankrupt the most expensive physical asset you will ever own.",
+            "word_sequence": [
+                "Cheap",
+                "habits",
+                "will",
+                "eventually",
+                "bankrupt",
+                "the",
+                "most",
+                "expensive",
+                "physical",
+                "asset",
+                "you",
+                "will",
+                "ever",
+                "own."
+            ],
+            "caption": "You cannot outsource your training. Treat your biology with executive precision. 💎",
+            "hashtags": [
+                "executivecoaching",
+                "wealthandhealth",
+                "physicalcapital",
+                "discipline",
+                "highnetworth"
+            ],
+            "dm_trigger": "",
+            "theme_note": "Midnight black canvas with hairline brushed gold borders and razor-sharp white editorial typography.",
+            "post_date": "2026-07-14"
+        },
+        {
+            "for_day": "Tuesday",
+            "post_number": 2,
+            "post_type": "Kinetic Typography Reel",
+            "row": "Mon–Wed",
+            "option_label": "The respect tax",
+            "source_mix": "Instagram + YouTube",
+            "strategic_rationale": "Leverages the theme of physical respect, linking it visually with the elite, minimal gold borders of this week's grid row.",
+            "reel_line": "True authority is never negotiated because your level of discipline speaks before you do.",
+            "word_sequence": [
+                "True",
+                "authority",
+                "is",
+                "never",
+                "negotiated",
+                "because",
+                "your",
+                "level",
+                "of",
+                "discipline",
+                "speaks",
+                "before",
+                "you",
+                "do."
+            ],
+            "caption": "Your physical presence dictates the terms before you ever speak a word. 💼",
+            "hashtags": [
+                "authority",
+                "presence",
+                "bodymastery",
+                "executivefitness",
+                "disciplinedlife"
             ],
             "dm_trigger": "",
             "theme_note": "Midnight black canvas with hairline brushed gold borders and razor-sharp white editorial typography.",
@@ -227,128 +189,121 @@
     ],
     "ideas": [
         {
-            "topic": "The Hidden Costs of Low-Ticket Fitness Coaching",
+            "topic": "The Failure of High-Volume, Low-Price Business Models in Coaching",
             "score": 92,
             "category": "coaching-business",
-            "why": "It contrasts high-value business transitions with low-barrier structures that attract uncommitted clients.",
-            "hook": "Why cheap coaching is costing you your authority.",
-            "linkedin_post": "Most entrepreneurs treat their physical health like a low-ticket transaction. They buy generic programs, seek cheap accountability, and wonder why their energy remains stagnant.\n\nWhen you invest in low-barrier fitness solutions, you get low-tier psychological buy-in. Real transformation requires systemic investment.\n\nHigh-status performers do not need more information; they need strategic infrastructure. They need a bespoke framework that integrates with a demanding calendar, not another generic PDF.\n\nIf you are still treating your physical engine as an afterthought, you are discounting your company's greatest asset.\n\nAre you investing in your body with the same capital standards you apply to your business?",
-            "x_hook": "Cheap fitness programs are designed for low buy-in. If you want high-status energy, stop buying transactional templates.",
+            "why": "It positions premium pricing as a filter for clients who actually execute.",
+            "hook": "Selling volume is a slow death sentence.",
+            "linkedin_post": "Low-price fitness offers are a structural trap. When you lower your financial barrier, you attract clients who require the most hand-holding and offer the least long-term commitment. True scaling doesn't come from managing a chaotic crowd; it comes from partnering with high-level individuals who value their time and pay for exact execution.\n\nBy positioning your coaching as an elite, high-ticket investment, you align yourself with clients who treat their health like a premium business asset. They do not need motivation; they need structure.\n\nAre you building a low-price trap, or are you running a high-ticket machine?",
+            "x_hook": "Low-price fitness coaching is a trap. Cheap offers attract high-maintenance clients who expect miracles without execution. Charge premium prices to attract premium actions.",
             "inspired_by_title": "I SOLD MY HIGH-VALUE, LOW-PRICE GYM. HERE’S WHAT I LEARNT ON THE OTHER SIDE."
         },
         {
-            "topic": "The Silent Authority of Physical Presence",
+            "topic": "Unspoken Physical Authority in Leadership",
             "score": 89,
             "category": "aesthetic",
-            "why": "Explores the psychological impact of physical presence in corporate and high-stakes environments.",
-            "hook": "Your body speaks louder than your balance sheet.",
-            "linkedin_post": "You can hire the best consultants, buy the finest tailoring, and rehearse your pitch for weeks.\n\nBut the second you walk into the boardroom, your physical frame has already communicated your level of self-mastery.\n\nAn out-of-shape physique in a high-status position signals a fundamental mismatch: an inability to manage one's own primary vehicle.\n\nTrue leadership is integrated. Your physical discipline is the ultimate proof of your internal governance. It cannot be bought, outsourced, or faked.\n\nDoes your physical frame match the level of your ambition?",
-            "x_hook": "Your physical presence speaks before you do. An undisciplined frame undercuts elite intellectual authority instantly.",
-            "inspired_by_title": "Turning sweat into muscle definition, and self-discipline into inner confidence. Grey embodies an understated sense of ritual—and defines the ”me“ at work."
-        },
-        {
-            "topic": "The Myth of Doing It Tired",
-            "score": 87,
-            "category": "mindset",
-            "why": "Exposes the high-performance flaw of toxic grind culture vs. calculated recovery protocols.",
-            "hook": "Doing it tired is a poorly designed strategy.",
-            "linkedin_post": "Modern hustle culture glorifies working on zero sleep and training until failure while exhausted.\n\nIn reality, executing while chronically fatigued is a design flaw. It leads to low-quality output, hormonal decline, and eventual systemic burnout.\n\nElite performers do not operate on raw willpower. They build protocols that optimize recovery, making high performance feel effortless.\n\nWhen you systemize your sleep, nutrition, and stress management, you no longer have to 'grind' through the day. You operate from a state of structural surplus.\n\nAre you building sustainable systems, or are you just relying on adrenaline?",
-            "x_hook": "Stop glorifying the grind of training tired. High-status performers optimize recovery so they never have to operate on empty.",
-            "inspired_by_title": "Do It Tired. | Motivational Rap | Relentless Discipline"
-        },
-        {
-            "topic": "The Cardiopulmonary First Impression",
-            "score": 85,
-            "category": "mechanism",
-            "why": "Draws a parallel between business presentation standards and personal cardiovascular conditioning.",
-            "hook": "Your cardiovascular health is your business's front lobby.",
-            "linkedin_post": "You wouldn’t invite an investor into a chaotic, unmanaged office. So why do you present an unconditioned, sluggish cardiovascular profile to the market?\n\nYour aerobic baseline is the foundation of your cognitive endurance. When your heart and lungs operate inefficiently, your brain experiences rapid decision fatigue.\n\nHigh-status execution requires sustained focus under pressure. That capacity is built in the aerobic zones, not just the boardroom.\n\nTreat your physical conditioning as the ultimate operational infrastructure.\n\nIs your physical foundation built to withstand high-velocity stress?",
-            "x_hook": "Your cardiovascular capacity determines your cognitive endurance. If your heart is unconditioned, your leadership is capped.",
-            "inspired_by_title": "O seu parque de cardio é o cartão de visitas da sua academia. Como está a primeira impressão que seu aluno tem ao entrar?"
-        },
-        {
-            "topic": "Unlocking Leverage Through Silent Execution",
-            "score": 90,
-            "category": "mindset",
-            "why": "Addresses the psychological advantage of silent work in a highly distracted, attention-seeking society.",
-            "hook": "The highest achievers make the least noise.",
-            "linkedin_post": "We live in an era of performative productivity. People post their early morning alarms, their gym selfies, and their daily routines for cheap validation.\n\nBut the truly elite operate differently. They build in silence.\n\nThey don't need public applause to sustain their discipline. Their metrics are their validation. They understand that talking about the work is just a distraction from doing the work.\n\nWhen you stop seeking external approval, you reclaim immense cognitive energy to focus purely on execution.\n\nAre you building for public applause, or are you building for permanent leverage?",
-            "x_hook": "Performative discipline is a drain on cognitive focus. The most formidable assets are built in total silence.",
+            "why": "Frames physical fitness as a foundational metric of leadership capacity.",
+            "hook": "The strongest physical presence makes the least noise in the room.",
+            "linkedin_post": "The highest-status leaders rarely announce their arrivals. Their posture, alignment, and physical frame do the speaking long before they reach the microphone. True authority is forged in the silence of early morning training sessions, where no one is watching.\n\nIf your physical presence is soft, your professional leadership is compromised. People register physical self-control subconsciously. You cannot lead a market if your biology is leading you down a path of neglect.\n\nDoes your physical frame command respect before you even speak?",
+            "x_hook": "Your body is your first resume. If you lack the discipline to control your own physical frame, you cannot expect others to trust you with their capital.",
             "inspired_by_title": "Built in silence.💀Seen by everyone.🔥"
         },
         {
-            "topic": "The Stoic Approach to Modern Longevity",
+            "topic": "The Trap of Natural Talent in Fitness and Business",
+            "score": 85,
+            "category": "mindset",
+            "why": "It dismantles the illusion of genetic luck and places emphasis purely on system execution.",
+            "hook": "Natural talent is a liability without structured discipline.",
+            "linkedin_post": "Relying on raw intelligence or natural gifts is a massive professional trap. It breeds comfort, and comfort breeds complacency. When market conditions shift, those who relied on raw talent collapse, while those who operate on systematic discipline scale.\n\nYour fitness is the ultimate honest metric of your consistency. You cannot negotiate with the weight, and you cannot buy a sculpted frame. It requires the compounding interest of non-negotiable daily habits.\n\nAre you coasting on raw talent, or are you relying on mechanical consistency?",
+            "x_hook": "Talent is a head start, not a destination. Without a rigid, mechanical routine, your potential will simply sit on the shelf.",
+            "inspired_by_title": "Discipline beats talent #shorts #mindset #comeback #ego"
+        },
+        {
+            "topic": "Operating Under Sub-Optimal Conditions",
+            "score": 94,
+            "category": "mindset",
+            "why": "It rejects the modern mental wellness narrative in favor of high-performance execution.",
+            "hook": "Waiting for optimal energy is a self-imposed performance tax.",
+            "linkedin_post": "Your business does not care if you slept poorly. Your physical goals certainly do not care if you had a stressful afternoon. The elite separate their output from their temporary emotional states.\n\nIf you only execute when you feel inspired, you are leaving your legacy to pure luck. Discipline is the ability to run your physical and professional protocols with clinical accuracy, even when your mind is telling you to stop. Stop waiting for the perfect moment.\n\nDo you run your life on temporary emotions or rigid systems?",
+            "x_hook": "Amateurs train when they feel inspired. High-performers run their physical and mental protocols precisely when they do not want to.",
+            "inspired_by_title": "Do It Tired. | Motivational Rap | Relentless Discipline"
+        },
+        {
+            "topic": "Physical Presence as a Subconscious Respect Signal",
             "score": 88,
             "category": "mechanism",
-            "why": "Applies timeless philosophical principles to modern biological optimization and aging.",
-            "hook": "Why your longevity strategy requires stoic discipline.",
-            "linkedin_post": "Most executive health strategies fail because they are built on temporary trends and complex biohacks.\n\nTrue longevity is simpler, yet far more demanding. It requires the stoic discipline of consistent, unexciting execution: strength training, clean nutrition, and cognitive boundaries.\n\nYou do not need more advanced gadgets. You need the internal governance to say no to short-term comforts in pursuit of long-term physical sovereignty.\n\nYour health span is the ultimate compounding asset. Do not let modern distractions dilute its trajectory.\n\nAre your daily physical actions aligned with your 80-year-old self's expectations?",
-            "x_hook": "Forget the complex biohacks. True physical longevity is built on the stoic execution of simple, non-negotiable habits.",
-            "inspired_by_title": "40 के बाद ये 10 सच समझ लो | Stoic Wisdom"
+            "why": "Explains respect as a biological byproduct of visible, consistent self-mastery.",
+            "hook": "You cannot negotiate respect with an undisciplined frame.",
+            "linkedin_post": "Respect is not a request; it is a biological reaction. When someone looks at you, their brain instantly registers your level of physical self-control. A soft, untuned frame signals that you struggle with basic internal boundaries.\n\nIf you cannot manage your own daily biology, why should your team, partners, or clients trust you to manage their investments? Physical mastery is the absolute baseline of personal and professional authority.\n\nIs your body projecting self-respect, or is it showing a pattern of compromise?",
+            "x_hook": "Respect is a biological signal. If your physical frame is completely soft, you are signaling a lack of internal discipline to everyone you meet.",
+            "inspired_by_title": "Real respect isn't demanded—it's earned through your habits."
+        },
+        {
+            "topic": "Replacing Motivation with Mechanical Systems",
+            "score": 91,
+            "category": "mechanism",
+            "why": "Directly critiques short-term motivational content while driving high-ticket coaching values.",
+            "hook": "Motivation is a temporary luxury for the unstructured.",
+            "linkedin_post": "Stop consuming motivational content. You do not need inspiration; you need a system. The world's top performers do not operate on dopamine rushes from social media quotes. They run on strict, unyielding protocols that dictate their sleep, nutrition, and training.\n\nIf your fitness program depends on your mood, you do not have a plan—you have a hobby. Elite execution requires removing your daily feelings from your daily checklist.\n\nAre your routines built on emotional spikes or clinical protocols?",
+            "x_hook": "Stop looking for motivation. It is a highly volatile resource. Build a clinical physical protocol that runs automatically, regardless of your mood.",
+            "inspired_by_title": "Most people don't need another Monday motivational quote."
         }
     ],
     "winning_templates": [
         {
-            "template": "Your ___ speaks louder than your ___.",
-            "why_it_works": "It creates an instant authority contrast, forcing the reader to evaluate physical reality over verbal or material claims.",
-            "proof": "Your body speaks louder than your balance sheet."
+            "template": "Your ___ dictate your ___ far more than your ___ ever will.",
+            "why_it_works": "It forces a direct comparison between passive variables (like talent/mood) and active variables (standards/protocols).",
+            "proof": "Inspired by: 'Your daily standards dictate your tax bracket far more than your talent ever will.'"
         },
         {
-            "template": "___ is a low-status trap.",
-            "why_it_works": "It uses high-status positioning and a contrarian frame to disrupt common habits or widely accepted beliefs.",
-            "proof": "Motivation is a low-status trap."
+            "template": "The quietest ___ always produce the most ___ ___.",
+            "why_it_works": "Contrarian positioning that values silent, steady execution over noisy, modern social media hustle.",
+            "proof": "Inspired by: 'The quietest rooms in the world always produce the most violent physical transformations.'"
         },
         {
-            "template": "The highest achievers make the least ___.",
-            "why_it_works": "It taps into the desire for exclusive, elite identity and contrasts it with common performative behaviors.",
-            "proof": "The highest achievers make the least noise."
+            "template": "Relying on ___ is the fastest way to build an incredibly average ___.",
+            "why_it_works": "Directly attacks a common crutch (motivation, luck, genetics) and links it directly to mediocrity.",
+            "proof": "Inspired by: 'Relying on motivation is the fastest way to build an incredibly average physique.'"
         }
     ],
-    "generated_at": "2026-07-13 04:30 UTC",
+    "generated_at": "2026-07-13 04:49 UTC",
     "rest_day": false,
     "post_date": "2026-07-14",
     "for_day": "Tuesday",
     "instagram_grid": {
         "for_day": "Tuesday",
         "post_number": 2,
-        "post_type": "High-Status Motion Reel",
+        "post_type": "Kinetic Typography Reel",
         "row": "Mon–Wed",
-        "option_label": "Kinetic Capital",
+        "option_label": "Daily standards",
         "source_mix": "Instagram",
-        "strategic_rationale": "This reel connects directly to Monday's warning about hidden risks by highlighting how a neglected physical presence silently damages leadership authority. Visually, the slow-looping dark luxury background with razor-thin gold accents maintains the editorial, high-status tone of the current row.",
-        "reel_frames": [
-            {
-                "time": "0-2s",
-                "overlay": "Your physical frame speaks first."
-            },
-            {
-                "time": "2-4s",
-                "overlay": "It is your ultimate kinetic resume."
-            },
-            {
-                "time": "4-6s",
-                "overlay": "Neglecting it dilutes your authority."
-            },
-            {
-                "time": "6-8s",
-                "overlay": "Discipline cannot be outsourced or faked."
-            },
-            {
-                "time": "8-10s",
-                "overlay": "Build a frame that commands respect."
-            }
+        "strategic_rationale": "Maintains the clinical, editorial vibe of Monday's post. The transition from Monday's 'risk' theme to Tuesday's daily execution standards creates a seamless progression of self-mastery.",
+        "reel_line": "Your daily standards dictate your tax bracket far more than your talent ever will.",
+        "word_sequence": [
+            "Your",
+            "daily",
+            "standards",
+            "dictate",
+            "your",
+            "tax",
+            "bracket",
+            "far",
+            "more",
+            "than",
+            "your",
+            "talent",
+            "ever",
+            "will."
         ],
-        "caption": "Your presence negotiates for you before you open your mouth. A high-status intellect trapped in a low-standard frame is an operational contradiction. Real leverage is physical. ⚖️",
+        "caption": "True authority isn't announced. It is engineered daily through your physical disciplines. ⚖️",
         "hashtags": [
-            "executivefitness",
             "highperformance",
-            "physicalexcellence",
-            "leadershipdevelopment",
-            "physiqueengineering",
-            "disciplinedlife",
-            "executivecoaching",
+            "discipline",
+            "executivehealth",
+            "mindsetshift",
+            "fitnessstandards",
             "selfmastery",
-            "highstatus"
+            "habits"
         ],
         "dm_trigger": "",
         "theme_note": "Midnight black canvas with hairline brushed gold borders and razor-sharp white editorial typography.",
