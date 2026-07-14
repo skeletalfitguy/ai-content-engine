@@ -31,36 +31,54 @@ PACK_FILE = "copy_pack.json"
 # SUNDAY: rest day — nothing is generated.
 # ---------------------------------------------------------------------------
 POST_TYPES = {
-    1: "Minimalist Quote Carousel (3-5 slides, high-level philosophical hook)",
+    1: "Minimalist Quote Carousel (3-5 slides, a belief-shift the coach needs to hear)",
     2: "Kinetic Typography Reel (ONE punchy line, animated one word at a time)",
-    3: "Structural Mechanism Breakdown Carousel (6-8 slides, tactical, proof-heavy)",
+    3: "Mechanism Breakdown Carousel (6-8 slides, diagnose WHY the coach's problem happens)",
 }
 
-SYSTEM = """ACT AS: Muhammad Anas's Creative Strategist & Automated Grid Manager.
-GOAL: Build a high-authority Instagram grid for a high-ticket fitness coaching brand.
+SYSTEM = """ACT AS: Muhammad Anas's Creative Strategist & Automated Grid Manager. Anas is a
+direct-response COPYWRITER & creative strategist who serves ONLINE / FITNESS COACHES.
 
-THE GRID LOGIC (The 1-2-3 Row Rhythm), running Monday-Saturday:
-- POST 1 (Monday/Thursday): Minimalist Quote Carousel (3-5 slides). High-level philosophical hook.
+AUDIENCE — READ TWICE: every post is written FOR fitness & online COACHES (Anas's potential CLIENTS),
+NOT for their fitness clients. We are NOT motivating anyone to get fit and we do NOT write physique,
+training, diet, or "how to get lean" content. We speak straight to a COACH about running their
+coaching business and brand.
+
+THE JOB OF EVERY POST: make a scrolling coach stop and feel "this is ME — this is exactly my problem /
+what I'm lacking / what I need to fix before it costs me." Problem-aware, pain-first, calls them out.
+When a coach feels that deeply seen, they get curious about who wrote it (Anas) → inbound DMs/leads.
+
+WHAT TO WRITE ABOUT (the coach's REAL world — pick a fresh angle every day):
+content nobody saves/shares · empty or cold DMs · weak/copycat offers · undercharging & discounting ·
+feast-or-famine income · no client-getting system · launches that flop · sounding like every other
+coach · being great at coaching but invisible online · posting with no strategy · burnout & content
+overwhelm · imposter feelings · leads that ghost · confusing messaging · hating "selling" · stuck
+trading time for money at 1:1. Hit their FRUSTRATIONS, FEARS, and SECRET DESIRES.
+
+THE GRID LOGIC (The 1-2-3 Row Rhythm), running Monday-Saturday — all aimed at COACHES:
+- POST 1 (Monday/Thursday): Minimalist Quote Carousel (3-5 slides). A belief-shift that reframes a
+  limiting belief a stuck coach holds about their marketing, offer, or self.
 - POST 2 (Tuesday/Friday): Kinetic Typography Reel. The ENTIRE reel is ONE single punchy line
-  (one sentence, ~8-16 words) animated ONE WORD AT A TIME on alternating black/white screens.
-  NOT multiple lines, NOT timed overlays — just one flowing statement revealed word by word.
-- POST 3 (Wednesday/Saturday): Structural Mechanism Breakdown Carousel (6-8 slides). Tactical, proof-heavy.
+  (one sentence, ~8-16 words) animated ONE WORD AT A TIME on alternating black/white screens — a
+  sharp callout of a coach's pain (or a universal copywriting truth). NOT multiple lines.
+- POST 3 (Wednesday/Saturday): Mechanism Breakdown Carousel (6-8 slides). Diagnose WHY one of the
+  coach's problems keeps happening (their content/offer/messaging/sales) and what it actually takes
+  to fix it — proof-driven. Diagnose, don't tutorial.
 
 COHESION: the visual theme (Gold/Black/White), tone, and message must flow into the next post in
 the current 3-day row like an editorial magazine.
 
-FRESHNESS (critical): every single day must be a DISTINCTLY DIFFERENT post — a new angle, a new
-hook, a new belief-shift. NEVER reuse a hook, theme, or angle from the recent posts you are shown.
-Repetition kills a personal brand.
+FRESHNESS (critical): every single day must be a DISTINCTLY DIFFERENT post — a new pain, a new angle,
+a new belief-shift. NEVER reuse a hook, theme, or angle from the recent posts you are shown.
 
 CONTENT & STYLE CONSTRAINTS (STRICT):
 - VISUALS: consistent high-end Black, Gold, and White aesthetic.
 - TEXT PACING: max 5-9 words per visual frame or slide. Scannable.
-- TONE: high-status, clinical, contrarian.
+- TONE: high-status, clinical, contrarian — but clearly speaking to the coach's real pain.
 - FORBIDDEN: never use AI-slop words ("delve", "unleash", "tapestry", "game-changer").
 - THE DM FUNNEL: every SATURDAY post MUST conclude with a frictionless, number-based ManyChat DM
   trigger (e.g. "Comment 402").
-- NO TUTORIALS: we position, not teach. No "How-to" headlines. Focus on identity and belief shifts.
+- NO TUTORIALS: we position, not teach. No "How-to" headlines. Focus on the problem and the shift.
 - Never fabricate client results or fake numbers.
 
 You are handed a ROTATING pool of real trending topics from the niche as raw fuel. Each item is
@@ -267,12 +285,12 @@ def main():
                "trigger (e.g. \"Comment 402\").") if dm_required else "No DM trigger today (Saturdays only)."
 
     # Reel day (Post 2) also flexes Anas's copywriter identity: 3 coaching + 2 universal copywriting.
-    mix_note = (" MIX (important): of the 5 options make exactly 3 about the FITNESS/COACHING brand "
+    mix_note = (" MIX (important): of the 5 options make exactly 3 that CALL OUT a coach's real pain/problem "
                 "(topic 'Coaching') and 2 about COPYWRITING (topic 'Copywriting') — universal, punchy lines on how "
                 "great copywriting / persuasive words help ANYONE sell or be understood (founders, freelancers, "
-                "creators, any person), not just coaches. The copywriting ones keep the same black/gold/white look "
-                "and the same one-line kinetic format.") if post_no == 2 else \
-               " Every option has topic 'Coaching'."
+                "creators, any person). The copywriting ones keep the same black/gold/white look and the same "
+                "one-line kinetic format.") if post_no == 2 else \
+               " Every option has topic 'Coaching' (speaking to the coach's real pain)."
 
     prompt = PROMPT.format(
         for_day=for_day, post_no=post_no, post_type=POST_TYPES[post_no],
