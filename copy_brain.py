@@ -31,9 +31,9 @@ PACK_FILE = "copy_pack.json"
 # SUNDAY: rest day — nothing is generated.
 # ---------------------------------------------------------------------------
 POST_TYPES = {
-    1: "Minimalist Quote Carousel (3-5 slides, a belief-shift the coach needs to hear)",
+    1: "Minimalist Quote Carousel (3-4 slides, a belief-shift the coach needs to hear)",
     2: "Kinetic Typography Reel (ONE punchy line, animated one word at a time)",
-    3: "Mechanism Breakdown Carousel (6-8 slides, diagnose WHY the coach's problem happens)",
+    3: "Mechanism Breakdown Carousel (5-6 slides, diagnose WHY the coach's problem happens)",
 }
 
 SYSTEM = """ACT AS: Muhammad Anas's Creative Strategist & Automated Grid Manager. Anas is a
@@ -56,14 +56,19 @@ overwhelm · imposter feelings · leads that ghost · confusing messaging · hat
 trading time for money at 1:1. Hit their FRUSTRATIONS, FEARS, and SECRET DESIRES.
 
 THE GRID LOGIC (The 1-2-3 Row Rhythm), running Monday-Saturday — all aimed at COACHES:
-- POST 1 (Monday/Thursday): Minimalist Quote Carousel (3-5 slides). A belief-shift that reframes a
+- POST 1 (Monday/Thursday): Minimalist Quote Carousel (3-4 slides). A belief-shift that reframes a
   limiting belief a stuck coach holds about their marketing, offer, or self.
 - POST 2 (Tuesday/Friday): Kinetic Typography Reel. The ENTIRE reel is ONE single punchy line
   (one sentence, ~8-16 words) animated ONE WORD AT A TIME on alternating black/white screens — a
   sharp callout of a coach's pain (or a universal copywriting truth). NOT multiple lines.
-- POST 3 (Wednesday/Saturday): Mechanism Breakdown Carousel (6-8 slides). Diagnose WHY one of the
+- POST 3 (Wednesday/Saturday): Mechanism Breakdown Carousel (5-6 slides). Diagnose WHY one of the
   coach's problems keeps happening (their content/offer/messaging/sales) and what it actually takes
   to fix it — proof-driven. Diagnose, don't tutorial.
+
+CAROUSEL SLIDES (STRICT): each slide must be ONE COMPLETE, self-contained statement — a whole thought
+that fully makes sense on its own when read alone. NEVER split a single sentence into fragments across
+slides (e.g. "Your coaching skill..." then "is precisely why..." then "clients don't see you" is WRONG).
+Every slide reads like its own punchy line. Keep carousels SHORT.
 
 COHESION: the visual theme (Gold/Black/White), tone, and message must flow into the next post in
 the current 3-day row like an editorial magazine.
@@ -279,8 +284,11 @@ def main():
                         '"word_sequence": ["reel_line", "split", "into", "its", "individual", "words", '
                         '"in", "order", "each", "one", "is", "a", "single", "on-screen", "beat"],')
     else:
-        n = "3-5" if post_no == 1 else "6-8"
-        assets_field = f'"slides": ["{n} slides, each max 5-9 words, slide 1 = the hook"],'
+        n = "3-4" if post_no == 1 else "5-6"
+        assets_field = (f'"slides": [array of {n} slides. Each slide is ONE COMPLETE standalone statement '
+                        '(a whole thought that makes full sense on its own, about 4-10 words) — NEVER a '
+                        'sentence fragment, NEVER split one sentence across slides. Slide 1 = the hook/problem '
+                        'the coach feels; final slide = the payoff or belief-shift.],')
     dm_line = ("⚠️ IT IS SATURDAY: the post MUST end with a frictionless number-based ManyChat DM "
                "trigger (e.g. \"Comment 402\").") if dm_required else "No DM trigger today (Saturdays only)."
 
