@@ -601,7 +601,7 @@ function render(){
 
 function gridPostHTML(g){
   const isReel=!!(g.reel_line||(g.word_sequence&&g.word_sequence.length));
-  const rhythm=`<div class="rhythm">${[1,2,3].map(n=>`<div class="rcell${g.post_number===n?' on':''}"><b>${n}</b><span>${n===1?'Quote Carousel':n===2?'Kinetic Reel':'Mechanism'}</span></div>`).join('')}</div>`;
+  const rhythm=`<div class="rhythm">${[1,2,3].map(n=>`<div class="rcell${g.post_number===n?' on':''}"><b>${n}</b><span>${n===1?'Belief Shift':n===2?'Kinetic Reel':'Mechanism'}</span></div>`).join('')}</div>`;
   const words=isReel?((g.word_sequence&&g.word_sequence.length)?g.word_sequence:(g.reel_line||'').split(/\s+/).filter(Boolean)):[];
   const line=isReel?(g.reel_line||words.join(' ')):'';
   const assets=isReel
