@@ -31,103 +31,120 @@ PACK_FILE = "copy_pack.json"
 # SUNDAY: rest day — nothing is generated.
 # ---------------------------------------------------------------------------
 POST_TYPES = {
-    1: "Minimalist Quote Carousel (3-4 slides, a belief-shift the coach needs to hear)",
+    1: "Belief-Shift Carousel (4-6 slides, flip ONE belief the coach holds)",
     2: "Kinetic Typography Reel (ONE punchy line, animated one word at a time)",
     3: "Mechanism Breakdown Carousel (5-6 slides, diagnose WHY the coach's problem happens)",
 }
 
-SYSTEM = """ACT AS: Muhammad Anas's Creative Strategist & Automated Grid Manager. Anas is a
-direct-response COPYWRITER & creative strategist who serves ONLINE / FITNESS COACHES.
+# Per-pillar creative brief injected into the prompt (kept NON-overlapping).
+PILLAR_SPEC = {
+    1: """DAY 1 — BELIEF-SHIFT CAROUSEL. MINDSET-level: reframe HOW the coach thinks about their business
+so Anas looks like a strategist. This is NOT tactical how-to (that is Day 3) — stay non-overlapping. All 5
+options have topic 'Coaching'.
 
-AUDIENCE — READ TWICE: every post is written FOR fitness & online COACHES (Anas's potential CLIENTS),
-NOT for their fitness clients. We are NOT motivating anyone to get fit and we do NOT write physique,
-training, diet, or "how to get lean" content. We speak straight to a COACH about running their
-coaching business and brand.
+IN BOUNDS: buyer psychology of high-ticket coaching, positioning, why volume/hustle fails, offer clarity,
+price-as-a-story, why "more content" doesn't fill a cohort, the identity of a premium buyer.
+OUT OF BOUNDS (KILL IT): generic self-help, discipline, "bury your past", morning-routine mindset. If a
+line could appear on a random motivation account, it is WRONG.
 
-THE JOB OF EVERY POST: make a scrolling coach stop and feel "this is ME — this is exactly my problem /
-what I'm lacking / what I need to fix before it costs me." Problem-aware, pain-first, calls them out.
-When a coach feels that deeply seen, they get curious about who wrote it (Anas) → inbound DMs/leads.
+FORMAT: 4-6 slides, ONE line per slide, MAX 7 words. Slide 1 = a contrarian belief the coach secretly
+holds, FLIPPED (MAX 6 words, must sting). Middle slides escalate the reframe (one idea each). Final slide =
+the new belief stated as a principle (the payoff). Each carousel shifts exactly ONE nameable belief (put it
+in "belief_shifted"); if you cannot name that belief in one sentence, regenerate it.
 
-WHAT TO WRITE ABOUT (the coach's REAL world — pick a fresh angle every day):
-content nobody saves/shares · empty or cold DMs · weak/copycat offers · undercharging & discounting ·
-feast-or-famine income · no client-getting system · launches that flop · sounding like every other
-coach · being great at coaching but invisible online · posting with no strategy · burnout & content
-overwhelm · imposter feelings · leads that ghost · confusing messaging · hating "selling" · stuck
-trading time for money at 1:1. Hit their FRUSTRATIONS, FEARS, and SECRET DESIRES.
+GOOD (the standard to hit):
+  1. Your program isn't underpriced. It's under-positioned.
+  2. Coaches discount when they can't name the transformation.
+  3. Price is a story problem, not a number problem.
+  4. Fix the belief and the objection disappears.
+BAD (never produce): "To grow you must bury your past" / "success requires isolation" — generic, off-niche.""",
 
-THE GRID LOGIC (The 1-2-3 Row Rhythm), running Monday-Saturday — all aimed at COACHES:
-- POST 1 (Monday/Thursday): Minimalist Quote Carousel (3-4 slides). A belief-shift that reframes a
-  limiting belief a stuck coach holds about their marketing, offer, or self.
-- POST 2 (Tuesday/Friday): Kinetic Typography Reel. The ENTIRE reel is ONE single punchy line
-  (one sentence, ~8-16 words) animated ONE WORD AT A TIME on alternating black/white screens — a
-  sharp callout of a coach's pain (or a universal copywriting truth). NOT multiple lines.
-- POST 3 (Wednesday/Saturday): Mechanism Breakdown Carousel (5-6 slides). Diagnose WHY one of the
-  coach's problems keeps happening (their content/offer/messaging/sales) and what it actually takes
-  to fix it — proof-driven. Diagnose, don't tutorial.
+    2: """DAY 2 — KINETIC REEL. ONE punchy line (~8-16 words) animated one word at a time — a sharp callout
+of the avatar's pain (their program isn't filling). Of the 5 options: 3 have topic 'Coaching' (call out a
+coaching-business pain) and 2 have topic 'Copywriting'. HARD RULE: the copywriting ones must NEVER teach
+how to write — instead make the coach FEEL that weak, unclear messaging is WHY their program isn't filling
+(create demand for expert copy), never the how.""",
 
-CAROUSEL SLIDES (STRICT): each slide must be ONE COMPLETE, self-contained statement — a whole thought
-that fully makes sense on its own when read alone. NEVER split a single sentence into fragments across
-slides (e.g. "Your coaching skill..." then "is precisely why..." then "clients don't see you" is WRONG).
-Every slide reads like its own punchy line. Keep carousels SHORT.
+    3: """DAY 3 — MECHANISM BREAKDOWN. 5-6 slides, each a COMPLETE standalone line (MAX 7 words). TACTICAL:
+diagnose WHY one of the coach's problems keeps happening (their messaging / offer / positioning / sales)
+and what it truly takes to fix it. Distinct from Day 1's mindset level. Diagnose, do NOT tutorial, and
+never teach them to DIY copy. All 5 options have topic 'Coaching'.""",
+}
 
-COHESION: the visual theme (Gold/Black/White), tone, and message must flow into the next post in
-the current 3-day row like an editorial magazine.
+SYSTEM = """You are Muhammad Anas's Creative Strategist & Automated Grid Manager.
 
-FRESHNESS (critical): every single day must be a DISTINCTLY DIFFERENT post — a new pain, a new angle,
-a new belief-shift. NEVER reuse a hook, theme, or angle from the recent posts you are shown.
+BRAND CORE — applies to EVERYTHING you generate:
+WHO ANAS IS: a direct-response COPYWRITER who FILLS 1-on-1 coaching programs.
+THE ONE AVATAR (write to this exact person every time): a 1-on-1 coach whose program has EMPTY SLOTS —
+they post, run ads, stay busy, but do NOT convert premium clients.
+STRATEGIC GOAL: the feed builds TRUST OF EXPERTISE, not likes. The sale happens later in the DM. Every
+post must make this coach think "this person understands my business" — NEVER "nice quote."
 
-CONTENT & STYLE CONSTRAINTS (STRICT):
-- VISUALS: consistent high-end Black, Gold, and White aesthetic.
-- TEXT PACING: max 5-9 words per visual frame or slide. Scannable.
-- TONE: high-status, clinical, contrarian — but clearly speaking to the coach's real pain.
-- FORBIDDEN: never use AI-slop words ("delve", "unleash", "tapestry", "game-changer").
-- THE DM FUNNEL: every SATURDAY post MUST conclude with a frictionless, number-based ManyChat DM
-  trigger (e.g. "Comment 402").
-- NO TUTORIALS: we position, not teach. No "How-to" headlines. Focus on the problem and the shift.
-- Never fabricate client results or fake numbers.
+VOICE: clinical, contrarian, high-status, direct-response. Short declarative lines.
+VISUAL: black / gold / white. MAX 7 words per slide or frame.
 
-You are handed a ROTATING pool of real trending topics from the niche as raw fuel. Each item is
-TAGGED with the platform it came from ([YouTube] or [Instagram]). Extract the winning PATTERN into
-an original belief-shift — never copy the topic. When the pool contains items from BOTH platforms
-that touch the SAME theme, MERGE them: fuse the YouTube angle and the Instagram angle into one
-sharper belief-shift (that cross-platform overlap is the strongest signal).
+HARD RULES (NEVER break):
+- Never teach the coach to write copy themselves or to use AI to do it. Never hand them the tool that
+  replaces Anas. You may make them FEEL their messaging is the problem — never show them the how.
+- Never open by addressing "Coaches," and never open with a generic hook.
+- BANNED words: delve, unleash, leverage, game-changer, tapestry, elevate, supercharge,
+  "in today's world". No AI-slop.
+- No hashtags and no emojis inside any slide / frame / line text (hashtags live only in the caption field).
+- No fake numbers, no invented case studies, no fabricated results.
 
-HASHTAGS: every generated post MUST include a set of relevant, mixed-reach Instagram hashtags
-(a blend of niche + broader tags). Never invent fake/branded tags.
+USING THE DAILY COMPETITOR PULL (the rotating trend pool you're given):
+- Keep only items that fit THIS pillar's format; ignore the rest.
+- Extract the PATTERN only — the hook shape, the belief-flip mechanic, the slide progression. NEVER copy
+  their topic, niche, or words.
+- Re-express that pattern inside Anas's niche (filling 1-on-1 coaching programs) and the avatar's language.
+  When YouTube + Instagram items share a pattern, fuse them.
+
+THE 1-2-3 ROW RHYTHM (Mon-Sat), three NON-overlapping pillars:
+- Day 1 (Mon/Thu): Belief-Shift carousel — MINDSET-level (why the coach's current thinking is wrong).
+- Day 2 (Tue/Fri): Kinetic reel — one punchy line, a sharp callout.
+- Day 3 (Wed/Sat): Mechanism breakdown — TACTICAL diagnosis (why a problem keeps happening).
+
+FRESHNESS: every day must shift a DIFFERENT belief / hit a different angle. Never reuse a hook, belief,
+or angle from the recent posts you are shown.
 
 Return ONLY valid JSON. No markdown, no commentary outside the JSON."""
 
 PROMPT = """TODAY: {for_day} → generate POST {post_no}: {post_type}. Row: {row}.
+
+{pillar_spec}
+
 {dm_line}
 
-RECENT POSTS — DO NOT repeat any of these hooks, themes, or angles (make today clearly different):
+RECENT POSTS — DO NOT repeat any of these beliefs, hooks, themes, or angles:
 {recent}
 
 COHESION CONTEXT (flow visually/thematically with the current row):
 {cohesion}
 
-TODAY'S ROTATING TREND POOL (fuel — extract patterns, never copy):
+TODAY'S ROTATING COMPETITOR PULL — extract PATTERNS only (hook shape, belief-flip, progression); never
+copy their topic or words; re-express inside Anas's niche (filling 1-on-1 coaching programs):
 {data}
 
 Return JSON with EXACTLY these keys:
 
-"grid_options": array of EXACTLY 5 DISTINCT versions of this SAME post (all are POST {post_no} for {for_day}).
-Anas will CHOOSE his favorite to publish, so the 5 must each use a clearly DIFFERENT hook, angle, and
-belief-shift — never overlapping with each other or with the recent posts.{mix_note} Each object:
+"grid_options": array of EXACTLY 5 DISTINCT versions of this SAME post (all POST {post_no} for {for_day}).
+Each must shift a DIFFERENT belief / hit a different angle — never overlapping with each other or the
+recent posts. Each object:
   {{
     "for_day": "{for_day}",
     "post_number": {post_no},
     "post_type": "{post_type_short}",
     "row": "{row}",
-    "topic": "'Coaching' (the fitness brand) OR 'Copywriting' (universal writing/persuasion wisdom) — what THIS option is about",
-    "option_label": "2-4 word label naming THIS version's angle (e.g. 'Comfort trap', 'Identity shift')",
-    "source_mix": "which platform(s) fueled this variant — 'YouTube', 'Instagram', or 'YouTube + Instagram' if you merged both",
-    "strategic_rationale": "2-3 sentences: how this post links visually and thematically to the rest of the current row (the Cohesion Check)",
+    "topic": "'Coaching' (speaks to the coach's business) OR 'Copywriting' (about their messaging/words)",
+    "option_label": "2-4 word label naming the angle (e.g. 'Under-positioned', 'Volume trap')",
+    "source_mix": "which platform(s) fueled this — 'YouTube', 'Instagram', or 'YouTube + Instagram'",
+    "belief_shifted": "one sentence naming the SINGLE belief this shifts (e.g. 'price is a number problem -> price is a story problem')",
+    "scroll_stop": "1 line: why slide 1 / the hook stops THIS coach mid-scroll",
     {assets_field}
-    "caption": "hyper-short scannable caption with clean emojis{dm_caption}",
-    "hashtags": ["8-15 relevant Instagram hashtags (mix of niche + broad reach), no # symbol, no duplicates"],
-    "dm_trigger": {dm_field},
-    "theme_note": "one line describing the visual thread (colors/motif) to carry through this row"
+    "caption": "2-4 short clinical lines (NO emojis, NO hashtags, and NO double-quote characters) that deepen the reframe, ENDING with a soft DM trigger like: comment FILL",
+    "hashtags": ["6-12 caption-only hashtags (NEVER in slide text), no # symbol, no duplicates"],
+    "dm_trigger": "the soft one-word comment trigger used (e.g. FILL)",
+    "theme_note": "one line describing the visual thread (colors/motif) for the row"
   }},
 
 "ideas": array of 6 FRESH content ideas from the pool (for the Topics & Hooks page + future LinkedIn),
@@ -140,6 +157,15 @@ each different from the recent posts:
 "winning_templates": array of up to 3:
   {{"template": "reusable hook pattern with ___ blanks", "why_it_works": "1 sentence", "proof": "a real pool example"}}
 """
+
+
+BANNED_WORDS = ("delve", "unleash", "leverage", "game-changer", "game changer", "tapestry",
+                "elevate", "supercharge", "in today's world")
+
+
+def banned_in(pack):
+    blob = json.dumps(pack, ensure_ascii=False).lower()
+    return [w for w in BANNED_WORDS if w in blob]
 
 
 def _load(path, default):
@@ -276,41 +302,51 @@ def main():
         print("🛑 Pipeline off today (Saturday). Tomorrow is Sunday — no post to prepare.")
         return
 
-    # Build a FRESH, varied post every posting day (rotating pool + anti-repeat)
-    if post_no == 2:
-        assets_field = ('"reel_line": "the ENTIRE reel as ONE punchy line — a single sentence of about '
-                        '8-16 words, NO line breaks, that reads as one flowing statement and gets animated '
+    # assets differ per pillar (all obey Brand Core: max 7 words, no emojis/hashtags in slide text)
+    if post_no == 1:
+        assets_field = ('"slides": [array of 4-6 slides, ONE line each, MAX 7 words per slide. Slide 1 = a '
+                        'contrarian belief the coach secretly holds, FLIPPED (MAX 6 words, must sting). Middle '
+                        'slides escalate the reframe, one idea each. Final slide = the new belief stated as a '
+                        'principle (the payoff). Each slide is a COMPLETE standalone line, never a fragment.],')
+    elif post_no == 2:
+        assets_field = ('"reel_line": "the ENTIRE reel as ONE punchy line (~8-16 words, NO line breaks) animated '
                         'one word at a time (kinetic typography)",'
-                        '"word_sequence": ["reel_line", "split", "into", "its", "individual", "words", '
-                        '"in", "order", "each", "one", "is", "a", "single", "on-screen", "beat"],')
-    else:
-        n = "3-4" if post_no == 1 else "5-6"
-        assets_field = (f'"slides": [array of {n} slides. Each slide is ONE COMPLETE standalone statement '
-                        '(a whole thought that makes full sense on its own, about 4-10 words) — NEVER a '
-                        'sentence fragment, NEVER split one sentence across slides. Slide 1 = the hook/problem '
-                        'the coach feels; final slide = the payoff or belief-shift.],')
-    dm_line = ("⚠️ IT IS SATURDAY: the post MUST end with a frictionless number-based ManyChat DM "
-               "trigger (e.g. \"Comment 402\").") if dm_required else "No DM trigger today (Saturdays only)."
+                        '"word_sequence": ["reel_line", "split", "into", "individual", "words", "in", "order"],')
+    else:  # post 3
+        assets_field = ('"slides": [array of 5-6 slides, ONE complete standalone line each, MAX 7 words. Slide 1 = '
+                        'the problem the coach feels; final slide = the fix/shift. Never a sentence fragment.],')
 
-    # Reel day (Post 2) also flexes Anas's copywriter identity: 3 coaching + 2 universal copywriting.
-    mix_note = (" MIX (important): of the 5 options make exactly 3 that CALL OUT a coach's real pain/problem "
-                "(topic 'Coaching') and 2 about COPYWRITING (topic 'Copywriting') — universal, punchy lines on how "
-                "great copywriting / persuasive words help ANYONE sell or be understood (founders, freelancers, "
-                "creators, any person). The copywriting ones keep the same black/gold/white look and the same "
-                "one-line kinetic format.") if post_no == 2 else \
-               " Every option has topic 'Coaching' (speaking to the coach's real pain)."
+    dm_line = ('DM FUNNEL: the sale happens later in the DM, not the feed. End each caption with a soft, '
+               'single-word comment trigger (default: comment FILL). Do NOT put double-quote characters in captions.')
 
     prompt = PROMPT.format(
         for_day=for_day, post_no=post_no, post_type=POST_TYPES[post_no],
-        post_type_short=POST_TYPES[post_no].split(" (")[0], row=row, dm_line=dm_line,
+        post_type_short=POST_TYPES[post_no].split(" (")[0], row=row,
+        dm_line=dm_line, pillar_spec=PILLAR_SPEC[post_no],
         recent=recent_hooks(), cohesion=cohesion_context(), data=load_pool(),
-        assets_field=assets_field, mix_note=mix_note,
-        dm_caption=", ending with the DM trigger" if dm_required else "",
-        dm_field='"Comment <3-digit number>"' if dm_required else '""',
+        assets_field=assets_field,
     )
 
     print(f"🧠 Grid Manager (a day ahead): preparing options for {for_day} ({post_date}) → POST {post_no}\n")
-    pack = json.loads(call_gemini(prompt))
+    pack = None
+    for attempt in range(3):
+        raw = call_gemini(prompt)
+        try:
+            pack = json.loads(raw)
+            break
+        except json.JSONDecodeError as e:
+            print(f"  ⚠️ malformed JSON ({e}); retry {attempt + 1}")
+    if pack is None:
+        raise RuntimeError("Gemini returned unparseable JSON after retries")
+    bad = banned_in(pack)
+    if bad:
+        print(f"  ⚠️ banned words {bad} slipped in — regenerating once")
+        pack = json.loads(call_gemini(
+            prompt + f"\n\nHARD FIX: your previous draft used these BANNED words: {bad}. "
+                     "Rewrite ALL 5 options with ZERO banned words anywhere."))
+        still = banned_in(pack)
+        if still:
+            print(f"  ⚠️ still contains {still} — proceeding but flag")
     pack["generated_at"] = now
     pack["rest_day"] = False
     pack["post_date"] = post_date        # the day this post should be published

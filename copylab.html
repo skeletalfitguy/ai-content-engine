@@ -199,6 +199,8 @@
   .frame .ft{flex:none;min-width:52px;color:var(--accent);font-weight:700;font-size:12px}
   .frame p{font-size:13.5px;color:#e6e6ea}
   .reelline{font-size:20px;line-height:1.4;font-weight:700;color:var(--text);text-align:center;padding:14px 10px;background:var(--accent-dim);border-radius:10px;margin-bottom:12px}
+  .beliefbox{background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:11px 14px;font-size:14px;margin-bottom:12px;color:var(--text)}
+  .beliefbox b{color:var(--accent)}
   .reelnote{font-size:12.5px;color:var(--muted);margin-bottom:10px}
   .wordseq{display:flex;flex-wrap:wrap;gap:7px}
   .wbeat{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px 8px 14px;font-size:14px;font-weight:600;color:var(--text)}
@@ -620,7 +622,8 @@ function gridPostHTML(g){
       <span class="gp-day">${esc(g.for_day)} · Row ${esc(g.row)}</span></div>
     <div class="srcmix">🔎 Fueled by: <b>${esc(srcMix)}</b></div>
     ${rhythm}
-    <div class="block"><div class="lbl"><span>🧭 Strategic rationale — cohesion check</span></div><div class="btext">${esc(g.strategic_rationale)}</div></div>
+    ${g.belief_shifted?`<div class="beliefbox">💡 <b>Belief shifted:</b> ${esc(g.belief_shifted)}</div>`:''}
+    ${(g.scroll_stop||g.strategic_rationale)?`<div class="block"><div class="lbl"><span>🎯 Why it stops the scroll</span></div><div class="btext">${esc(g.scroll_stop||g.strategic_rationale)}</div></div>`:''}
     <div class="block"><div class="lbl"><span>${isReel?'🎞️ Kinetic reel — one line, word by word':'🖼️ Carousel — slide by slide'}</span><button class="copybtn" onclick="copyText(CLIP.gassets)">${isReel?'Copy line':'Copy all'}</button></div>${assets}</div>
     <div class="block"><div class="lbl"><span>📝 Caption & CTA</span><button class="copybtn" onclick="copyText(CLIP.gcap)">Copy caption + tags</button></div><div class="caption">${esc(g.caption)}</div>
       ${g.dm_trigger?`<div class="dmtrig">💬 ManyChat DM trigger: <b>${esc(g.dm_trigger)}</b></div>`:''}</div>
