@@ -601,12 +601,12 @@ function render(){
 
 function gridPostHTML(g){
   const isReel=!!(g.reel_line||(g.word_sequence&&g.word_sequence.length));
-  const rhythm=`<div class="rhythm">${[1,2,3].map(n=>`<div class="rcell${g.post_number===n?' on':''}"><b>${n}</b><span>${n===1?'Belief Shift':n===2?'Kinetic Reel':'Mechanism'}</span></div>`).join('')}</div>`;
+  const rhythm=`<div class="rhythm">${[1,2,3].map(n=>`<div class="rcell${g.post_number===n?' on':''}"><b>${n}</b><span>${n===1?'Belief Shift':n===2?'Authority Line':'Mechanism'}</span></div>`).join('')}</div>`;
   const words=isReel?((g.word_sequence&&g.word_sequence.length)?g.word_sequence:(g.reel_line||'').split(/\s+/).filter(Boolean)):[];
   const line=isReel?(g.reel_line||words.join(' ')):'';
   const assets=isReel
     ? `<div class="reelline">${esc(line)}</div>
-       <div class="reelnote">🎬 Animated one word at a time — type this line into your kinetic typography tool:</div>
+       <div class="reelnote">🎬 One tweet-style authority line — read in ~2s, screenshot-shareable. Animate word-by-word if you like:</div>
        <div class="wordseq">${words.map((w,i)=>`<span class="wbeat"><small>${i+1}</small>${esc(w)}</span>`).join('')}</div>`
     : (g.slides||[]).map((s,i)=>`<div class="slide"><div class="sn">${i+1}</div><p>${esc(s)}</p></div>`).join('');
   CLIP.gassets=isReel ? line
@@ -624,7 +624,7 @@ function gridPostHTML(g){
     ${rhythm}
     ${g.belief_shifted?`<div class="beliefbox">💡 <b>Belief shifted:</b> ${esc(g.belief_shifted)}</div>`:''}
     ${(g.scroll_stop||g.strategic_rationale)?`<div class="block"><div class="lbl"><span>🎯 Why it stops the scroll</span></div><div class="btext">${esc(g.scroll_stop||g.strategic_rationale)}</div></div>`:''}
-    <div class="block"><div class="lbl"><span>${isReel?'🎞️ Kinetic reel — one line, word by word':'🖼️ Carousel — slide by slide'}</span><button class="copybtn" onclick="copyText(CLIP.gassets)">${isReel?'Copy line':'Copy all'}</button></div>${assets}</div>
+    <div class="block"><div class="lbl"><span>${isReel?'🎞️ Authority line — one tweet-style line on video':'🖼️ Carousel — slide by slide'}</span><button class="copybtn" onclick="copyText(CLIP.gassets)">${isReel?'Copy line':'Copy all'}</button></div>${assets}</div>
     <div class="block"><div class="lbl"><span>📝 Caption & CTA</span><button class="copybtn" onclick="copyText(CLIP.gcap)">Copy caption + tags</button></div><div class="caption">${esc(g.caption)}</div>
       ${g.dm_trigger?`<div class="dmtrig">💬 ManyChat DM trigger: <b>${esc(g.dm_trigger)}</b></div>`:''}</div>
     ${tags.length?`<div class="block"><div class="lbl"><span># Hashtags (${tags.length})</span><button class="copybtn" onclick="copyText('${esc(tagline)}')">Copy tags</button></div><div class="tagwrap">${tags.map(t=>`<span class="tagchip">${esc(t)}</span>`).join('')}</div></div>`:''}

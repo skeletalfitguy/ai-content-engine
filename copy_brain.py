@@ -32,7 +32,7 @@ PACK_FILE = "copy_pack.json"
 # ---------------------------------------------------------------------------
 POST_TYPES = {
     1: "Belief-Shift Carousel (4-6 slides, flip ONE belief the coach holds)",
-    2: "Kinetic Typography Reel (ONE punchy line, animated one word at a time)",
+    2: "One-Line Authority Post (a single tweet-style line, shown on video)",
     3: "Mechanism Breakdown Carousel (5-6 slides, diagnose WHY the coach's problem happens)",
 }
 
@@ -59,11 +59,25 @@ GOOD (the standard to hit):
   4. Fix the belief and the objection disappears.
 BAD (never produce): "To grow you must bury your past" / "success requires isolation" — generic, off-niche.""",
 
-    2: """DAY 2 — KINETIC REEL. ONE punchy line (~8-16 words) animated one word at a time — a sharp callout
-of the avatar's pain (their program isn't filling). Of the 5 options: 3 have topic 'Coaching' (call out a
-coaching-business pain) and 2 have topic 'Copywriting'. HARD RULE: the copywriting ones must NEVER teach
-how to write — instead make the coach FEEL that weak, unclear messaging is WHY their program isn't filling
-(create demand for expert copy), never the how.""",
+    2: """DAY 2 — ONE-LINE AUTHORITY POST (tweet-style, shown on video). APHORISM-LEVEL: a single
+screenshot-shareable truth that makes the coach STOP and NOD. ONE sharp idea, NO breakdown. Distinct from
+Day 1 (which builds a case over slides) and Day 3 (tactical). All 5 options have topic 'Coaching'.
+
+FORMAT: ONE line, 8-22 words, readable in ~2 seconds.
+- Structure = a two-part TURN: set up a belief the coach holds, then FLIP it.
+- Concrete nouns. No stacked adjectives, no hashtags, no emojis.
+- It must stay true with Anas's name removed — it stands on the IDEA, never on hype.
+
+TOPIC SCOPE (same as Day 1, compressed to a single blade): buyer psychology of high-ticket coaching,
+positioning, effort-vs-results, one clear mechanism beats many funnels, why an empty cohort is a
+positioning problem (not a traffic problem), the identity of a premium buyer.
+
+GOOD (the standard):
+  - Your empty cohort isn't a traffic problem. It's a positioning problem in a traffic costume.
+  - Premium clients don't buy more information. They buy a shortcut they trust.
+  - A coach with one clear mechanism outsells a coach with a bigger audience.
+BAD (never produce): "Don't beg for attention when you can dictate market perspective in three words."
+— too abstract, aimed at copywriters, not at a coach with empty slots.""",
 
     3: """DAY 3 — MECHANISM BREAKDOWN. 5-6 slides, each a COMPLETE standalone line (MAX 7 words). TACTICAL:
 diagnose WHY one of the coach's problems keeps happening (their messaging / offer / positioning / sales)
@@ -164,7 +178,8 @@ BANNED_WORDS = ("delve", "unleash", "leverage", "game-changer", "game changer", 
 
 
 def banned_in(pack):
-    blob = json.dumps(pack, ensure_ascii=False).lower()
+    # only guard the PUBLISHED posts (grid_options), not the internal ideas fuel
+    blob = json.dumps(pack.get("grid_options", pack), ensure_ascii=False).lower()
     return [w for w in BANNED_WORDS if w in blob]
 
 
@@ -309,9 +324,11 @@ def main():
                         'slides escalate the reframe, one idea each. Final slide = the new belief stated as a '
                         'principle (the payoff). Each slide is a COMPLETE standalone line, never a fragment.],')
     elif post_no == 2:
-        assets_field = ('"reel_line": "the ENTIRE reel as ONE punchy line (~8-16 words, NO line breaks) animated '
-                        'one word at a time (kinetic typography)",'
-                        '"word_sequence": ["reel_line", "split", "into", "individual", "words", "in", "order"],')
+        assets_field = ('"reel_line": "ONE tweet-style authority line, 8-22 words, a two-part TURN (set up a '
+                        'belief the coach holds, then FLIP it). Concrete nouns, no stacked adjectives, no hashtags, '
+                        'no emojis, no double-quote characters. Readable in ~2 seconds; true even without Anas name.",'
+                        '"word_sequence": ["the", "reel_line", "split", "into", "individual", "words", "in", '
+                        '"order", "for", "the", "on-screen", "animation"],')
     else:  # post 3
         assets_field = ('"slides": [array of 5-6 slides, ONE complete standalone line each, MAX 7 words. Slide 1 = '
                         'the problem the coach feels; final slide = the fix/shift. Never a sentence fragment.],')
